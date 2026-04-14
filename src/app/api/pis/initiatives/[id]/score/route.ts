@@ -31,7 +31,7 @@ export async function POST(
     );
 
     // Parse model from body (optional)
-    let modelId = "claude-sonnet";
+    let modelId = "gemini-pro";
     try {
       const body = await request.json();
       if (body.modelId) modelId = body.modelId;

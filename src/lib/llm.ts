@@ -23,7 +23,8 @@ const FALLBACK_CHAIN: Record<string, string[]> = {
   "gemini-flash": ["openai-gpt4o-mini", "claude-haiku"],
   "openai-gpt4o-mini": ["gemini-flash", "claude-haiku"],
   "claude-haiku": ["gemini-flash", "openai-gpt4o-mini"],
-  "claude-sonnet": ["gemini-flash", "openai-gpt4o-mini"],
+  "claude-sonnet": ["gemini-pro", "gemini-flash", "openai-gpt4o-mini"],
+  "gemini-pro": ["gemini-flash", "claude-sonnet", "openai-gpt4o-mini"],
 };
 
 async function withRetry<T>(fn: () => Promise<T>, retries = MAX_RETRIES): Promise<T> {

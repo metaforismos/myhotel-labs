@@ -3,14 +3,18 @@
 import type { KpiImpact } from "@/lib/pis/types";
 
 const IMPACT_STYLES = {
+  alto: "bg-negative-muted text-negative",
+  medio: "bg-neutral-muted text-neutral-sent",
+  bajo: "bg-positive-muted text-positive",
+  // fallback for English keys from older scores
   high: "bg-negative-muted text-negative",
   medium: "bg-neutral-muted text-neutral-sent",
   low: "bg-positive-muted text-positive",
-};
+} as Record<string, string>;
 
 export function KpiImpactTable({ impacts }: { impacts: KpiImpact[] }) {
   if (!impacts || impacts.length === 0) {
-    return <p className="text-sm text-text-dim">No KPI impacts identified.</p>;
+    return <p className="text-sm text-text-dim">No se identificaron impactos en KPIs.</p>;
   }
 
   return (
@@ -40,7 +44,7 @@ export function KpiImpactTable({ impacts }: { impacts: KpiImpact[] }) {
               </td>
               <td className="px-3 py-2 text-center">
                 <span
-                  className={`inline-flex px-2 py-0.5 rounded text-xs font-semibold ${IMPACT_STYLES[impact.impact]}`}
+                  className={`inline-flex px-2 py-0.5 rounded text-xs font-semibold ${IMPACT_STYLES[impact.impact] || "bg-surface-3 text-text-dim"}`}
                 >
                   {impact.impact}
                 </span>

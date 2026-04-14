@@ -41,7 +41,7 @@ export default function InitiativeDetailPage() {
       const res = await fetch(`/api/pis/initiatives/${initiative.id}/score`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ modelId: "claude-sonnet" }),
+        body: JSON.stringify({ modelId: "gemini-pro" }),
       });
       if (!res.ok) {
         const data = await res.json();

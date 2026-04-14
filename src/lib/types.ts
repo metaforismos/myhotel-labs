@@ -108,6 +108,13 @@ export const MODEL_OPTIONS: ModelOption[] = [
     description: "Fast & capable — Google",
   },
   {
+    id: "gemini-pro",
+    label: "Gemini 2.5 Pro",
+    provider: "gemini",
+    modelId: "gemini-2.5-pro",
+    description: "High reasoning — Google",
+  },
+  {
     id: "openai-gpt4o-mini",
     label: "GPT-4o Mini",
     provider: "openai",

@@ -23,7 +23,7 @@ export function ScoreBreakdown({ initiative }: { initiative: PisInitiative }) {
       <div className="grid grid-cols-2 gap-4">
         <div className="bg-surface rounded-lg border border-border p-4">
           <div className="text-[10px] font-semibold uppercase tracking-wider text-text-dim mb-2">
-            PIS Score
+            Puntaje PIS
           </div>
           <ScoreBadge score={initiative.pis_score} size="lg" />
           {sr?.score_criteria && (
@@ -34,7 +34,7 @@ export function ScoreBreakdown({ initiative }: { initiative: PisInitiative }) {
         </div>
         <div className="bg-surface rounded-lg border border-border p-4">
           <div className="text-[10px] font-semibold uppercase tracking-wider text-text-dim mb-2">
-            Hypothesis Score
+            Puntaje Hipótesis
           </div>
           <ScoreBadge score={initiative.hypothesis_score} size="lg" />
           {sr?.hypothesis_feedback && (

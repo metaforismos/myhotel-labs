@@ -15,7 +15,7 @@ export type InitiativeStatus = "draft" | "scored" | "archived";
 export interface KpiImpact {
   kpi_id: number;
   kpi_name: string;
-  impact: "high" | "medium" | "low";
+  impact: "alto" | "medio" | "bajo" | "high" | "medium" | "low";
   explanation: string;
 }
 
