@@ -2,7 +2,71 @@ import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { callLLM } from "@/lib/llm";
 import { buildSystemPrompt, buildUserMessage } from "@/lib/pis/prompts";
-import type { ScoringResult } from "@/lib/pis/types";
+import { PIS_AXES, clampAxisScore } from "@/lib/pis/constants";
+import { effortPercent } from "@/lib/pis/types";
+import type {
+  AxisScore,
+  RubricBreakdown,
+  ScoringResult,
+  KpiImpact,
+  HypothesisQuality,
+} from "@/lib/pis/types";
+
+function parseAxis(raw: unknown): AxisScore | null {
+  if (!raw || typeof raw !== "object") return null;
+  const r = raw as Record<string, unknown>;
+  const score = typeof r.score === "number" ? r.score : Number(r.score);
+  if (!Number.isFinite(score)) return null;
+  const reasoning = typeof r.reasoning === "string" ? r.reasoning : "";
+  return { score, reasoning };
+}
+
+function parseHypothesisQuality(raw: unknown): HypothesisQuality | null {
+  if (!raw || typeof raw !== "object") return null;
+  const r = raw as Record<string, unknown>;
+  const score = typeof r.score === "number" ? r.score : Number(r.score);
+  if (!Number.isFinite(score)) return null;
+  const clamped = Math.max(0, Math.min(100, Math.round(score)));
+  const feedback = typeof r.feedback === "string" ? r.feedback : "";
+  return { score: clamped, feedback };
+}
+
+function validateAndClamp(parsed: unknown): ScoringResult | { error: string } {
+  if (!parsed || typeof parsed !== "object") return { error: "not_object" };
+  const p = parsed as Record<string, unknown>;
+  const rawRubric = p.rubric;
+  if (!rawRubric || typeof rawRubric !== "object") {
+    return { error: "missing_rubric" };
+  }
+  const rr = rawRubric as Record<string, unknown>;
+
+  const rubric = {} as RubricBreakdown;
+  let total = 0;
+  for (const axis of PIS_AXES) {
+    const axisRaw = parseAxis(rr[axis.id]);
+    if (!axisRaw) return { error: `missing_axis_${axis.id}` };
+    const clamped = clampAxisScore(axis.id, axisRaw.score);
+    rubric[axis.id] = { score: clamped, reasoning: axisRaw.reasoning };
+    total += clamped;
+  }
+
+  const hypothesis_quality = parseHypothesisQuality(p.hypothesis_quality);
+  if (!hypothesis_quality) return { error: "missing_hypothesis_quality" };
+
+  const kpi_impact: KpiImpact[] = Array.isArray(p.kpi_impact)
+    ? (p.kpi_impact as KpiImpact[])
+    : [];
+  const recommendation =
+    typeof p.recommendation === "string" ? p.recommendation : "";
+
+  return {
+    rubric,
+    pis_score: total,
+    hypothesis_quality,
+    kpi_impact,
+    recommendation,
+  };
+}
 
 export async function POST(
   request: NextRequest,
@@ -46,6 +110,9 @@ export async function POST(
       hypothesis: initiative.hypothesis,
       products: initiative.products,
       author: initiative.author,
+      celula: initiative.celula,
+      jornadas: initiative.jornadas,
+      effortPercent: effortPercent(initiative.jornadas),
     });
 
     const { text, modelUsed } = await callLLM({
@@ -57,12 +124,20 @@ export async function POST(
 
     // Parse JSON from LLM response (strip markdown fences if present)
     const cleaned = text.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
-    let scoring: ScoringResult;
+    let parsed: unknown;
     try {
-      scoring = JSON.parse(cleaned);
+      parsed = JSON.parse(cleaned);
     } catch {
       return NextResponse.json(
-        { error: "llm_parse_error", raw: text },
+        { error: "llm_parse_error", reason: "invalid_json", raw: text },
+        { status: 422 }
+      );
+    }
+
+    const validated = validateAndClamp(parsed);
+    if ("error" in validated) {
+      return NextResponse.json(
+        { error: "llm_parse_error", reason: validated.error, raw: text },
         { status: 422 }
       );
     }
@@ -71,23 +146,21 @@ export async function POST(
     await pool.query(
       `UPDATE pis_initiatives
        SET pis_score = $1,
-           hypothesis_score = $2,
-           scoring_result = $3,
-           model_used = $4,
+           scoring_result = $2,
+           model_used = $3,
            scored_at = NOW(),
            status = 'scored',
            updated_at = NOW()
-       WHERE id = $5`,
+       WHERE id = $4`,
       [
-        scoring.pis_score,
-        scoring.hypothesis_score,
-        JSON.stringify(scoring),
+        validated.pis_score,
+        JSON.stringify(validated),
         modelUsed,
         initId,
       ]
     );
 
-    return NextResponse.json({ scoring, model_used: modelUsed });
+    return NextResponse.json({ scoring: validated, model_used: modelUsed });
   } catch (err) {
     console.error("[PIS Score]", err);
     return NextResponse.json({ error: "scoring_failed" }, { status: 500 });

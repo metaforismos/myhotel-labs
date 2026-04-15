@@ -6,8 +6,8 @@ export async function GET(request: NextRequest) {
   const status = searchParams.get("status");
 
   try {
-    let query = `SELECT id, title, products, author, celula, jornadas, status, pis_score, hypothesis_score,
-                        model_used, scored_at, created_at, updated_at
+    let query = `SELECT id, title, products, author, celula, jornadas, status, pis_score,
+                        scoring_result, model_used, scored_at, created_at, updated_at
                  FROM pis_initiatives`;
     const values: string[] = [];
 

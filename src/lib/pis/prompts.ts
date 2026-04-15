@@ -1,9 +1,43 @@
-import { KPI_2026 } from "./constants";
+import { DEV_CYCLE_DAYS, KPI_2026, PIS_AXES } from "./constants";
 
 interface KnowledgeRow {
   category: string;
   title: string;
   content: string;
+}
+
+function buildRubricSection(): string {
+  return PIS_AXES.map((axis) => {
+    const bandsSimple = axis.bands
+      .map((b) => `  - Desde ${b.min}/${axis.max}: ${b.description}`)
+      .join("\n");
+    return `### ${axis.label} (/${axis.max})
+**Pregunta:** ${axis.question}
+**Guía:** ${axis.guidance}
+**Bandas:**
+${bandsSimple}`;
+  }).join("\n\n");
+}
+
+function buildOutputSchema(): string {
+  const rubricExample = PIS_AXES.map((axis) => {
+    // Middle-band example value for each axis
+    const mid = Math.round(axis.max * 0.55);
+    return `    "${axis.id}": { "score": ${mid}, "reasoning": "<1-2 oraciones explicando el puntaje>" }`;
+  }).join(",\n");
+  return `{
+  "rubric": {
+${rubricExample}
+  },
+  "hypothesis_quality": {
+    "score": <número 0-100>,
+    "feedback": "<2-4 oraciones de feedback educativo: qué está bien, qué falta, cómo mejorar>"
+  },
+  "kpi_impact": [
+    { "kpi_id": <número>, "kpi_name": "<string>", "impact": "alto|medio|bajo", "explanation": "<una línea>" }
+  ],
+  "recommendation": "<1-3 oraciones para el comité de producto>"
+}`;
 }
 
 export function buildSystemPrompt(knowledgeEntries: KnowledgeRow[] = []): string {
@@ -43,44 +77,49 @@ ${performanceKpis.map((k) => `${k.id}. **${k.name}** — ${k.description}. Meta:
 ### KPIs Estratégicos
 ${strategicKpis.map((k) => `${k.id}. **${k.name}** — ${k.description}. Meta: ${k.target}`).join("\n")}
 
-## Instrucciones de Evaluación
+## Rúbrica de Evaluación
 
-Evalúa la iniciativa en dos ejes:
+Debes evaluar la iniciativa en 5 ejes independientes que SUMAN 100 puntos totales. Cada eje tiene un peso fijo y pregunta algo específico. No intentes balancear los ejes entre sí — evalúa cada uno por separado contra su pregunta y guía.
 
-### 1. Puntaje PIS (0-100): Impacto potencial en los KPIs 2026
-- 80-100: Mueve directa y significativamente múltiples KPIs
-- 60-79: Impacto claro y medible en 1-2 KPIs
-- 40-59: Impacto indirecto o moderado en KPIs
-- 20-39: Conexión débil o especulativa con KPIs
-- 0-19: Sin impacto medible en KPIs
+El ciclo de desarrollo de myHotel es de ${DEV_CYCLE_DAYS} días hábiles con un equipo típico de 1 frontend + 1 backend.
 
-Considera: ¿Cuántos KPIs se ven afectados? ¿Qué tan directamente? ¿Qué tan grande es el impacto potencial relativo a la meta? ¿Afecta KPIs estratégicos (revenue)?
+${buildRubricSection()}
 
-### 2. Puntaje Hipótesis (0-100): Calidad de la hipótesis de desarrollo
-- 80-100: Testeable, basada en evidencia, criterios de éxito específicos, lógica causal clara
-- 60-79: Hipótesis razonable pero le falta especificidad o evidencia
-- 40-59: Vaga o basada en supuestos, difícil de validar
-- 20-39: Lógica causal débil, no testeable
-- 0-19: Sin hipótesis real o completamente infundada
+## Mapa de Impacto en KPIs
 
-### 3. Mapa de Impacto en KPIs
-Para cada KPI que la iniciativa pueda afectar, indica el nivel de impacto y una breve explicación.
+Además de la rúbrica, lista los KPIs que la iniciativa pueda afectar con nivel de impacto (alto/medio/bajo) y una breve explicación. Esto alimenta tu razonamiento para el eje Magnitude.
 
-### 4. Recomendación
+## Calidad de la Hipótesis (métrica educativa, NO afecta el PIS score)
+
+Evalúa por separado la calidad de la **prosa de la hipótesis** como texto — independientemente de si la idea es buena o mala. Este puntaje NO suma al PIS ni a ningún eje de la rúbrica. Su único propósito es **educativo**: enseñar al autor a escribir hipótesis más sólidas la próxima vez.
+
+Criterios para evaluar la calidad (escala 0-100):
+
+- **Testeabilidad (25 pts):** ¿Se puede formular un experimento que la valide o refute? ¿Tiene criterios de éxito medibles?
+- **Especificidad (25 pts):** ¿Describe una acción concreta y un resultado concreto? ¿Evita vaguedades como "mejorar la experiencia"?
+- **Lógica causal (25 pts):** ¿Explica el mecanismo causal ("si X entonces Y porque Z")? ¿La relación causa-efecto es plausible?
+- **Evidencia o contexto (25 pts):** ¿Cita datos, feedback de clientes, comportamiento observado, o solo opinión?
+
+Bandas de referencia:
+- 80-100: Hipótesis sólida, lista para ejecutar. Testeable, específica, causalmente clara, con evidencia o contexto.
+- 60-79: Hipótesis razonable pero le falta algún componente (ej. falta el criterio de éxito, o la evidencia es blanda).
+- 40-59: Hipótesis vaga o basada en intuición. Necesita más especificidad antes de priorizar.
+- 20-39: Lógica débil, afirmaciones sin respaldo, no testeable.
+- 0-19: Sin hipótesis real — solo descripción de una feature o deseo.
+
+En el campo \`feedback\` del JSON, escribe 2-4 oraciones **dirigidas al autor** (en segunda persona, "tu hipótesis") explicando qué está bien y qué debería mejorar concretamente. Sé amable pero directo. Ejemplos de feedback útil:
+- "Tu hipótesis tiene un mecanismo causal claro pero falta el criterio de éxito medible — ¿cómo sabrás si funcionó? Agrega una métrica y un delta esperado."
+- "La hipótesis está bien estructurada y cita datos de soporte. Podrías fortalecerla aún más especificando qué segmento de hoteles esperas ver afectado primero."
+
+## Recomendación
+
 1-3 oraciones de recomendación para el comité de producto. Sé directo y accionable.
 
 ## Formato de Salida
-Responde SOLAMENTE con JSON válido (sin bloques markdown):
-{
-  "pis_score": <número 0-100>,
-  "score_criteria": "<explicación breve del puntaje PIS — qué KPIs se impactan y por qué este puntaje>",
-  "hypothesis_score": <número 0-100>,
-  "hypothesis_feedback": "<feedback breve sobre la calidad de la hipótesis — ¿es testeable, basada en evidencia, específica?>",
-  "kpi_impact": [
-    { "kpi_id": <número>, "kpi_name": "<string>", "impact": "alto|medio|bajo", "explanation": "<una línea>" }
-  ],
-  "recommendation": "<1-3 oraciones para el comité de producto>"
-}`;
+
+Responde SOLAMENTE con JSON válido (sin bloques markdown, sin comentarios, sin texto antes o después). Incluye los 5 ejes completos — no omitas ninguno. Los puntajes son enteros dentro del rango de cada eje.
+
+${buildOutputSchema()}`;
 }
 
 export function buildUserMessage(initiative: {
@@ -89,12 +128,29 @@ export function buildUserMessage(initiative: {
   hypothesis: string;
   products: string[];
   author: string;
+  celula?: string | null;
+  jornadas?: number | null;
+  effortPercent?: number | null;
 }): string {
+  const deliveryContext: string[] = [];
+  if (initiative.celula) deliveryContext.push(`Célula: ${initiative.celula}`);
+  if (initiative.jornadas != null) {
+    const pct =
+      initiative.effortPercent != null
+        ? ` (${initiative.effortPercent}% del ciclo de ${DEV_CYCLE_DAYS} días)`
+        : "";
+    deliveryContext.push(`Jornadas estimadas: ${initiative.jornadas}${pct}`);
+  }
+  const deliveryBlock =
+    deliveryContext.length > 0
+      ? `\n\n**Contexto de entrega:**\n${deliveryContext.map((l) => `- ${l}`).join("\n")}`
+      : "";
+
   return `## Iniciativa a Evaluar
 
 **Título:** ${initiative.title}
 **Productos:** ${initiative.products.join(", ")}
-**Autor:** ${initiative.author}
+**Autor:** ${initiative.author}${deliveryBlock}
 
 **Descripción:**
 ${initiative.description}

@@ -52,7 +52,6 @@ export async function PUT(
            celula = COALESCE($6, celula),
            jornadas = COALESCE($7, jornadas),
            pis_score = NULL,
-           hypothesis_score = NULL,
            scoring_result = NULL,
            model_used = NULL,
            scored_at = NULL,

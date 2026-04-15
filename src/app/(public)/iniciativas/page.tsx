@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { PIS_PRODUCTS } from "@/lib/pis/types";
-import { SCORE_THRESHOLDS } from "@/lib/pis/constants";
+import { SCORE_THRESHOLDS, PIS_AXES } from "@/lib/pis/constants";
 import type { PisProduct, ScoringResult } from "@/lib/pis/types";
 
 const PRODUCT_DESCRIPTIONS: Record<string, string> = {
@@ -210,31 +210,104 @@ export default function PublicInitiativeForm() {
               Evaluación preliminar por IA
             </div>
 
-            {/* Score cards */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className={`rounded-xl p-4 ${scoreBg(sr.pis_score)} border border-border/50`}>
+            {/* Total PIS score */}
+            <div className={`rounded-xl p-4 ${scoreBg(sr.pis_score)} border border-border/50 flex items-center justify-between`}>
+              <div>
                 <div className="text-[10px] font-semibold uppercase tracking-wider text-text-dim mb-1">
-                  Puntaje PIS
+                  Puntaje PIS Total
                 </div>
-                <div className={`text-3xl font-bold ${scoreColor(sr.pis_score)}`}>
-                  {sr.pis_score}%
+                <div className="text-xs text-text-muted">
+                  Suma ponderada de los 5 ejes
                 </div>
-                <p className="text-xs text-text-muted mt-2 leading-relaxed">
-                  {sr.score_criteria}
-                </p>
               </div>
-              <div className={`rounded-xl p-4 ${scoreBg(sr.hypothesis_score)} border border-border/50`}>
-                <div className="text-[10px] font-semibold uppercase tracking-wider text-text-dim mb-1">
-                  Puntaje Hipótesis
-                </div>
-                <div className={`text-3xl font-bold ${scoreColor(sr.hypothesis_score)}`}>
-                  {sr.hypothesis_score}%
-                </div>
-                <p className="text-xs text-text-muted mt-2 leading-relaxed">
-                  {sr.hypothesis_feedback}
-                </p>
+              <div className={`text-4xl font-bold tabular-nums ${scoreColor(sr.pis_score)}`}>
+                {sr.pis_score}
+                <span className="text-lg opacity-60">/100</span>
               </div>
             </div>
+
+            {/* Rubric breakdown — educational: show the question for each axis */}
+            {sr.rubric && (
+              <div className="bg-surface border border-border rounded-xl p-4 space-y-3">
+                <div>
+                  <div className="text-[10px] font-semibold uppercase tracking-wider text-text-dim">
+                    Rúbrica — 5 ejes
+                  </div>
+                  <div className="text-[11px] text-text-dim mt-0.5">
+                    Cada eje evalúa algo distinto. Tu PIS es la suma ponderada de los 5.
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  {PIS_AXES.map((axis) => {
+                    // Defensive fallback if the rubric blob is partial/corrupt
+                    const axisScore = sr.rubric[axis.id] ?? { score: 0, reasoning: "" };
+                    const ratio = Math.max(0, Math.min(1, axisScore.score / axis.max));
+                    const barColor =
+                      ratio >= 0.7
+                        ? "bg-positive"
+                        : ratio >= 0.4
+                          ? "bg-neutral-sent"
+                          : "bg-negative";
+                    return (
+                      <div key={axis.id} className="border-t border-border/50 pt-2.5 first:border-t-0 first:pt-0">
+                        <div className="flex items-baseline justify-between gap-2 mb-1">
+                          <div className="min-w-0 flex-1">
+                            <div className="text-xs font-semibold text-text">
+                              {axis.label}
+                            </div>
+                            <div className="text-[11px] text-text-dim leading-snug mt-0.5">
+                              {axis.question}
+                            </div>
+                          </div>
+                          <div className="shrink-0 text-xs font-bold tabular-nums text-text">
+                            {axisScore.score}
+                            <span className="text-[10px] font-normal text-text-dim">
+                              /{axis.max}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="h-1 rounded-full bg-surface-3 overflow-hidden mb-1.5">
+                          <div
+                            className={`h-full ${barColor} transition-all`}
+                            style={{ width: `${ratio * 100}%` }}
+                          />
+                        </div>
+                        {axisScore.reasoning && (
+                          <p className="text-[11px] text-text-muted leading-relaxed">
+                            {axisScore.reasoning}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Hypothesis quality — prominent educational card */}
+            {sr.hypothesis_quality && (
+              <div className="bg-accent/5 border border-accent/20 rounded-xl p-4">
+                <div className="flex items-start justify-between gap-3 mb-2">
+                  <div className="min-w-0 flex-1">
+                    <div className="text-[10px] font-semibold uppercase tracking-wider text-accent mb-1">
+                      Calidad de tu Hipótesis · Feedback educativo
+                    </div>
+                    <div className="text-[11px] text-text-dim leading-snug">
+                      Este puntaje <strong>NO afecta tu PIS</strong>. Es una guía para escribir hipótesis más sólidas la próxima vez — testeables, específicas, con lógica causal clara y evidencia.
+                    </div>
+                  </div>
+                  <div className="shrink-0 text-3xl font-bold tabular-nums text-accent">
+                    {sr.hypothesis_quality.score}
+                    <span className="text-sm font-normal opacity-60">/100</span>
+                  </div>
+                </div>
+                {sr.hypothesis_quality.feedback && (
+                  <p className="text-sm text-text leading-relaxed mt-2 pt-2 border-t border-accent/20">
+                    {sr.hypothesis_quality.feedback}
+                  </p>
+                )}
+              </div>
+            )}
 
             {/* KPI impacts */}
             {sr.kpi_impact && sr.kpi_impact.length > 0 && (
@@ -389,33 +462,25 @@ export default function PublicInitiativeForm() {
             tooltip="Selecciona uno o más productos de myHotel que se verían afectados por esta iniciativa. Si afecta a varios, selecciona todos los relevantes."
             required
           />
-          <div className="space-y-2">
-            <div className="flex flex-wrap gap-2">
-              {PIS_PRODUCTS.map((p) => {
-                const selected = products.includes(p);
-                return (
-                  <button
-                    key={p}
-                    type="button"
-                    onClick={() => toggleProduct(p)}
-                    className={`group relative px-3 py-2 rounded-lg text-xs font-medium border transition-all ${
-                      selected
-                        ? "bg-accent/15 border-accent/40 text-accent-light shadow-sm"
-                        : "bg-surface border-border text-text-muted hover:border-border-light hover:bg-surface-2"
-                    }`}
-                  >
-                    <span className="font-semibold">{p}</span>
-                    <span
-                      className={`block text-[10px] font-normal mt-0.5 leading-tight ${
-                        selected ? "text-accent/70" : "text-text-dim"
-                      }`}
-                    >
-                      {PRODUCT_DESCRIPTIONS[p]}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
+          <div className="flex flex-wrap gap-1.5">
+            {PIS_PRODUCTS.map((p) => {
+              const selected = products.includes(p);
+              return (
+                <button
+                  key={p}
+                  type="button"
+                  onClick={() => toggleProduct(p)}
+                  title={PRODUCT_DESCRIPTIONS[p]}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                    selected
+                      ? "bg-accent/15 border-accent/50 text-accent-light shadow-sm"
+                      : "bg-surface border-border text-text-muted hover:border-accent/30 hover:bg-surface-2"
+                  }`}
+                >
+                  {p}
+                </button>
+              );
+            })}
           </div>
         </div>
 

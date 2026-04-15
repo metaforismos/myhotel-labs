@@ -1,3 +1,5 @@
+import { DEV_CYCLE_DAYS } from "./constants";
+
 export const PIS_PRODUCTS = [
   "PreStay",
   "OnSite",
@@ -19,16 +21,41 @@ export interface KpiImpact {
   explanation: string;
 }
 
+// ---------------------------------------------------------------------------
+// Rubric scoring (5 axes summing to 100)
+// ---------------------------------------------------------------------------
+
+export interface AxisScore {
+  score: number; // 0..max (server-clamped)
+  reasoning: string; // 1-2 sentences
+}
+
+export interface RubricBreakdown {
+  directness: AxisScore;
+  magnitude: AxisScore;
+  evidence: AxisScore;
+  strategic: AxisScore;
+  delivery: AxisScore;
+}
+
+// Hypothesis quality is an educational side metric — it does NOT contribute
+// to pis_score. It evaluates the prose of the hypothesis (testability,
+// specificity, evidence, causal logic) and gives the user feedback on how
+// to write better hypotheses.
+export interface HypothesisQuality {
+  score: number;    // 0..100
+  feedback: string; // 2-4 sentences of educational feedback
+}
+
 export interface ScoringResult {
-  pis_score: number;
-  score_criteria: string;
-  hypothesis_score: number;
-  hypothesis_feedback: string;
+  rubric: RubricBreakdown;
+  pis_score: number; // server-computed sum, 0..100
+  hypothesis_quality: HypothesisQuality;
   kpi_impact: KpiImpact[];
   recommendation: string;
 }
 
-export const DEV_CYCLE_DAYS = 30; // 6 weeks = 30 working days
+export { DEV_CYCLE_DAYS };
 
 export interface PisInitiative {
   id: number;
@@ -41,7 +68,6 @@ export interface PisInitiative {
   jornadas: number | null;
   status: InitiativeStatus;
   pis_score: number | null;
-  hypothesis_score: number | null;
   scoring_result: ScoringResult | null;
   model_used: string | null;
   scored_at: string | null;
@@ -49,10 +75,9 @@ export interface PisInitiative {
   updated_at: string;
 }
 
-export type PisInitiativeSummary = Omit<
-  PisInitiative,
-  "scoring_result" | "description" | "hypothesis"
->;
+// Summary shape used by the list & matrix views. Includes scoring_result so
+// the matrix view can render per-axis cells without an extra fetch per row.
+export type PisInitiativeSummary = Omit<PisInitiative, "description" | "hypothesis">;
 
 export function effortPercent(jornadas: number | null): number | null {
   if (jornadas === null || jornadas === undefined) return null;

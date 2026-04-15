@@ -4,15 +4,18 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ScoreBadge } from "./ScoreBadge";
 import { ProductTags } from "./ProductTags";
+import { InitiativeMatrix } from "./InitiativeMatrix";
 import { effortPercent } from "@/lib/pis/types";
 import type { PisInitiativeSummary } from "@/lib/pis/types";
 
 type StatusFilter = "active" | "pre-evaluacion" | "scored" | "draft" | "archived";
+type ViewMode = "lista" | "matriz";
 
 export function InitiativeList() {
   const [initiatives, setInitiatives] = useState<PisInitiativeSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<StatusFilter>("active");
+  const [view, setView] = useState<ViewMode>("lista");
 
   useEffect(() => {
     fetchInitiatives();
@@ -43,7 +46,7 @@ export function InitiativeList() {
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-4 flex-wrap">
         <div className="flex gap-1">
           {filters.map((f) => (
             <button
@@ -59,12 +62,29 @@ export function InitiativeList() {
             </button>
           ))}
         </div>
-        <Link
-          href="/pis/new"
-          className="px-3 py-1.5 bg-accent text-white text-xs font-medium rounded-md hover:bg-accent-light transition-colors"
-        >
-          + Nueva iniciativa
-        </Link>
+        <div className="flex items-center gap-2">
+          <div className="flex gap-0.5 p-0.5 bg-surface-2 rounded-md">
+            {(["lista", "matriz"] as const).map((v) => (
+              <button
+                key={v}
+                onClick={() => setView(v)}
+                className={`px-2.5 py-1 text-xs font-medium rounded transition-colors capitalize ${
+                  view === v
+                    ? "bg-surface text-text shadow-sm"
+                    : "text-text-dim hover:text-text-muted"
+                }`}
+              >
+                {v}
+              </button>
+            ))}
+          </div>
+          <Link
+            href="/pis/new"
+            className="px-3 py-1.5 bg-accent text-white text-xs font-medium rounded-md hover:bg-accent-light transition-colors"
+          >
+            + Nueva iniciativa
+          </Link>
+        </div>
       </div>
 
       {/* Table */}
@@ -81,6 +101,8 @@ export function InitiativeList() {
             Crear una
           </Link>
         </div>
+      ) : view === "matriz" ? (
+        <InitiativeMatrix initiatives={initiatives} />
       ) : (
         <div className="overflow-hidden rounded-lg border border-border">
           <table className="w-full text-sm">
@@ -94,9 +116,6 @@ export function InitiativeList() {
                 </th>
                 <th className="px-3 py-2.5 text-left text-[10px] font-semibold uppercase tracking-wider text-text-dim">
                   Productos
-                </th>
-                <th className="px-3 py-2.5 text-center text-[10px] font-semibold uppercase tracking-wider text-text-dim w-20">
-                  Hipótesis
                 </th>
                 <th className="px-3 py-2.5 text-left text-[10px] font-semibold uppercase tracking-wider text-text-dim w-24">
                   Célula
@@ -133,9 +152,6 @@ export function InitiativeList() {
                   </td>
                   <td className="px-3 py-2.5">
                     <ProductTags products={init.products} />
-                  </td>
-                  <td className="px-3 py-2.5 text-center">
-                    <ScoreBadge score={init.hypothesis_score} size="sm" />
                   </td>
                   <td className="px-3 py-2.5 text-text-muted text-xs">
                     {init.celula || "—"}
