@@ -54,6 +54,17 @@ const sections: NavSection[] = [
       { href: "/pis", label: "Initiatives" },
     ],
   },
+  {
+    label: "Tracker",
+    items: [
+      { href: "/tracker", label: "Overview" },
+      { href: "/tracker/search", label: "Search" },
+      { href: "/tracker/bulk", label: "Bulk" },
+      { href: "/tracker/browse", label: "Browse" },
+      { href: "/tracker/discovery", label: "Discovery" },
+      { href: "/tracker/prospecting", label: "Prospecting" },
+    ],
+  },
 ];
 
 // Context so layout can read collapsed state
