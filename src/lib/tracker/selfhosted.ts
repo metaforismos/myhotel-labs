@@ -3,16 +3,24 @@
 // accionable para Sales: estos hoteles son candidatos claros a migrar
 // a un IBE moderno.
 
+import psl from "psl";
 import type { Detection, RawResource, SelfHostedSignal } from "./types";
 
 const BOOKING_KEYWORDS =
   /\b(reservas?|reservar|reservation|reservations|booking|book|hospedaje|hospedagem|checkout)\b/i;
 
+// Antes comparábamos hostname exacto, pero muchos hoteles ponen el
+// booking en un subdominio propio (reservas.hotel.com, book.hotel.com).
+// Comparamos el dominio registrable para que esos sitios también
+// disparen como "self-hosted booking".
 function sameHost(candidate: string, finalUrl: string): boolean {
   try {
     const u = new URL(candidate, finalUrl);
     const b = new URL(finalUrl);
-    return u.hostname === b.hostname;
+    if (u.hostname === b.hostname) return true;
+    const a = psl.get(u.hostname);
+    const c = psl.get(b.hostname);
+    return !!a && a === c;
   } catch {
     return false;
   }

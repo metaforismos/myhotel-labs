@@ -366,7 +366,14 @@ function detectAgencyFromMeta(html: string): AgencyInfo | null {
       name = textOnly.slice(0, 80);
     } else {
       const sld = targetHost.split(".")[0];
-      if (sld && sld.length >= 3) name = sld;
+      if (sld && sld.length >= 3) {
+        // Heurística de capitalización: SLDs cortos (≤5 chars) como
+        // "uaal", "ibm", "agus" suelen ser acrónimos → UPPER. Más
+        // largos → Title Case ("tambourine" → "Tambourine"). No
+        // perfecto pero mucho mejor que mostrar todo lowercase.
+        if (sld.length <= 5) name = sld.toUpperCase();
+        else name = sld.charAt(0).toUpperCase() + sld.slice(1);
+      }
     }
     if (!name) continue;
 
