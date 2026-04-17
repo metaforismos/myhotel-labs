@@ -5,7 +5,8 @@ const pool = new Pool({
   ssl: process.env.DATABASE_URL?.includes("railway.internal")
     ? false
     : { rejectUnauthorized: false },
-  max: 5,
+  max: 10,
+  idleTimeoutMillis: 30_000,
 });
 
 export default pool;
