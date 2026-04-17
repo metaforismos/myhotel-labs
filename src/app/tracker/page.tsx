@@ -1,5 +1,6 @@
 import Link from "next/link";
 import pool from "@/lib/db";
+import { TopVendorsByCategory } from "@/components/tracker/TopVendorsByCategory";
 
 type Totals = { total: number; customers: number; with_stack: number; countries: number };
 
@@ -62,6 +63,8 @@ export default async function TrackerOverviewPage() {
           ))}
         </div>
       </section>
+
+      <TopVendorsByCategory />
 
       <section>
         <h2 className="text-[10px] font-semibold uppercase tracking-[0.15em] text-text-dim mb-2">
