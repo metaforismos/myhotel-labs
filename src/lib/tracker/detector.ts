@@ -1,7 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
+import { detectAgency } from "./agency";
 import { detectChain } from "./chain";
 import { extractResources } from "./resources";
+import { detectSelfHosted } from "./selfhosted";
 import type {
   AnalyzeResult,
   Detection,
@@ -236,6 +238,58 @@ export function detect(
   });
 
   const chain = detectChain({ html, anchors });
+  const agency = detectAgency(html, baseHost);
+  const { self_hosted_booking, self_hosted_cms } = detectSelfHosted({
+    html,
+    finalUrl,
+    form_actions,
+    anchors,
+    detections,
+    resources,
+  });
+
+  // Emit synthetic detections for self-hosted signals so they flow through
+  // the persistence pipeline (tracker_hotel_stack) and synthesizeStack.
+  if (self_hosted_booking) {
+    detections.push({
+      rule_id: "self_hosted_booking",
+      vendor: self_hosted_booking.label,
+      product:
+        self_hosted_booking.kind === "form"
+          ? "Form-based booking"
+          : "Internal booking page",
+      category: "booking_engine",
+      confidence: 0.7,
+      detected_via: "self_hosted",
+      evidence: [
+        {
+          signature_type:
+            self_hosted_booking.kind === "form"
+              ? "form_action"
+              : "internal_anchor",
+          pattern: "self_hosted_booking",
+          matched: self_hosted_booking.evidence,
+        },
+      ],
+    });
+  }
+  if (self_hosted_cms) {
+    detections.push({
+      rule_id: "self_hosted_cms",
+      vendor: self_hosted_cms.label,
+      product: "Handcoded / self-hosted site",
+      category: "cms",
+      confidence: 0.6,
+      detected_via: "self_hosted",
+      evidence: [
+        {
+          signature_type: "url_extension",
+          pattern: "self_hosted_cms",
+          matched: self_hosted_cms.evidence,
+        },
+      ],
+    });
+  }
 
   return {
     final_url: finalUrl,
@@ -248,5 +302,8 @@ export function detect(
     detections,
     resources,
     chain,
+    agency,
+    self_hosted_booking,
+    self_hosted_cms,
   };
 }

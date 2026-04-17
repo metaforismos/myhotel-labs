@@ -148,6 +148,13 @@ export async function POST(
         is_chain: r.chain.is_chain,
         property_count_estimate: r.chain.property_count_estimate,
         chain_signals: r.chain.signals,
+        agency: r.agency
+          ? {
+              name: r.agency.name,
+              url: r.agency.url,
+              confidence: r.agency.confidence,
+            }
+          : null,
         stack,
         ...compact,
       };

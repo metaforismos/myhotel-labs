@@ -10,6 +10,11 @@ type StatsResponse = {
     unknown: number;
     chain_pct: number;
   };
+  agencies?: {
+    agency_name: string;
+    agency_url: string | null;
+    hotels: number;
+  }[];
   roles: {
     role: string;
     hotels_with: number;
@@ -154,6 +159,54 @@ export function TrackerStats() {
           </div>
         </div>
       </section>
+
+      {data.agencies && data.agencies.length > 0 && (
+        <section>
+          <h2 className="text-[10px] font-semibold uppercase tracking-[0.15em] text-text-dim mb-2">
+            Top agencias web (quién construye los sitios)
+          </h2>
+          <div className="border border-border rounded-md bg-surface overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-surface-2 border-b border-border">
+                <tr className="text-left text-[10px] uppercase tracking-wider text-text-dim">
+                  <th className="px-3 py-2">Agencia</th>
+                  <th className="px-3 py-2">URL</th>
+                  <th className="px-3 py-2 text-right">Hoteles</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.agencies.map((a) => (
+                  <tr
+                    key={a.agency_name}
+                    className="border-b border-border last:border-0"
+                  >
+                    <td className="px-3 py-1.5 text-sm font-medium text-text">
+                      {a.agency_name}
+                    </td>
+                    <td className="px-3 py-1.5 text-[11px] text-text-dim truncate max-w-[340px]">
+                      {a.agency_url ? (
+                        <a
+                          href={a.agency_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="hover:text-accent-light underline decoration-dotted"
+                        >
+                          {a.agency_url}
+                        </a>
+                      ) : (
+                        "—"
+                      )}
+                    </td>
+                    <td className="px-3 py-1.5 text-right tabular-nums">
+                      {a.hotels}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
 
       {data.chains && (data.chains.chains + data.chains.independents > 0) && (
         <section>

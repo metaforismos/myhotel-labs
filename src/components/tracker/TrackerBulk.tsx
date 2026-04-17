@@ -41,6 +41,11 @@ type Item = {
     is_chain?: boolean;
     property_count_estimate?: number | null;
     chain_signals?: string[];
+    agency?: {
+      name: string;
+      url: string | null;
+      confidence: number;
+    } | null;
     categories?: string[];
     booking_engine?: string | null;
     cms?: string | null;
@@ -524,6 +529,7 @@ export function TrackerBulk() {
                   <th className="px-3 py-2">Cadena</th>
                   <th className="px-3 py-2">Booking</th>
                   <th className="px-3 py-2">CMS</th>
+                  <th className="px-3 py-2">Agencia web</th>
                   <th className="px-3 py-2">Otras capas</th>
                   <th className="px-3 py-2 text-right">Recursos</th>
                   <th className="px-3 py-2">Detalles</th>
@@ -556,6 +562,9 @@ export function TrackerBulk() {
                     </td>
                     <td className="px-3 py-1.5">
                       <StackCellView cell={it.result_summary?.stack?.cms ?? null} />
+                    </td>
+                    <td className="px-3 py-1.5">
+                      <AgencyCell agency={it.result_summary?.agency ?? null} />
                     </td>
                     <td className="px-3 py-1.5">
                       <CategoryPills stack={it.result_summary?.stack} exclude={["booking_engine", "cms"]} />
@@ -661,6 +670,33 @@ const CATEGORY_LABEL: Record<string, string> = {
   analytics: "Analytics",
   consent: "Consent",
 };
+
+function AgencyCell({
+  agency,
+}: {
+  agency: { name: string; url: string | null; confidence: number } | null;
+}) {
+  if (!agency) return <span className="text-text-dim text-xs">—</span>;
+  return (
+    <div>
+      {agency.url ? (
+        <a
+          href={agency.url}
+          target="_blank"
+          rel="noreferrer"
+          className="text-xs font-medium text-text hover:text-accent-light underline decoration-dotted"
+        >
+          {agency.name}
+        </a>
+      ) : (
+        <span className="text-xs font-medium text-text">{agency.name}</span>
+      )}
+      <div className="text-[10px] text-text-dim mt-0.5">
+        conf {(agency.confidence * 100).toFixed(0)}%
+      </div>
+    </div>
+  );
+}
 
 function StackCellView({ cell }: { cell: StackCell | null }) {
   if (!cell || (!cell.vendor && !cell.domain)) {

@@ -214,6 +214,29 @@ async function persistAnalysis(
       }
     }
 
+    if (result.agency) {
+      await client.query(
+        `INSERT INTO tracker_hotel_agency
+           (hotel_id, agency_name, agency_url, evidence, confidence)
+         VALUES ($1, $2, $3, $4::jsonb, $5)
+         ON CONFLICT (hotel_id, agency_name) DO UPDATE SET
+           agency_url = COALESCE(EXCLUDED.agency_url, tracker_hotel_agency.agency_url),
+           evidence = EXCLUDED.evidence,
+           confidence = GREATEST(EXCLUDED.confidence, tracker_hotel_agency.confidence)`,
+        [
+          hotel_id,
+          result.agency.name.slice(0, 160),
+          result.agency.url,
+          JSON.stringify({
+            phrase: result.agency.phrase,
+            source_url: result.final_url,
+            detected_at: new Date().toISOString(),
+          }),
+          result.agency.confidence,
+        ]
+      );
+    }
+
     await client.query(
       `INSERT INTO tracker_hotel_events (hotel_id, event_type, payload)
        VALUES ($1, 'analyze', $2::jsonb)`,

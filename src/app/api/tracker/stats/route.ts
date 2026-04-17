@@ -107,6 +107,21 @@ export async function GET() {
     const hotelsTotal = hotels.rows[0].total;
     const hotelsAnalyzed = analyzed.rows[0].analyzed;
 
+    const agenciesRes = await pool.query<{
+      agency_name: string;
+      agency_url: string | null;
+      hotels: number;
+    }>(
+      `SELECT
+         agency_name,
+         MIN(agency_url) AS agency_url,
+         COUNT(DISTINCT hotel_id)::int AS hotels
+       FROM tracker_hotel_agency
+       GROUP BY agency_name
+       ORDER BY hotels DESC, agency_name
+       LIMIT 20`
+    );
+
     const chainsRes = await pool.query<{
       chains: number;
       independents: number;
@@ -197,6 +212,7 @@ export async function GET() {
         unknown: chainStats.unknown,
         chain_pct: chainKnown > 0 ? chainStats.chains / chainKnown : 0,
       },
+      agencies: agenciesRes.rows,
       roles,
       classification: classification.rows[0],
       penetration,

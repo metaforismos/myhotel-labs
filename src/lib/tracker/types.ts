@@ -36,12 +36,25 @@ export type Detection = {
   product: string;
   category: DetectionCategory;
   confidence: number;
-  detected_via: "rule" | "wappalyzer" | "llm" | "manual";
+  detected_via: "rule" | "wappalyzer" | "llm" | "manual" | "self_hosted";
   evidence: {
-    signature_type: SignatureType;
+    signature_type: SignatureType | "form_action" | "internal_anchor" | "url_extension";
     pattern: string;
     matched: string;
   }[];
+};
+
+export type AgencyInfo = {
+  name: string;
+  url: string | null;
+  phrase: string;
+  confidence: number;
+};
+
+export type SelfHostedSignal = {
+  kind: "form" | "internal_anchor" | "extension";
+  evidence: string;
+  label: string; // "Custom / self-hosted", "Custom (PHP)", etc.
 };
 
 export type ResourceRole =
@@ -96,6 +109,9 @@ export type AnalyzeResult = {
   detections: Detection[];
   resources: RawResource[];
   chain: ChainInfo;
+  agency: AgencyInfo | null;
+  self_hosted_booking: SelfHostedSignal | null;
+  self_hosted_cms: SelfHostedSignal | null;
   // Surfaced structural data
   script_srcs: string[];
   iframe_srcs: string[];
