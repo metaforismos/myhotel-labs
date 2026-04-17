@@ -17,6 +17,7 @@ import {
   processBulkBatch,
   BULK_MAX_BATCH,
 } from "./bulk-run";
+import { isOrchestratorPaused } from "./kv";
 
 const TICK_MS = 2000;
 // Upper bound on concurrent jobs driven per tick. Kept conservative to
@@ -55,6 +56,14 @@ const inFlight = new Set<string>();
 
 async function tick(): Promise<void> {
   try {
+    // Respect the persistent pause flag. If paused, we still stay
+    // "running" so the caller sees we are alive, but we do nothing —
+    // this way unpausing is instant (no need to restart) while zero
+    // items are processed.
+    if (await isOrchestratorPaused()) {
+      state.activeJobs = 0;
+      return;
+    }
     const jobs = await listActiveJobs();
     state.activeJobs = jobs.length;
     if (jobs.length === 0) return;
@@ -93,8 +102,14 @@ async function tick(): Promise<void> {
   }
 }
 
-export function startOrchestrator(): { started: boolean; state: OrchestratorState } {
+export async function startOrchestrator(): Promise<{ started: boolean; state: OrchestratorState }> {
   if (state.running) {
+    return { started: false, state };
+  }
+  // Respect the persistent pause flag on start — skip entirely if paused.
+  // Tick itself also checks, but this avoids setting up a timer we don't
+  // need.
+  if (await isOrchestratorPaused()) {
     return { started: false, state };
   }
   state.running = true;
@@ -146,10 +161,8 @@ if (
   process.env.TRACKER_ORCHESTRATOR_AUTOSTART !== "0"
 ) {
   setTimeout(() => {
-    try {
-      startOrchestrator();
-    } catch (err) {
+    startOrchestrator().catch((err) => {
       console.error("[bulk-orchestrator] autostart failed", err);
-    }
+    });
   }, 500);
 }

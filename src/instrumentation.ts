@@ -13,7 +13,7 @@ export async function register() {
   setTimeout(async () => {
     try {
       const mod = await import("@/lib/tracker/bulk-orchestrator");
-      mod.startOrchestrator();
+      await mod.startOrchestrator();
     } catch (err) {
       console.error("[instrumentation] failed to start orchestrator", err);
     }
