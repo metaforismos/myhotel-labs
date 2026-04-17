@@ -90,11 +90,20 @@ export function TrackerResources() {
     let totalMs = 0;
     let pass = 0;
     const MAX_PASSES = 15; // safety: ≤600 clasificados por click
+
+    // Poll en vivo: cada pasada al LLM tarda ~40-60s, así que mientras
+    // corre refrescamos el contador del catálogo cada 3s para que el
+    // usuario vea bajar "sin clasificar" en tiempo real en vez de
+    // quedarse mirando el mismo número durante un minuto.
+    const livePoll = setInterval(() => {
+      load();
+    }, 3000);
+
     try {
       while (pass < MAX_PASSES) {
         pass++;
         setClassifyMsg(
-          `Clasificando (pasada ${pass})… ${totalSucceeded} ya clasificados`
+          `Procesando pasada ${pass}… llevamos ${totalSucceeded} clasificados en esta sesión (mirá el contador de catálogo arriba para ver el total en vivo)`
         );
         const r = await fetch("/api/tracker/resources/classify", {
           method: "POST",
@@ -119,7 +128,9 @@ export function TrackerResources() {
     } catch (e) {
       setClassifyMsg(e instanceof Error ? e.message : "error");
     } finally {
+      clearInterval(livePoll);
       setClassifying(false);
+      await load();
     }
   }, [load]);
 
