@@ -6,3 +6,8 @@ out/
 .env*.local
 *.tsbuildinfo
 next-env.d.ts
+
+# Local DuckDB caches materialized from public datasets (Foursquare, etc.)
+data/tracker/foursquare/*.db
+data/tracker/foursquare/*.db.wal
+data/tracker/foursquare/*.db-shm
