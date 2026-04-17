@@ -19,10 +19,14 @@ import {
 } from "./bulk-run";
 
 const TICK_MS = 2000;
-// Upper bound on concurrent jobs driven per tick. With CONCURRENCY=3 inside
-// processBulkBatch, MAX_PARALLEL_JOBS=6 means up to 18 analyzeUrl calls in
-// flight at once — matches DB pool (max=10) + LLM rate limits comfortably.
-const MAX_PARALLEL_JOBS = 6;
+// Upper bound on concurrent jobs driven per tick. Kept conservative to
+// stay well under Railway Postgres max_connections=100 even during
+// rolling-deploy overlap (old + new process both connected). With pool
+// max=8 and CONCURRENCY=2 inside processBulkBatch, MAX_PARALLEL_JOBS=3
+// gives peak ~6 in-flight analyze calls + claim transactions, i.e. ~8
+// connections per replica — leaves headroom for UI polling and a second
+// process during deploy.
+const MAX_PARALLEL_JOBS = 3;
 
 type OrchestratorState = {
   running: boolean;

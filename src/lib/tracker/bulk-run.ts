@@ -15,7 +15,11 @@ import { compactStackSummary, synthesizeStack } from "@/lib/tracker/stack";
 
 export const BULK_DEFAULT_BATCH = 5;
 export const BULK_MAX_BATCH = 10;
-export const BULK_CONCURRENCY = 3;
+// Per-batch in-flight analyze calls. Each call holds a pool connection
+// for ~500ms around its DB writes (INSERT into tracker_hotels +
+// tracker_hotel_stack). Combined with MAX_PARALLEL_JOBS=3 this caps
+// concurrent pool usage to ~6 connections at peak (plus UI polling).
+export const BULK_CONCURRENCY = 2;
 
 type ItemRow = {
   id: string;
