@@ -350,6 +350,55 @@ export function TrackerBulk() {
     return () => clearInterval(t);
   }, [activeJobId, jobs, loadJobs]);
 
+  // Orchestrator client-side: cuando estamos en la lista (no en el
+  // detalle de un job), avanza TODOS los batches activos en paralelo.
+  // Evita que batches CREATED queden atascados y que la velocidad
+  // total colapse cuando el user no está viendo el detalle.
+  const globalRunningRef = useRef<Set<string>>(new Set());
+  const jobsRef = useRef<JobRow[]>(jobs);
+  useEffect(() => {
+    jobsRef.current = jobs;
+  }, [jobs]);
+
+  useEffect(() => {
+    if (activeJobId) return;
+    if (!autoRun) return;
+
+    const tick = async () => {
+      const activeIds = jobsRef.current
+        .filter(
+          (j) =>
+            j.pending > 0 ||
+            j.status === "created" ||
+            j.status === "running"
+        )
+        .map((j) => j.id);
+      if (activeIds.length === 0) return;
+      await Promise.all(
+        activeIds.map(async (id) => {
+          if (globalRunningRef.current.has(id)) return;
+          globalRunningRef.current.add(id);
+          try {
+            await fetch(`/api/tracker/bulk/${id}/run`, {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify({ batch_size: 5 }),
+            });
+          } catch {
+            /* ignore, siguiente tick reintenta */
+          } finally {
+            globalRunningRef.current.delete(id);
+          }
+        })
+      );
+      loadJobs();
+    };
+
+    const interval = setInterval(tick, 4000);
+    tick();
+    return () => clearInterval(interval);
+  }, [activeJobId, autoRun, loadJobs]);
+
   useEffect(() => {
     if (!activeJobId) {
       setActiveJob(null);
