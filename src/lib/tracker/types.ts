@@ -79,6 +79,12 @@ export type RawResource = {
   contexts: ResourceContext[];
 };
 
+export type ChainInfo = {
+  is_chain: boolean;
+  property_count_estimate: number | null;
+  signals: string[];
+};
+
 export type AnalyzeResult = {
   url: string;
   final_url: string;
@@ -89,6 +95,7 @@ export type AnalyzeResult = {
   meta_generator: string | null;
   detections: Detection[];
   resources: RawResource[];
+  chain: ChainInfo;
   // Surfaced structural data
   script_srcs: string[];
   iframe_srcs: string[];

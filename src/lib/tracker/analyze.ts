@@ -2,7 +2,7 @@ import type { PoolClient } from "pg";
 import pool from "@/lib/db";
 import { detect } from "./detector";
 import { fetchHtml, normalizeUrl } from "./fetcher";
-import type { AnalyzeResult } from "./types";
+import type { AnalyzeResult, RawResource, ResourceRole } from "./types";
 
 export type AnalyzePrefill = {
   external_id?: string;
@@ -127,21 +127,45 @@ async function persistAnalysis(
     );
 
     // Apply prefill updates (is_customer, canonical_name if new, etc.)
+    const chainPayload = JSON.stringify({
+      signals: result.chain.signals,
+      detected_at: new Date().toISOString(),
+    });
+
     if (created) {
       await client.query(
         `UPDATE tracker_hotels
          SET website_url = COALESCE(website_url, $2),
+             is_chain = $3,
+             property_count_estimate = $4,
+             chain_signals = $5::jsonb,
              last_enriched_at = NOW(),
              updated_at = NOW()
          WHERE id = $1`,
-        [hotel_id, result.final_url]
+        [
+          hotel_id,
+          result.final_url,
+          result.chain.is_chain,
+          result.chain.property_count_estimate,
+          chainPayload,
+        ]
       );
     } else {
       await client.query(
-        `UPDATE tracker_hotels SET last_enriched_at = NOW(), updated_at = NOW() WHERE id = $1`,
-        [hotel_id]
+        `UPDATE tracker_hotels
+         SET is_chain = $2,
+             property_count_estimate = $3,
+             chain_signals = $4::jsonb,
+             last_enriched_at = NOW(),
+             updated_at = NOW()
+         WHERE id = $1`,
+        [
+          hotel_id,
+          result.chain.is_chain,
+          result.chain.property_count_estimate,
+          chainPayload,
+        ]
       );
-      // Propagate is_customer from prefill if provided and differs
       if (typeof options.prefill?.is_customer === "boolean") {
         await client.query(
           `UPDATE tracker_hotels SET is_customer = $2 WHERE id = $1 AND is_customer <> $2`,
@@ -301,6 +325,56 @@ async function persistAnalysis(
   }
 }
 
+/**
+ * Enriquece los recursos extraídos del HTML con vendor_name / vendor_product /
+ * role (override) desde el catálogo global (tracker_resources). Esto permite
+ * que una clasificación LLM previa se refleje automáticamente en nuevos
+ * análisis sin requerir re-match de reglas.
+ */
+async function enrichResourcesWithCatalog(
+  resources: RawResource[]
+): Promise<RawResource[]> {
+  if (resources.length === 0) return resources;
+  const domains = Array.from(
+    new Set(resources.map((r) => r.registrable_domain))
+  );
+  const res = await pool.query<{
+    registrable_domain: string;
+    vendor_name: string | null;
+    vendor_product: string | null;
+    primary_role: string | null;
+    classified_by: string | null;
+  }>(
+    `SELECT registrable_domain, vendor_name, vendor_product, primary_role, classified_by
+     FROM tracker_resources
+     WHERE registrable_domain = ANY($1::text[])`,
+    [domains]
+  );
+  const byDomain = new Map(res.rows.map((r) => [r.registrable_domain, r]));
+  return resources.map((r) => {
+    const cat = byDomain.get(r.registrable_domain);
+    if (!cat) return r;
+    // Si el LLM ya clasificó con rol distinto, confiamos en el catálogo.
+    const role_hint =
+      cat.primary_role && cat.classified_by === "llm"
+        ? (cat.primary_role as ResourceRole)
+        : r.role_hint;
+    return {
+      ...r,
+      role_hint,
+      vendor_name: r.vendor_name || cat.vendor_name || null,
+      vendor_product: r.vendor_product || cat.vendor_product || null,
+      classified_by:
+        r.classified_by ||
+        (cat.classified_by === "rule"
+          ? "rule"
+          : cat.classified_by === null
+            ? null
+            : null),
+    };
+  });
+}
+
 export async function analyzeUrl(
   options: AnalyzeOptions
 ): Promise<AnalyzeOk | AnalyzeErr> {
@@ -329,6 +403,7 @@ export async function analyzeUrl(
   }
 
   const parsed = detect(fetched.html, fetched.final_url);
+  parsed.resources = await enrichResourcesWithCatalog(parsed.resources);
   const result: AnalyzeOk = {
     ok: true,
     url,

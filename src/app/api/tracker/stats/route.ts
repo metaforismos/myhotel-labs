@@ -107,6 +107,19 @@ export async function GET() {
     const hotelsTotal = hotels.rows[0].total;
     const hotelsAnalyzed = analyzed.rows[0].analyzed;
 
+    const chainsRes = await pool.query<{
+      chains: number;
+      independents: number;
+      unknown: number;
+    }>(
+      `SELECT
+         COUNT(*) FILTER (WHERE is_chain = TRUE)::int AS chains,
+         COUNT(*) FILTER (WHERE is_chain = FALSE)::int AS independents,
+         COUNT(*) FILTER (WHERE is_chain IS NULL)::int AS unknown
+       FROM tracker_hotels
+       WHERE id IN (SELECT DISTINCT hotel_id FROM tracker_hotel_resources)`
+    );
+
     // Group topDomains by role
     const topByRole = new Map<
       string,
@@ -170,11 +183,19 @@ export async function GET() {
       },
     ];
 
+    const chainStats = chainsRes.rows[0];
+    const chainKnown = chainStats.chains + chainStats.independents;
     return NextResponse.json({
       hotels: {
         total: hotelsTotal,
         analyzed: hotelsAnalyzed,
         analyzed_pct: hotelsTotal > 0 ? hotelsAnalyzed / hotelsTotal : 0,
+      },
+      chains: {
+        chains: chainStats.chains,
+        independents: chainStats.independents,
+        unknown: chainStats.unknown,
+        chain_pct: chainKnown > 0 ? chainStats.chains / chainKnown : 0,
       },
       roles,
       classification: classification.rows[0],

@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { detectChain } from "./chain";
 import { extractResources } from "./resources";
 import type {
   AnalyzeResult,
@@ -234,6 +235,8 @@ export function detect(
     detections,
   });
 
+  const chain = detectChain({ html, anchors });
+
   return {
     final_url: finalUrl,
     title,
@@ -244,5 +247,6 @@ export function detect(
     outbound_links,
     detections,
     resources,
+    chain,
   };
 }

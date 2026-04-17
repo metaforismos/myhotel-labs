@@ -15,6 +15,14 @@ type JobRow = {
   pending: number;
 };
 
+type StackCell = {
+  vendor: string | null;
+  product: string | null;
+  domain: string | null;
+  source: "rule" | "resource" | null;
+  needs_classification: boolean;
+};
+
 type Item = {
   id: string;
   idx: number;
@@ -30,8 +38,18 @@ type Item = {
     detections_count?: number;
     resources_count?: number;
     insecure_tls?: boolean;
+    is_chain?: boolean;
+    property_count_estimate?: number | null;
+    chain_signals?: string[];
+    categories?: string[];
     booking_engine?: string | null;
     cms?: string | null;
+    pms?: string | null;
+    chat?: string | null;
+    reviews?: string | null;
+    ads?: string | null;
+    analytics?: string | null;
+    stack?: Partial<Record<string, StackCell>>;
   } | null;
   error: string | null;
 };
@@ -187,8 +205,11 @@ export function TrackerBulk() {
   const [label, setLabel] = useState("");
   const [creating, setCreating] = useState(false);
   const [autoRun, setAutoRun] = useState(true);
+  const [autoClassify, setAutoClassify] = useState(true);
+  const [classifyMsg, setClassifyMsg] = useState<string | null>(null);
   const [runErr, setRunErr] = useState<string | null>(null);
   const runningRef = useRef(false);
+  const classifyFiredRef = useRef<string | null>(null);
 
   const loadJobs = useCallback(async () => {
     const r = await fetch("/api/tracker/bulk");
@@ -281,6 +302,36 @@ export function TrackerBulk() {
     }, 600);
     return () => clearTimeout(t);
   }, [autoRun, activeJob, runNextBatch]);
+
+  // Auto-trigger LLM classification once the batch finishes, so unknown
+  // domains discovered during the batch pick up vendor labels.
+  useEffect(() => {
+    if (!autoClassify || !activeJobId || !activeJob) return;
+    if (activeJob.counts.pending + activeJob.counts.running > 0) return;
+    if (activeJob.counts.done === 0) return;
+    if (classifyFiredRef.current === activeJobId) return;
+    classifyFiredRef.current = activeJobId;
+    setClassifyMsg("Clasificando unknowns del catálogo con LLM…");
+    (async () => {
+      try {
+        const r = await fetch("/api/tracker/resources/classify", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ batch: true, min_hotels: 1, limit: 40 }),
+        });
+        const d = await r.json();
+        if (!r.ok) {
+          setClassifyMsg(`Classify error: ${d.error || r.status}`);
+        } else {
+          setClassifyMsg(
+            `LLM: ${d.succeeded} clasificados · ${d.failed} fallas · ${Math.round((d.duration_ms || 0) / 1000)}s`
+          );
+        }
+      } catch (e) {
+        setClassifyMsg(e instanceof Error ? e.message : "classify_failed");
+      }
+    })();
+  }, [autoClassify, activeJobId, activeJob]);
 
   const pctDone = activeJob
     ? Math.min(
@@ -406,6 +457,18 @@ export function TrackerBulk() {
                 />
                 Auto-procesar
               </label>
+              <label
+                className="flex items-center gap-1.5 text-xs text-text-muted"
+                title="Al terminar el batch, clasificar con LLM los dominios unknown del catálogo global."
+              >
+                <input
+                  type="checkbox"
+                  checked={autoClassify}
+                  onChange={(e) => setAutoClassify(e.target.checked)}
+                  className="accent-accent"
+                />
+                Clasificar unknowns al terminar
+              </label>
               <button
                 onClick={() => runNextBatch()}
                 disabled={activeJob.counts.pending === 0}
@@ -421,6 +484,9 @@ export function TrackerBulk() {
               </a>
             </div>
           </div>
+          {classifyMsg && (
+            <div className="text-xs text-text-muted px-1">{classifyMsg}</div>
+          )}
 
           <div className="border border-border rounded-md bg-surface px-4 py-3">
             <div className="flex items-center justify-between text-xs mb-2">
@@ -455,9 +521,10 @@ export function TrackerBulk() {
                   <th className="px-3 py-2 w-10">#</th>
                   <th className="px-3 py-2">URL</th>
                   <th className="px-3 py-2">Estado</th>
+                  <th className="px-3 py-2">Cadena</th>
                   <th className="px-3 py-2">Booking</th>
                   <th className="px-3 py-2">CMS</th>
-                  <th className="px-3 py-2 text-right">Señales</th>
+                  <th className="px-3 py-2">Otras capas</th>
                   <th className="px-3 py-2 text-right">Recursos</th>
                   <th className="px-3 py-2">Detalles</th>
                 </tr>
@@ -466,25 +533,32 @@ export function TrackerBulk() {
                 {activeJob.items.map((it) => (
                   <tr
                     key={it.id}
-                    className="border-b border-border last:border-0"
+                    className="border-b border-border last:border-0 align-top"
                   >
                     <td className="px-3 py-1.5 text-[11px] text-text-dim tabular-nums">
                       {it.idx + 1}
                     </td>
-                    <td className="px-3 py-1.5 font-mono text-[11px] text-text-muted truncate max-w-[280px]">
+                    <td className="px-3 py-1.5 font-mono text-[11px] text-text-muted truncate max-w-[240px]">
                       {it.url}
                     </td>
                     <td className="px-3 py-1.5">
                       <StatusBadge status={it.status} />
                     </td>
-                    <td className="px-3 py-1.5 text-xs text-text-muted">
-                      {it.result_summary?.booking_engine || "—"}
+                    <td className="px-3 py-1.5">
+                      <ChainBadge
+                        is_chain={it.result_summary?.is_chain}
+                        count={it.result_summary?.property_count_estimate}
+                        signals={it.result_summary?.chain_signals}
+                      />
                     </td>
-                    <td className="px-3 py-1.5 text-xs text-text-muted">
-                      {it.result_summary?.cms || "—"}
+                    <td className="px-3 py-1.5">
+                      <StackCellView cell={it.result_summary?.stack?.booking_engine ?? null} />
                     </td>
-                    <td className="px-3 py-1.5 text-right tabular-nums text-text-muted">
-                      {it.result_summary?.detections_count ?? "—"}
+                    <td className="px-3 py-1.5">
+                      <StackCellView cell={it.result_summary?.stack?.cms ?? null} />
+                    </td>
+                    <td className="px-3 py-1.5">
+                      <CategoryPills stack={it.result_summary?.stack} exclude={["booking_engine", "cms"]} />
                     </td>
                     <td className="px-3 py-1.5 text-right tabular-nums text-text-muted">
                       {it.result_summary?.resources_count ?? "—"}
@@ -573,6 +647,128 @@ export function TrackerBulk() {
         </div>
       )}
     </div>
+  );
+}
+
+const CATEGORY_LABEL: Record<string, string> = {
+  booking_engine: "Booking",
+  cms: "CMS",
+  pms: "PMS",
+  channel_mgr: "Channel",
+  chat: "Chat",
+  reviews: "Reviews",
+  ads: "Ads",
+  analytics: "Analytics",
+  consent: "Consent",
+};
+
+function StackCellView({ cell }: { cell: StackCell | null }) {
+  if (!cell || (!cell.vendor && !cell.domain)) {
+    return <span className="text-text-dim text-xs">—</span>;
+  }
+  if (cell.vendor) {
+    return (
+      <div>
+        <div className="text-xs font-medium text-text">{cell.vendor}</div>
+        {cell.product && (
+          <div className="text-[10px] text-text-dim">{cell.product}</div>
+        )}
+        <span
+          className={`inline-block mt-0.5 px-1 py-0 text-[9px] uppercase tracking-wider rounded border ${
+            cell.source === "rule"
+              ? "bg-accent/10 text-accent-light border-accent/30"
+              : "bg-positive-muted text-positive border-positive/30"
+          }`}
+        >
+          {cell.source === "rule" ? "rule" : "obs"}
+        </span>
+      </div>
+    );
+  }
+  return (
+    <div>
+      <div className="text-[11px] font-mono text-text-muted">
+        {cell.domain}
+      </div>
+      <span className="inline-block mt-0.5 px-1 py-0 text-[9px] uppercase tracking-wider bg-neutral-muted text-neutral-sent border border-neutral-sent/30 rounded">
+        sin clasificar
+      </span>
+    </div>
+  );
+}
+
+function CategoryPills({
+  stack,
+  exclude = [],
+}: {
+  stack: Partial<Record<string, StackCell>> | undefined;
+  exclude?: string[];
+}) {
+  if (!stack) return <span className="text-text-dim text-xs">—</span>;
+  const entries = Object.entries(stack).filter(
+    ([k, v]) => !exclude.includes(k) && v && (v.vendor || v.domain)
+  );
+  if (entries.length === 0) {
+    return <span className="text-text-dim text-xs">—</span>;
+  }
+  return (
+    <div className="flex flex-wrap gap-1">
+      {entries.map(([k, v]) => {
+        if (!v) return null;
+        const label = CATEGORY_LABEL[k] || k;
+        const val = v.vendor || v.domain;
+        const pending = v.needs_classification;
+        return (
+          <span
+            key={k}
+            title={`${label}: ${val}${pending ? " (sin clasificar)" : ""}`}
+            className={`px-1.5 py-0 text-[10px] rounded border whitespace-nowrap ${
+              pending
+                ? "bg-surface-2 text-text-dim border-border"
+                : "bg-accent/10 text-accent-light border-accent/30"
+            }`}
+          >
+            <span className="font-semibold">{label}</span>{" "}
+            <span className="opacity-80">· {val}</span>
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
+function ChainBadge({
+  is_chain,
+  count,
+  signals,
+}: {
+  is_chain?: boolean;
+  count?: number | null;
+  signals?: string[];
+}) {
+  if (typeof is_chain !== "boolean") {
+    return <span className="text-text-dim text-xs">—</span>;
+  }
+  const title = signals?.length
+    ? `Señales: ${signals.slice(0, 4).join(" · ")}`
+    : undefined;
+  if (is_chain) {
+    return (
+      <span
+        title={title}
+        className="inline-block px-1.5 py-0.5 text-[10px] uppercase tracking-wider font-semibold bg-accent/10 text-accent-light border border-accent/30 rounded"
+      >
+        Cadena{count ? ` · ${count}` : ""}
+      </span>
+    );
+  }
+  return (
+    <span
+      title={title}
+      className="inline-block px-1.5 py-0.5 text-[10px] uppercase tracking-wider bg-surface-2 text-text-dim border border-border rounded"
+    >
+      Independiente
+    </span>
   );
 }
 

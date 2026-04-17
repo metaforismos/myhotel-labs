@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { analyzeUrl } from "@/lib/tracker/analyze";
+import { compactStackSummary, synthesizeStack } from "@/lib/tracker/stack";
 
 export const maxDuration = 60;
 
@@ -134,6 +135,8 @@ export async function POST(
         return { item_id: item.id, ok: false, error: r.error };
       }
 
+      const stack = synthesizeStack(r.detections, r.resources);
+      const compact = compactStackSummary(stack);
       const summary = {
         final_url: r.final_url,
         status: r.status,
@@ -142,10 +145,11 @@ export async function POST(
         detections_count: r.detections.length,
         resources_count: r.resources.length,
         insecure_tls: r.insecure_tls ?? false,
-        booking_engine:
-          r.detections.find((d) => d.category === "booking_engine")?.vendor ||
-          null,
-        cms: r.detections.find((d) => d.category === "cms")?.vendor || null,
+        is_chain: r.chain.is_chain,
+        property_count_estimate: r.chain.property_count_estimate,
+        chain_signals: r.chain.signals,
+        stack,
+        ...compact,
       };
       await pool.query(
         `UPDATE tracker_bulk_job_items

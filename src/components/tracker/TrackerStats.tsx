@@ -4,6 +4,12 @@ import { useEffect, useState } from "react";
 
 type StatsResponse = {
   hotels: { total: number; analyzed: number; analyzed_pct: number };
+  chains?: {
+    chains: number;
+    independents: number;
+    unknown: number;
+    chain_pct: number;
+  };
   roles: {
     role: string;
     hotels_with: number;
@@ -148,6 +154,42 @@ export function TrackerStats() {
           </div>
         </div>
       </section>
+
+      {data.chains && (data.chains.chains + data.chains.independents > 0) && (
+        <section>
+          <h2 className="text-[10px] font-semibold uppercase tracking-[0.15em] text-text-dim mb-2">
+            Cadenas vs independientes
+          </h2>
+          <div className="border border-border rounded-md bg-surface divide-y divide-border">
+            <div className="px-4 py-2.5 grid grid-cols-[220px,1fr,80px,80px] items-center gap-3">
+              <div className="text-sm text-text">Cadenas hoteleras</div>
+              <Bar value={data.chains.chain_pct} />
+              <div className="text-right text-xs tabular-nums text-text-muted">
+                {data.chains.chains} hoteles
+              </div>
+              <div className="text-right text-sm font-medium tabular-nums text-text">
+                {pctText(data.chains.chain_pct)}
+              </div>
+            </div>
+            <div className="px-4 py-2.5 grid grid-cols-[220px,1fr,80px,80px] items-center gap-3">
+              <div className="text-sm text-text">Independientes</div>
+              <Bar value={1 - data.chains.chain_pct} />
+              <div className="text-right text-xs tabular-nums text-text-muted">
+                {data.chains.independents} hoteles
+              </div>
+              <div className="text-right text-sm font-medium tabular-nums text-text">
+                {pctText(1 - data.chains.chain_pct)}
+              </div>
+            </div>
+            {data.chains.unknown > 0 && (
+              <div className="px-4 py-1.5 text-[11px] text-text-dim">
+                {data.chains.unknown} hoteles analizados antes de Fase 1D.6 (sin
+                dato de cadena); re-analiza para completar.
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       <section>
         <h2 className="text-[10px] font-semibold uppercase tracking-[0.15em] text-text-dim mb-2">

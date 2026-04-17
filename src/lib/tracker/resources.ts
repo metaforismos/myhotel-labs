@@ -128,9 +128,40 @@ export function parseHost(url: string): string | null {
   }
 }
 
+// Heurísticas por subdominio: el nombre del subdomain delata intención.
+// Se aplican sólo a hosts que NO matchearon ningún HOST_ROLE_HEURISTICS,
+// así no pisan clasificaciones más específicas.
+const SUBDOMAIN_PATTERNS: { prefix: RegExp; role: ResourceRole }[] = [
+  {
+    // Subdominios típicos de motores de reserva e IBEs embebidos.
+    prefix:
+      /^(motor|reservas?|reservations?|booking|bookings|book|ibe|checkout|hospedaje|hospedagem|buchen|prenota|reserver)\./,
+    role: "booking_engine",
+  },
+  {
+    prefix: /^(cdn|static|assets|media|files|img|imgs|images|img-cdn)\./,
+    role: "cdn",
+  },
+  {
+    prefix: /^(maps?|mapa)\./,
+    role: "maps",
+  },
+  {
+    prefix: /^(blog|blogs)\./,
+    role: "cms",
+  },
+  {
+    prefix: /^(shop|store|tienda)\./,
+    role: "other",
+  },
+];
+
 function matchHostRole(host: string): ResourceRole | null {
   for (const { match, role } of HOST_ROLE_HEURISTICS) {
     if (match.test(host)) return role;
+  }
+  for (const { prefix, role } of SUBDOMAIN_PATTERNS) {
+    if (prefix.test(host)) return role;
   }
   return null;
 }
@@ -286,14 +317,19 @@ export function extractResources(args: {
     if (!rd) continue;
     const role_hint = inferRoleFromContext(host, contexts, anchorHints);
 
+    // Solo atribuimos vendor del detection al recurso cuando la categoría
+    // del detection coincide con el role_hint inferido. Evita que una
+    // librería Bootstrap/jQuery detectada en un subdomain de motor.*
+    // termine apareciendo como "booking engine: Bootstrap".
     const det = detectionByHost.get(host);
+    const vendor_compatible = det && det.category === role_hint;
     out.push({
       host,
       registrable_domain: rd,
       role_hint,
-      vendor_name: det?.vendor ?? null,
-      vendor_product: det?.product ?? null,
-      classified_by: det ? "rule" : null,
+      vendor_name: vendor_compatible ? det!.vendor : null,
+      vendor_product: vendor_compatible ? det!.product : null,
+      classified_by: vendor_compatible ? "rule" : null,
       contexts,
     });
   }
