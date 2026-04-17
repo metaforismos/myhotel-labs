@@ -307,11 +307,22 @@ const H = {
   fuente: idx("fuente_geodata"),
 };
 
+// Columnas url_1..url_10 para pickOfficialUrl.
+const URL_IDX = [];
+for (let i = 1; i <= 10; i++) URL_IDX.push(idx(`url_${i}`));
+
 let total = 0;
 let inserted = 0;
 let updated = 0;
 let skipped = 0;
+let urlsFound = 0;
+let canonicalCollisions = 0;
 const countryCount = new Map();
+// First-wins dedup en memoria: la primera fila con un canonical se
+// queda con él; las demás quedan con website_url pero
+// website_url_canonical=null. Típico caso: cadenas del CSV apuntan al
+// mismo dominio raíz (marriott.com × 26 hoteles).
+const seenCanonicals = new Set();
 
 const BATCH = 500;
 let batch = [];
@@ -330,12 +341,16 @@ async function flushBatch() {
         city,
         lat,
         lng,
+        website_url,
+        website_url_canonical,
         raw,
       } = row;
 
       const res = await client.query(
-        `INSERT INTO tracker_hotels (canonical_name, slug, country, region, city, lat, lng, external_id)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        `INSERT INTO tracker_hotels
+           (canonical_name, slug, country, region, city, lat, lng,
+            external_id, website_url, website_url_canonical)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
          ON CONFLICT (external_id) WHERE external_id IS NOT NULL DO UPDATE SET
            canonical_name = EXCLUDED.canonical_name,
            slug = EXCLUDED.slug,
@@ -344,9 +359,22 @@ async function flushBatch() {
            city = COALESCE(EXCLUDED.city, tracker_hotels.city),
            lat = COALESCE(EXCLUDED.lat, tracker_hotels.lat),
            lng = COALESCE(EXCLUDED.lng, tracker_hotels.lng),
+           website_url = COALESCE(tracker_hotels.website_url, EXCLUDED.website_url),
+           website_url_canonical = COALESCE(tracker_hotels.website_url_canonical, EXCLUDED.website_url_canonical),
            updated_at = NOW()
          RETURNING id, (xmax = 0) AS inserted`,
-        [canonical_name, slug, country, region, city, lat, lng, external_id]
+        [
+          canonical_name,
+          slug,
+          country,
+          region,
+          city,
+          lat,
+          lng,
+          external_id,
+          website_url,
+          website_url_canonical,
+        ]
       );
       const { id, inserted: wasInserted } = res.rows[0];
       if (wasInserted) inserted++;
@@ -373,6 +401,16 @@ await client.query(
      ON tracker_hotels (external_id)
    WHERE external_id IS NOT NULL`
 );
+
+// Precarga canonicals ya presentes en DB (de corridas previas)
+// para no colisionar durante el import in-memory dedup.
+{
+  const existing = await client.query(
+    "SELECT website_url_canonical FROM tracker_hotels WHERE website_url_canonical IS NOT NULL"
+  );
+  for (const row of existing.rows) seenCanonicals.add(row.website_url_canonical);
+  console.log(`[seed] precarga canonicals existentes: ${seenCanonicals.size}`);
+}
 
 for (const line of rowIter) {
   if (total >= limit) break;
@@ -402,6 +440,20 @@ for (const line of rowIter) {
     countryCount.set(key, n + 1);
   }
 
+  // Extrae la primera URL que NO sea OTA → website_url oficial candidato.
+  const website_url = pickOfficialUrl(fields, URL_IDX);
+  let website_url_canonical = website_url ? canonicalizeUrl(website_url) : null;
+  if (website_url) urlsFound++;
+  // Dedup in-memory: primera fila con ese canonical se lo queda.
+  if (website_url_canonical) {
+    if (seenCanonicals.has(website_url_canonical)) {
+      website_url_canonical = null;
+      canonicalCollisions++;
+    } else {
+      seenCanonicals.add(website_url_canonical);
+    }
+  }
+
   const raw = {
     id_hotel: external_id,
     nombre: canonical_name,
@@ -411,6 +463,7 @@ for (const line of rowIter) {
     direccion: fields[H.direccion]?.trim() || null,
     geosource: fields[H.geosource]?.trim() || null,
     fuente: fields[H.fuente]?.trim() || null,
+    website_url,
   };
 
   batch.push({
@@ -422,6 +475,8 @@ for (const line of rowIter) {
     city,
     lat,
     lng,
+    website_url,
+    website_url_canonical,
     raw,
   });
 
@@ -437,7 +492,7 @@ await flushBatch();
 await client.end();
 
 console.log(
-  `[seed] total=${total} inserted=${inserted} updated=${updated} skipped=${skipped}`
+  `[seed] total=${total} inserted=${inserted} updated=${updated} skipped=${skipped} urls_found=${urlsFound} canonical_collisions=${canonicalCollisions}`
 );
 if (samplePerCountry !== null) {
   console.log("[seed] por país:");

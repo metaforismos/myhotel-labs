@@ -20,44 +20,144 @@ const AGENCY_PHRASES: RegExp[] = [
   /realiza(?:do|zione)\s+d[ae]\s+([\s\S]{0,400}?)(?=<\/(?:p|div|footer|span|li|small|section)>|$)/i,
 ];
 
-const EXCLUDED_NAMES = new Set([
-  "html",
+// Plataformas / CMS / booking engines / themes. "Powered by X" donde X
+// matchea estos NO es una agencia — es un reconocimiento de plataforma.
+// Se puede usar como signal extra para la categoría respectiva, pero no
+// contamina el catálogo de agencias.
+const PLATFORM_BLACKLIST = new Set([
+  // CMS / site builders
   "wordpress",
-  "shopify",
+  "wordpress.org",
+  "wordpress.com",
   "wix",
+  "wix.com",
   "squarespace",
   "webflow",
+  "shopify",
   "drupal",
   "joomla",
+  "ghost",
+  "contentful",
+  "strapi",
+  // WordPress themes / plugins (aparecen como "powered by" en muchos sitios)
+  "elegant themes",
+  "divi",
+  "elementor",
+  "wpbakery",
+  "oxygen",
+  "astra",
+  "ocean wp",
+  "oceanwp",
+  "generatepress",
+  "ultimatelysocial",
+  "jetpack",
+  "yoast",
+  "woocommerce",
+  "contact form 7",
+  "wp rocket",
+  "wpforms",
+  // Hotel-specific platforms (booking engines, PMS, channel mgr)
+  "cloudbeds",
+  "siteminder",
+  "mews",
+  "asksuite",
+  "synxis",
+  "sabre",
+  "opera",
+  "oracle hospitality",
+  "little hotelier",
+  "guestline",
+  "omnibees",
+  "hotetec",
+  "availpro",
+  "d-edge",
+  "profitroom",
+  "travelclick",
+  "ihotelier",
+  "roomcloud",
+  "vertical booking",
+  "pegasus",
+  "tambourine",
+  "umi",
+  "bookingcore",
+  "fnsbooking",
+  // Generic noise
+  "html",
+  "html5",
+  "css3",
+  "bootstrap",
+  "jquery",
+  "fontawesome",
+  "google",
+  "facebook",
+]);
+
+// Stop words y fragmentos que no son nombres de agencia.
+const STOPWORD_NAMES = new Set([
+  "por",
+  "de",
+  "the",
+  "a",
+  "an",
+  "la",
+  "el",
+  "los",
+  "las",
+  "and",
+  "y",
+  "para",
+  "with",
+  "con",
+  "our",
+  "we",
+  "us",
+  "team",
+  "staff",
+  "services on your own",
+  "services",
+  "all rights reserved",
+  "copyright",
 ]);
 
 function stripTags(s: string): string {
+  // Strip tags completos (incluyendo multilínea con atributos tipo
+  // onerror="handleImageLoadError(this)" height="32").
   return s
-    .replace(/<[^>]+>/g, " ")
+    .replace(/<\/?[a-z][\s\S]*?>/gi, " ") // cualquier tag abierto/cerrado/self-closed
     .replace(/&nbsp;/gi, " ")
     .replace(/&amp;/gi, "&")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#\d+;/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 }
+
+const EMAIL_RE = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
 
 function extractFirstAnchor(
   html: string,
   baseHost: string
 ): { name: string | null; url: string | null } {
-  const m = html.match(/<a\b[^>]*\bhref=["']([^"']+)["'][^>]*>([\s\S]{0,200}?)<\/a>/i);
+  const m = html.match(
+    /<a\b[^>]*\bhref=["']([^"']+)["'][^>]*>([\s\S]{0,200}?)<\/a>/i
+  );
   if (!m) return { name: null, url: null };
   const href = m[1];
   const text = stripTags(m[2]);
+  // Mailto links: el target no es una agencia web, es un email del
+  // contacto/staff del propio hotel. Descartar.
+  if (/^mailto:/i.test(href)) return { name: null, url: null };
+  if (/^tel:|^javascript:/i.test(href)) return { name: null, url: null };
   try {
     const u = new URL(href, `https://${baseHost || "example.com"}`);
     // Excluimos anchors del propio hotel (links a secciones internas).
     if (u.hostname === baseHost) return { name: text || null, url: null };
-    // Excluimos redes sociales y plataformas genéricas que se cuelan como
-    // "powered by" (ej. "powered by Shopify" donde el link va a shopify.com
-    // — no es la agencia, es la plataforma).
-    if (/facebook|instagram|twitter|x\.com|linkedin|tiktok|youtube|pinterest/i.test(
-      u.hostname
-    )) {
+    // Excluimos redes sociales — "powered by" que linkea a FB o IG es ruido.
+    if (
+      /facebook|instagram|twitter|x\.com|linkedin|tiktok|youtube|pinterest/i.test(
+        u.hostname
+      )
+    ) {
       return { name: text || null, url: null };
     }
     return {
@@ -69,45 +169,89 @@ function extractFirstAnchor(
   }
 }
 
+function cleanCandidateName(raw: string): string | null {
+  let name = stripTags(raw)
+    .replace(/^[\s\-–—:.·•|]+/, "")
+    .replace(/[\s\-–—:.·•|]+$/, "")
+    .split(/[\.\|·•]/)[0]
+    .trim();
+
+  // Cortar en coma si queda texto accesorio después.
+  if (name.includes(",")) name = name.split(",")[0].trim();
+
+  if (!name) return null;
+  // Rechazar emails, URLs crudas, y fragmentos de atributos HTML.
+  if (EMAIL_RE.test(name)) return null;
+  if (/^https?:\/\//i.test(name)) return null;
+  if (/["'=<>]/.test(name)) return null;
+  if (/\bonerror=|onclick=|onload=/i.test(name)) return null;
+
+  // Longitud + estructura: al menos una palabra de ≥3 chars.
+  const words = name.split(/\s+/).filter(Boolean);
+  if (words.length === 0) return null;
+  const hasSubstantiveWord = words.some((w) => w.length >= 3);
+  if (!hasSubstantiveWord) return null;
+
+  // Rechazar stop words y frases genéricas.
+  if (STOPWORD_NAMES.has(name.toLowerCase())) return null;
+  const firstWord = words[0].toLowerCase();
+  if (words.length === 1 && STOPWORD_NAMES.has(firstWord)) return null;
+
+  return name.slice(0, 80);
+}
+
+function isPlatform(name: string): boolean {
+  const n = name.toLowerCase().trim();
+  if (PLATFORM_BLACKLIST.has(n)) return true;
+  // Match por prefijo cuando el nombre trae sufijos tipo "WordPress.com"
+  for (const p of PLATFORM_BLACKLIST) {
+    if (n === p) return true;
+    if (n.startsWith(p + " ") || n.startsWith(p + ".")) return true;
+  }
+  return false;
+}
+
 export function detectAgency(
   html: string,
   baseHost: string
 ): AgencyInfo | null {
-  // Sólo miramos la mitad inferior del HTML — las menciones de agencia
-  // suelen estar en el footer. Acota el costo y reduce falsos positivos
-  // (ej. "designed by our team" en el body).
-  const lowerHalf = html.slice(Math.floor(html.length * 0.5));
+  // Sólo miramos el tercio inferior del HTML — las menciones de agencia
+  // viven en el footer. Acota el costo y reduce falsos positivos
+  // (ej. "designed by our team" en el body, "services on your own" que
+  // aparecía al capturar frases de contenido).
+  const lowerSlice = html.slice(Math.floor(html.length * 0.66));
   const candidates: {
     phrase: string;
     name: string;
     url: string | null;
     confidence: number;
-    source: string;
   }[] = [];
 
   for (const rx of AGENCY_PHRASES) {
-    const match = rx.exec(lowerHalf);
+    const match = rx.exec(lowerSlice);
     if (!match) continue;
 
     const raw = match[1] || "";
     const { name: anchorText, url } = extractFirstAnchor(raw, baseHost);
 
-    const fallbackText = stripTags(raw)
-      .replace(/^[\s\-–—:.]+/, "")
-      .split(/[\.\|,;]/)[0]
-      .trim();
-    const name = (anchorText || fallbackText).slice(0, 80);
+    // Candidato "desde anchor" siempre que el texto limpie OK. Si no hay
+    // anchor, intentamos con el texto plano (pero con confianza menor).
+    const anchorCleaned = anchorText ? cleanCandidateName(anchorText) : null;
+    const rawCleaned = cleanCandidateName(raw);
+    const name = anchorCleaned || rawCleaned;
 
-    if (!name || name.length < 3) continue;
-    if (EXCLUDED_NAMES.has(name.toLowerCase())) continue;
-    if (/^(the|a|la|el)\s/i.test(name) && !url) continue;
+    if (!name) continue;
+    // Filtro clave: "powered by [Platform]" es reconocimiento de plataforma,
+    // no agencia. Descartar.
+    if (isPlatform(name)) continue;
+    // Sin URL + nombre de una sola palabra corta → muy probable ruido.
+    if (!url && name.split(/\s+/).length === 1 && name.length < 5) continue;
 
     candidates.push({
       phrase: match[0].slice(0, 120).replace(/\s+/g, " "),
       name,
       url,
       confidence: url ? 0.9 : 0.6,
-      source: rx.source.split("\\s+")[0],
     });
   }
 
