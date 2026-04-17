@@ -2,6 +2,11 @@ import Link from "next/link";
 import pool from "@/lib/db";
 import { TopVendorsByCategory } from "@/components/tracker/TopVendorsByCategory";
 
+// KPIs mueven con cada drain / cleanup; forzamos render fresco en cada
+// request para que los operadores vean el estado actual de la base.
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 type Totals = { total: number; customers: number; with_stack: number; countries: number };
 
 async function getTotals(): Promise<Totals> {
