@@ -9,20 +9,35 @@ import type { Detection, RawResource, SelfHostedSignal } from "./types";
 const BOOKING_KEYWORDS =
   /\b(reservas?|reservar|reservation|reservations|booking|book|hospedaje|hospedagem|checkout)\b/i;
 
-// Antes comparábamos hostname exacto, pero muchos hoteles ponen el
-// booking en un subdominio propio (reservas.hotel.com, book.hotel.com).
-// Comparamos el dominio registrable para que esos sitios también
-// disparen como "self-hosted booking".
-function sameHost(candidate: string, finalUrl: string): boolean {
+// Endpoints que SÍ huelen a motor de reservas (path pegado a acción).
+// Los exigimos para aceptar un anchor como "self-hosted booking" y
+// evitar falsos positivos tipo /contact, /how-to-book, /manage-reservation,
+// /privacy-policy — páginas informativas que matchean el keyword laxo.
+const BOOKING_ENDPOINT =
+  /\/(?:book(?:ing)?|reserv(?:a|ar|as|e|ation|ations)?|checkout|engine|hotel[-_]booking|make[-_]reservation|new[-_]reservation)\/?(?:\?|$)|\.(?:php|aspx|jsp|cfm)(?:\?|$)/i;
+
+// Rechazamos explícitamente estas paths aunque tengan keyword — son
+// páginas informativas / administrativas, no el motor de reservas.
+const BOOKING_NEGATIVE =
+  /\/(?:how[-_]?to[-_]?book|manage[-_]?(?:my[-_]?)?reservation|find[-_]?reservation|reservation[-_]?policy|revisar[-_]?reserva|contrato[-_]?(?:de[-_]?)?hospeda|contact|contacto|terms|privacy|about|sobre)\b/i;
+
+// Compara hostname exacto (preferido, alta confianza) o registrable
+// domain (mismo hotel en otro subdominio, confianza menor — puede ser
+// booking white-label de Omnibees/Cloudbeds detrás de reservas.X).
+function hostRelation(
+  candidate: string,
+  finalUrl: string
+): "same_host" | "same_registrable" | null {
   try {
     const u = new URL(candidate, finalUrl);
     const b = new URL(finalUrl);
-    if (u.hostname === b.hostname) return true;
+    if (u.hostname === b.hostname) return "same_host";
     const a = psl.get(u.hostname);
     const c = psl.get(b.hostname);
-    return !!a && a === c;
+    if (!!a && a === c) return "same_registrable";
+    return null;
   } catch {
-    return false;
+    return null;
   }
 }
 
@@ -48,10 +63,13 @@ export function detectSelfHosted(args: {
 
   if (!hasBooking3p) {
     // Paso 1: <form action="reservas.php" ...> (o similar) internal.
+    // Requiere endpoint específico de booking — no cualquier URL que
+    // mencione la palabra "reserva".
     for (const action of args.form_actions) {
       if (!action) continue;
-      if (!BOOKING_KEYWORDS.test(action)) continue;
-      if (!sameHost(action, args.finalUrl)) continue;
+      if (!BOOKING_ENDPOINT.test(action)) continue;
+      const rel = hostRelation(action, args.finalUrl);
+      if (rel !== "same_host") continue;
       self_hosted_booking = {
         kind: "form",
         evidence: action.slice(0, 200),
@@ -59,24 +77,38 @@ export function detectSelfHosted(args: {
       };
       break;
     }
-    // Paso 2: anchor CTA con texto "Reservar/Book" apuntando a URL interna.
+
+    // Paso 2: anchor CTA. Nueva heurística mucho más estricta:
+    //  - href DEBE matchear BOOKING_ENDPOINT (paths tipo /book, /reserva,
+    //    .php, .aspx, /checkout) — rechaza /contact, /about, /how-to-book,
+    //    /manage-reservation, /privacy-policy y similares que antes se
+    //    colaban.
+    //  - href NUNCA puede empezar con "#" — son anclas de página, no
+    //    booking flows.
+    //  - hostRelation distingue same_host (tier 3, alta) vs
+    //    same_registrable (subdominio propio, tier 4, puede ser
+    //    white-label — label distinto para no mezclar en stats).
     if (!self_hosted_booking) {
       for (const a of args.anchors) {
-        const textMatch = BOOKING_KEYWORDS.test(a.text);
-        const pathMatch = (() => {
-          try {
-            const u = new URL(a.href, args.finalUrl);
-            return BOOKING_KEYWORDS.test(u.pathname);
-          } catch {
-            return false;
-          }
-        })();
-        if (!textMatch && !pathMatch) continue;
-        if (!sameHost(a.href, args.finalUrl)) continue;
+        if (!a.href || a.href.startsWith("#")) continue;
+        if (a.href.startsWith("mailto:") || a.href.startsWith("tel:")) continue;
+        let path: string;
+        try {
+          path = new URL(a.href, args.finalUrl).pathname;
+        } catch {
+          continue;
+        }
+        if (BOOKING_NEGATIVE.test(path)) continue;
+        if (!BOOKING_ENDPOINT.test(path)) continue;
+        const rel = hostRelation(a.href, args.finalUrl);
+        if (!rel) continue;
         self_hosted_booking = {
           kind: "internal_anchor",
-          evidence: (a.href || a.text).slice(0, 200),
-          label: "Custom / self-hosted",
+          evidence: a.href.slice(0, 200),
+          label:
+            rel === "same_host"
+              ? "Custom / self-hosted"
+              : "Booking subdominio propio (probable white-label)",
         };
         break;
       }
@@ -88,7 +120,7 @@ export function detectSelfHosted(args: {
     const extCounts = new Map<string, number>();
     for (const a of args.anchors) {
       if (!a.href) continue;
-      if (!sameHost(a.href, args.finalUrl)) continue;
+      if (hostRelation(a.href, args.finalUrl) !== "same_host") continue;
       try {
         const u = new URL(a.href, args.finalUrl);
         const m = u.pathname.match(/\.(php|aspx|jsp|cfm)$/i);
