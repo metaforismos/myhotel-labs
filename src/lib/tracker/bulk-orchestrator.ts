@@ -66,7 +66,6 @@ async function tick(): Promise<void> {
     }
     const jobs = await listActiveJobs();
     state.activeJobs = jobs.length;
-    if (jobs.length === 0) return;
 
     // Only drive jobs that aren't already being processed by this loop.
     const candidates = jobs
@@ -92,6 +91,10 @@ async function tick(): Promise<void> {
       (sum, r) => sum + (r?.processed ?? 0),
       0
     );
+    // Always advance tick counters so the UI can show liveness even when
+    // there are no active jobs (idle loop). Without this, an orchestrator
+    // that just started and has nothing to do looks identical to a dead
+    // one ("último tick: nunca").
     state.lastTickAt = new Date().toISOString();
     state.lastTickProcessed = processed;
     state.totalTicks += 1;

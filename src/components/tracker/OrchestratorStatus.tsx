@@ -42,34 +42,32 @@ export function OrchestratorStatus() {
     return () => clearInterval(t);
   }, [load]);
 
-  const start = async () => {
-    setBusy(true);
-    try {
-      await fetch("/api/tracker/bulk/orchestrator", { method: "POST" });
-      await load();
-    } finally {
-      setBusy(false);
-    }
-  };
-
+  // Persistent pause is the only real off-switch: calling DELETE alone
+  // does nothing lasting because the watchdog restarts the orchestrator
+  // on the next GET when there's pending work. So "Detener" = pause flag.
   const stop = async () => {
-    setBusy(true);
-    try {
-      await fetch("/api/tracker/bulk/orchestrator", { method: "DELETE" });
-      await load();
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  const togglePause = async (paused: boolean) => {
     setBusy(true);
     try {
       await fetch("/api/tracker/bulk/orchestrator", {
         method: "PATCH",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ paused }),
+        body: JSON.stringify({ paused: true }),
       });
+      await load();
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const resume = async () => {
+    setBusy(true);
+    try {
+      await fetch("/api/tracker/bulk/orchestrator", {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ paused: false }),
+      });
+      await fetch("/api/tracker/bulk/orchestrator", { method: "POST" });
       await load();
     } finally {
       setBusy(false);
@@ -84,14 +82,20 @@ export function OrchestratorStatus() {
     );
   }
 
+  const idle = state.running && !state.paused && state.activeJobs === 0;
+
   const dot = state.paused
     ? "bg-amber-500"
-    : state.running
+    : state.running && state.activeJobs > 0
     ? "bg-emerald-500 animate-pulse"
+    : state.running
+    ? "bg-sky-500"
     : "bg-zinc-500";
 
   const badge = state.paused
     ? { cls: "bg-amber-500/10 text-amber-600", label: "PAUSED" }
+    : idle
+    ? { cls: "bg-sky-500/10 text-sky-600", label: "IDLE" }
     : state.running
     ? { cls: "bg-emerald-500/10 text-emerald-600", label: "ON" }
     : { cls: "bg-zinc-500/10 text-zinc-600", label: "OFF" };
@@ -132,42 +136,30 @@ export function OrchestratorStatus() {
       <div className="ml-auto flex gap-2">
         {state.paused ? (
           <button
-            onClick={() => togglePause(false)}
+            onClick={resume}
             disabled={busy}
             className="px-2.5 py-1 text-[11px] font-medium rounded border border-accent text-accent hover:bg-accent/10 disabled:opacity-50"
-            title="Re-habilita el orquestador — el watchdog o el próximo tick lo levanta"
+            title="Quita la pausa persistente y arranca el orquestador."
           >
             Reanudar
           </button>
+        ) : state.running ? (
+          <button
+            onClick={stop}
+            disabled={busy}
+            className="px-2.5 py-1 text-[11px] font-medium rounded border border-amber-500 text-amber-600 hover:bg-amber-500/10 disabled:opacity-50"
+            title="Pausa persistente — sobrevive restarts. Reanudar cuando quieras."
+          >
+            Detener
+          </button>
         ) : (
-          <>
-            {state.running ? (
-              <button
-                onClick={stop}
-                disabled={busy}
-                className="px-2.5 py-1 text-[11px] font-medium rounded border border-border hover:border-border-light disabled:opacity-50"
-                title="Detiene la instancia actual — el watchdog la volverá a levantar si hay pendientes"
-              >
-                Detener
-              </button>
-            ) : (
-              <button
-                onClick={start}
-                disabled={busy}
-                className="px-2.5 py-1 text-[11px] font-medium rounded border border-accent text-accent hover:bg-accent/10 disabled:opacity-50"
-              >
-                Iniciar
-              </button>
-            )}
-            <button
-              onClick={() => togglePause(true)}
-              disabled={busy}
-              className="px-2.5 py-1 text-[11px] font-medium rounded border border-amber-500 text-amber-600 hover:bg-amber-500/10 disabled:opacity-50"
-              title="Pausa persistente (sobrevive restarts). Reanudar cuando quieras."
-            >
-              Pausar
-            </button>
-          </>
+          <button
+            onClick={resume}
+            disabled={busy}
+            className="px-2.5 py-1 text-[11px] font-medium rounded border border-accent text-accent hover:bg-accent/10 disabled:opacity-50"
+          >
+            Iniciar
+          </button>
         )}
       </div>
     </div>
