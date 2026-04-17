@@ -71,7 +71,7 @@ type JobDetail = {
   };
 };
 
-function parseCsvLine(line: string): string[] {
+function parseCsvLine(line: string, sep: string): string[] {
   const fields: string[] = [];
   let current = "";
   let inQuotes = false;
@@ -84,7 +84,7 @@ function parseCsvLine(line: string): string[] {
       } else {
         inQuotes = !inQuotes;
       }
-    } else if ((ch === "\t" || ch === ",") && !inQuotes) {
+    } else if ((ch === sep || ch === "\t") && !inQuotes) {
       fields.push(current);
       current = "";
     } else {
@@ -105,86 +105,191 @@ type ParsedItem = {
   is_customer?: boolean;
 };
 
-function parseCsvOrUrlList(raw: string): {
+// Limpia un string y devuelve una URL normalizada absoluta, o null si
+// no se puede extraer. Tolerante con: BOM, quotes Excel, whitespace
+// invisible, markdown, fragment, puntuación final, scheme faltante.
+function cleanUrl(raw: string): string | null {
+  if (!raw) return null;
+  let s = String(raw);
+  // Strip BOM + zero-width
+  s = s.replace(/[\uFEFF\u200B-\u200F\u202A-\u202E]/g, "");
+  s = s.trim();
+  // Strip surrounding quotes/backticks
+  s = s.replace(/^["'`«]+|["'`»]+$/g, "").trim();
+  // Markdown link [text](url)
+  const md = s.match(/\]\((https?:\/\/\S+?)\)/i);
+  if (md) s = md[1];
+  // Extract first URL-looking substring from free text
+  const urlMatch = s.match(/https?:\/\/\S+/i);
+  if (urlMatch) s = urlMatch[0];
+  // If still no scheme, accept domain-like strings and prepend https://
+  if (!/^https?:\/\//i.test(s)) {
+    if (!/^[a-z0-9][a-z0-9\-._]*\.[a-z]{2,}(\/|$|\?|#)/i.test(s)) return null;
+    s = "https://" + s;
+  }
+  // Strip trailing punctuation not part of URL
+  s = s.replace(/[\s.,;:\)\]>»"'`]+$/g, "");
+  // Lowercase the scheme
+  s = s.replace(/^HTTPS:\/\//i, "https://").replace(/^HTTP:\/\//i, "http://");
+  try {
+    const u = new URL(s);
+    if (!u.hostname.includes(".")) return null;
+    if (/^\d+\.\d+\.\d+\.\d+$/.test(u.hostname)) return null;
+    u.hash = ""; // drop fragment
+    return u.toString();
+  } catch {
+    return null;
+  }
+}
+
+// Clave canónica para dedupe: host sin www. + path sin trailing slash +
+// query ordenada. Protocolo ignorado (http vs https son el mismo hotel).
+function dedupKey(absUrl: string): string {
+  try {
+    const u = new URL(absUrl);
+    const host = u.hostname.toLowerCase().replace(/^www\./, "");
+    const path = u.pathname.replace(/\/+$/, "") || "/";
+    const params = [...u.searchParams.entries()]
+      .filter(([k]) => !/^(utm_|fbclid|gclid|mc_)/i.test(k))
+      .sort(([a], [b]) => a.localeCompare(b));
+    const qs = params.length
+      ? "?" + params.map(([k, v]) => `${k}=${v}`).join("&")
+      : "";
+    return `${host}${path}${qs}`;
+  } catch {
+    return absUrl.toLowerCase();
+  }
+}
+
+function detectSeparator(firstLine: string): string {
+  const commas = (firstLine.match(/,/g) || []).length;
+  const semis = (firstLine.match(/;/g) || []).length;
+  const tabs = (firstLine.match(/\t/g) || []).length;
+  if (tabs > commas && tabs > semis) return "\t";
+  if (semis > commas) return ";";
+  return ",";
+}
+
+const URL_COL_NAMES = /^(url|urls|link|enlace|website|sitio|site|domain|dominio|web)$/i;
+const OPTIONAL_COL_NAMES: Record<string, keyof ParsedItem> = {
+  name: "name",
+  nombre: "name",
+  city: "city",
+  ciudad: "city",
+  country: "country",
+  pais: "country",
+  region: "region",
+  estado: "region",
+  external_id: "external_id",
+  id_hotel: "external_id",
+  is_customer: "is_customer",
+  cliente: "is_customer",
+};
+
+function normalizeHeader(h: string): string {
+  return h
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
+}
+
+type ParseSummary = {
   items: ParsedItem[];
-  invalid: string[];
-  hasHeaders: boolean;
-} {
-  const lines = raw.split(/\r?\n/).filter((l) => l.trim());
-  if (!lines.length) return { items: [], invalid: [], hasHeaders: false };
+  invalid: { raw: string; reason: string }[];
+  duplicates: number;
+  source: "url_list" | "csv";
+};
 
-  // Detect headers: if first line contains "url" or "name" as a field.
-  const firstFields = parseCsvLine(lines[0]);
-  const headerish = firstFields.some((f) =>
-    /^(url|name|nombre|city|ciudad|country|pais|external_id|id_hotel|is_customer)$/i.test(
-      f.trim()
-    )
-  );
-
-  if (!headerish) {
-    // Plain URL list
-    const items: ParsedItem[] = [];
-    const invalid: string[] = [];
-    for (const l of lines) {
-      const trimmed = l.trim();
-      if (!trimmed) continue;
-      if (/^https?:\/\//i.test(trimmed) || /\./.test(trimmed)) {
-        items.push({ url: trimmed });
-      } else {
-        invalid.push(trimmed);
-      }
-    }
-    return { items, invalid, hasHeaders: false };
+function parseCsvOrUrlList(raw: string): ParseSummary {
+  const clean = raw.replace(/^\uFEFF/, "").replace(/\r/g, "");
+  const lines = clean.split(/\n+/).map((l) => l.trim()).filter(Boolean);
+  if (!lines.length) {
+    return { items: [], invalid: [], duplicates: 0, source: "url_list" };
   }
 
-  const headers = firstFields.map((h) =>
-    h
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .trim()
-  );
-  const col = (name: string) => headers.indexOf(name);
-  const idx = {
-    url: col("url"),
-    name:
-      col("name") >= 0
-        ? col("name")
-        : col("nombre") >= 0
-          ? col("nombre")
-          : -1,
-    city: col("city") >= 0 ? col("city") : col("ciudad"),
-    country: col("country") >= 0 ? col("country") : col("pais"),
-    region: col("region") >= 0 ? col("region") : col("estado"),
-    external_id:
-      col("external_id") >= 0 ? col("external_id") : col("id_hotel"),
-    is_customer: col("is_customer"),
-  };
+  const sep = detectSeparator(lines[0]);
+  const firstFields = parseCsvLine(lines[0], sep).map((h) => h.replace(/^["']+|["']+$/g, ""));
+
+  // Detect if first row looks like a header: ALL fields are non-URL-like
+  // short strings, AND at least one matches a known column name.
+  const firstLooksLikeHeader =
+    firstFields.length > 0 &&
+    firstFields.every((f) => !/^https?:\/\//i.test(f) && f.length < 40) &&
+    firstFields.some((f) => {
+      const n = normalizeHeader(f);
+      return URL_COL_NAMES.test(n) || n in OPTIONAL_COL_NAMES;
+    });
 
   const items: ParsedItem[] = [];
-  const invalid: string[] = [];
-  for (let i = 1; i < lines.length; i++) {
-    const f = parseCsvLine(lines[i]);
-    const url = idx.url >= 0 ? f[idx.url] : "";
+  const invalid: { raw: string; reason: string }[] = [];
+  const seen = new Set<string>();
+  let duplicates = 0;
+
+  const addItem = (url: string | null, rawStr: string, extra: Partial<ParsedItem> = {}) => {
     if (!url) {
-      invalid.push(lines[i]);
-      continue;
+      invalid.push({ raw: rawStr.slice(0, 100), reason: "no_valid_url" });
+      return;
     }
-    const item: ParsedItem = { url };
-    if (idx.name >= 0) item.name = f[idx.name] || undefined;
-    if (idx.city >= 0) item.city = f[idx.city] || undefined;
-    if (idx.country >= 0) item.country = f[idx.country] || undefined;
-    if (idx.region >= 0) item.region = f[idx.region] || undefined;
-    if (idx.external_id >= 0) item.external_id = f[idx.external_id] || undefined;
-    if (idx.is_customer >= 0) {
-      const v = f[idx.is_customer]?.toLowerCase().trim();
-      if (v === "true" || v === "1" || v === "si" || v === "sí" || v === "yes")
-        item.is_customer = true;
-      else if (v === "false" || v === "0" || v === "no") item.is_customer = false;
+    const key = dedupKey(url);
+    if (seen.has(key)) {
+      duplicates++;
+      return;
     }
-    items.push(item);
+    seen.add(key);
+    items.push({ url, ...extra });
+  };
+
+  if (firstLooksLikeHeader) {
+    const headers = firstFields.map((h) => normalizeHeader(h));
+    const urlIdx = headers.findIndex((h) => URL_COL_NAMES.test(h));
+    const colIdx: Partial<Record<keyof ParsedItem, number>> = {};
+    headers.forEach((h, i) => {
+      const mapped = OPTIONAL_COL_NAMES[h];
+      if (mapped) colIdx[mapped] = i;
+    });
+
+    // Fallback: if header detected but no URL column, take the first column.
+    const effectiveUrlIdx = urlIdx >= 0 ? urlIdx : 0;
+
+    for (let i = 1; i < lines.length; i++) {
+      const row = parseCsvLine(lines[i], sep);
+      const rawCell = row[effectiveUrlIdx] ?? "";
+      const url = cleanUrl(rawCell);
+      const extra: Partial<ParsedItem> = {};
+      for (const [k, idx] of Object.entries(colIdx) as [keyof ParsedItem, number][]) {
+        const v = row[idx];
+        if (!v) continue;
+        if (k === "is_customer") {
+          const lv = v.toLowerCase().trim();
+          if (/^(true|1|si|sí|yes)$/.test(lv)) extra.is_customer = true;
+          else if (/^(false|0|no)$/.test(lv)) extra.is_customer = false;
+        } else {
+          extra[k] = v as never;
+        }
+      }
+      addItem(url, lines[i], extra);
+    }
+    return { items, invalid, duplicates, source: "csv" };
   }
-  return { items, invalid, hasHeaders: true };
+
+  // No header: treat every line as potentially holding a URL.
+  // If line has separator, take the first field that cleans into a URL.
+  for (const line of lines) {
+    let found: string | null = null;
+    const cells = line.includes(sep) || line.includes("\t")
+      ? parseCsvLine(line, sep)
+      : [line];
+    for (const cell of cells) {
+      const u = cleanUrl(cell);
+      if (u) {
+        found = u;
+        break;
+      }
+    }
+    addItem(found, line);
+  }
+  return { items, invalid, duplicates, source: "url_list" };
 }
 
 function formatDuration(start?: string | null, end?: string | null) {
@@ -202,11 +307,8 @@ export function TrackerBulk() {
   const [activeJob, setActiveJob] = useState<JobDetail | null>(null);
 
   const [raw, setRaw] = useState("");
-  const [parsed, setParsed] = useState<{
-    items: ParsedItem[];
-    invalid: string[];
-    hasHeaders: boolean;
-  } | null>(null);
+  const [parsed, setParsed] = useState<ParseSummary | null>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
   const [label, setLabel] = useState("");
   const [creating, setCreating] = useState(false);
   const [autoRun, setAutoRun] = useState(true);
@@ -245,6 +347,14 @@ export function TrackerBulk() {
     setParsed(parseCsvOrUrlList(raw));
   };
 
+  const handleFile = async (file: File | null) => {
+    if (!file) return;
+    setFileName(file.name);
+    const text = await file.text();
+    setRaw(text);
+    setParsed(parseCsvOrUrlList(text));
+  };
+
   const handleCreate = async () => {
     if (!parsed?.items.length) return;
     setCreating(true);
@@ -264,6 +374,7 @@ export function TrackerBulk() {
       setRaw("");
       setParsed(null);
       setLabel("");
+      setFileName(null);
       await loadJobs();
     } catch (e) {
       setRunErr(e instanceof Error ? e.message : "error");
@@ -352,30 +463,53 @@ export function TrackerBulk() {
     <div className="space-y-6">
       {!activeJobId && (
         <div className="border border-border rounded-md bg-surface p-4 space-y-3">
-          <div className="flex items-center justify-between">
+          <div className="flex items-start justify-between gap-4">
             <div>
               <h2 className="text-sm font-semibold text-text">
                 Nuevo batch
               </h2>
               <p className="text-xs text-text-dim mt-0.5">
-                Pega URLs (una por línea) o un CSV con headers{" "}
-                <span className="font-mono text-[11px]">
-                  url, name, city, country, external_id, is_customer
-                </span>
-                . Máximo 2.000 filas por batch.
+                Pega URLs (una por línea) o subí un CSV. Con CSV basta una
+                columna llamada{" "}
+                <span className="font-mono text-[11px]">url</span>,{" "}
+                <span className="font-mono text-[11px]">link</span>,{" "}
+                <span className="font-mono text-[11px]">website</span>,{" "}
+                <span className="font-mono text-[11px]">sitio</span> o similar.
+                Si no hay header, se toma la primera columna. Limpiamos
+                quotes, BOM, markdown, fragments y dedup automáticamente.
+                Máximo 2.000 URLs por batch.
               </p>
             </div>
+            <label className="px-3 py-1.5 text-xs font-medium rounded border border-border bg-surface hover:border-border-light cursor-pointer shrink-0">
+              Subir CSV
+              <input
+                type="file"
+                accept=".csv,.tsv,.txt,text/csv,text/plain"
+                onChange={(e) => handleFile(e.target.files?.[0] ?? null)}
+                className="hidden"
+              />
+            </label>
           </div>
 
           <textarea
             value={raw}
-            onChange={(e) => setRaw(e.target.value)}
+            onChange={(e) => {
+              setRaw(e.target.value);
+              setFileName(null);
+            }}
             rows={10}
             placeholder={
               "https://www.hotelbidasoa.cl\nhttps://www.mandarinoriental.com/santiago\nhttps://diegodealmagro.cl"
             }
             className="w-full px-3 py-2 text-sm font-mono border border-border rounded bg-surface-2 focus:outline-none focus:border-accent"
           />
+
+          {fileName && (
+            <div className="text-[11px] text-text-dim">
+              Archivo cargado:{" "}
+              <span className="font-mono">{fileName}</span>
+            </div>
+          )}
 
           <div className="flex flex-wrap items-end gap-3">
             <div className="flex flex-col gap-1">
@@ -412,16 +546,32 @@ export function TrackerBulk() {
 
           {parsed && (
             <div className="text-xs text-text-dim border-t border-border pt-2 mt-2">
-              <div>
-                <span className="tabular-nums">{parsed.items.length}</span>{" "}
-                URLs válidas ·{" "}
-                <span className="tabular-nums">{parsed.invalid.length}</span>{" "}
-                inválidas ·{" "}
-                {parsed.hasHeaders ? "CSV con headers" : "lista simple de URLs"}
+              <div className="flex flex-wrap gap-3">
+                <span>
+                  <span className="tabular-nums text-text font-medium">
+                    {parsed.items.length}
+                  </span>{" "}
+                  URLs válidas
+                </span>
+                <span>
+                  <span className="tabular-nums">{parsed.duplicates}</span>{" "}
+                  duplicadas descartadas
+                </span>
+                <span>
+                  <span className="tabular-nums">{parsed.invalid.length}</span>{" "}
+                  inválidas
+                </span>
+                <span className="text-text-dim">
+                  · {parsed.source === "csv" ? "CSV con header" : "lista simple"}
+                </span>
               </div>
               {parsed.invalid.length > 0 && (
-                <div className="mt-1 text-[11px]">
-                  Inválidas: {parsed.invalid.slice(0, 5).join(", ")}
+                <div className="mt-1 text-[11px] font-mono text-text-dim">
+                  Inválidas:{" "}
+                  {parsed.invalid
+                    .slice(0, 5)
+                    .map((x) => x.raw)
+                    .join(" · ")}
                   {parsed.invalid.length > 5 && "…"}
                 </div>
               )}
