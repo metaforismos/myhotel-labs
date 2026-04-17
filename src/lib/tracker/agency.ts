@@ -20,6 +20,47 @@ const AGENCY_PHRASES: RegExp[] = [
   /realiza(?:do|zione)\s+d[ae]\s+([\s\S]{0,400}?)(?=<\/(?:p|div|footer|span|li|small|section)>|$)/i,
 ];
 
+// Hosts de plataformas conocidas. Si el anchor de la frase "created by /
+// powered by" apunta a uno de estos dominios (o subdominio), el candidato
+// NO es una agencia web — es la plataforma/CMS/booking engine detrás del
+// sitio. Ej: "Canvas" con href=siteminder.com/canvas es SiteMinder, no una
+// agencia llamada Canvas.
+const PLATFORM_HOSTS = new Set([
+  "siteminder.com",
+  "cloudbeds.com",
+  "mews.com",
+  "profitroom.com",
+  "profitroom.pl",
+  "hotetec.com",
+  "d-edge.com",
+  "availpro.com",
+  "synxis.com",
+  "ihotelier.com",
+  "travelclick.com",
+  "amadeus-hospitality.com",
+  "sabrehospitality.com",
+  "littlehotelier.com",
+  "guestline.com",
+  "hotelrunner.com",
+  "omnibees.com",
+  "roomcloud.net",
+  "asksuite.com",
+  "bookingcore.com",
+  "wordpress.com",
+  "wordpress.org",
+  "wix.com",
+  "squarespace.com",
+  "webflow.com",
+  "shopify.com",
+  "blogger.com",
+  "blogspot.com",
+  "google.com",
+  "litespeedtech.com",
+  "litespeed.com",
+  "godaddy.com",
+  "wpengine.com",
+]);
+
 // Plataformas / CMS / booking engines / themes. "Powered by X" donde X
 // matchea estos NO es una agencia — es un reconocimiento de plataforma.
 // Se puede usar como signal extra para la categoría respectiva, pero no
@@ -81,6 +122,15 @@ const PLATFORM_BLACKLIST = new Set([
   "umi",
   "bookingcore",
   "fnsbooking",
+  "canvas",
+  "siteminder canvas",
+  "blogger",
+  "blogspot",
+  "litespeed",
+  "litespeed web server",
+  "litespeed technologies",
+  "litespeed technologies inc",
+  "please be advised that litespeed technologies inc",
   // Generic noise
   "html",
   "html5",
@@ -134,38 +184,55 @@ function stripTags(s: string): string {
 
 const EMAIL_RE = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
 
+function hostIsPlatform(hostname: string): boolean {
+  const host = hostname.toLowerCase().replace(/^www\./, "");
+  if (PLATFORM_HOSTS.has(host)) return true;
+  for (const p of PLATFORM_HOSTS) {
+    if (host.endsWith("." + p)) return true;
+  }
+  return false;
+}
+
 function extractFirstAnchor(
   html: string,
   baseHost: string
-): { name: string | null; url: string | null } {
+): { name: string | null; url: string | null; isPlatform: boolean } {
   const m = html.match(
     /<a\b[^>]*\bhref=["']([^"']+)["'][^>]*>([\s\S]{0,200}?)<\/a>/i
   );
-  if (!m) return { name: null, url: null };
+  if (!m) return { name: null, url: null, isPlatform: false };
   const href = m[1];
   const text = stripTags(m[2]);
   // Mailto links: el target no es una agencia web, es un email del
   // contacto/staff del propio hotel. Descartar.
-  if (/^mailto:/i.test(href)) return { name: null, url: null };
-  if (/^tel:|^javascript:/i.test(href)) return { name: null, url: null };
+  if (/^mailto:/i.test(href)) return { name: null, url: null, isPlatform: false };
+  if (/^tel:|^javascript:/i.test(href))
+    return { name: null, url: null, isPlatform: false };
   try {
     const u = new URL(href, `https://${baseHost || "example.com"}`);
     // Excluimos anchors del propio hotel (links a secciones internas).
-    if (u.hostname === baseHost) return { name: text || null, url: null };
+    if (u.hostname === baseHost)
+      return { name: text || null, url: null, isPlatform: false };
     // Excluimos redes sociales — "powered by" que linkea a FB o IG es ruido.
     if (
       /facebook|instagram|twitter|x\.com|linkedin|tiktok|youtube|pinterest/i.test(
         u.hostname
       )
     ) {
-      return { name: text || null, url: null };
+      return { name: text || null, url: null, isPlatform: false };
+    }
+    // Si el link apunta a un host de plataforma/CMS/BE conocido, el
+    // "powered by X" es reconocimiento de producto, no agencia.
+    if (hostIsPlatform(u.hostname)) {
+      return { name: text || null, url: null, isPlatform: true };
     }
     return {
       name: text || null,
       url: u.toString(),
+      isPlatform: false,
     };
   } catch {
-    return { name: text || null, url: null };
+    return { name: text || null, url: null, isPlatform: false };
   }
 }
 
@@ -232,7 +299,14 @@ export function detectAgency(
     if (!match) continue;
 
     const raw = match[1] || "";
-    const { name: anchorText, url } = extractFirstAnchor(raw, baseHost);
+    const { name: anchorText, url, isPlatform: anchorIsPlatform } =
+      extractFirstAnchor(raw, baseHost);
+
+    // Si el anchor apunta a un host de plataforma conocido, tirar el
+    // candidato entero — no importa cómo se llame el texto ("Canvas",
+    // "Powered by ...") ni lo limpio que esté. Es reconocimiento de
+    // plataforma, no agencia.
+    if (anchorIsPlatform) continue;
 
     // Candidato "desde anchor" siempre que el texto limpie OK. Si no hay
     // anchor, intentamos con el texto plano (pero con confianza menor).

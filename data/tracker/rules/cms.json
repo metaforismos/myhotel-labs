@@ -112,5 +112,29 @@
       { "type": "script_src", "pattern": "wa-uploads\\.profitroom\\.com|assets\\.profitroom\\.com" },
       { "type": "html", "pattern": "fonts\\.profitroom\\.com|wa-uploads\\.profitroom\\.com" }
     ]
+  },
+  {
+    "id": "siteminder_canvas",
+    "vendor": "SiteMinder",
+    "product": "SiteMinder Canvas",
+    "category": "cms",
+    "confidence_base": 0.9,
+    "signatures": [
+      { "type": "script_src", "pattern": "canvas\\.siteminder\\.com|static\\.siteminder\\.com" },
+      { "type": "link_href", "pattern": "canvas\\.siteminder\\.com|static\\.siteminder\\.com" },
+      { "type": "html", "pattern": "siteminder\\.com/canvas|canvas\\.siteminder\\.com" }
+    ]
+  },
+  {
+    "id": "blogger",
+    "vendor": "Google",
+    "product": "Blogger",
+    "category": "cms",
+    "confidence_base": 0.9,
+    "signatures": [
+      { "type": "meta_generator", "pattern": "blogger" },
+      { "type": "script_src", "pattern": "blogger\\.com|blogspot\\.com" },
+      { "type": "html", "pattern": "blogspot\\.com/static" }
+    ]
   }
 ]

@@ -35,7 +35,11 @@ const { rows: preview } = await client.query(
        'hotetec','availpro','d-edge','profitroom','travelclick',
        'ihotelier','roomcloud','vertical booking','pegasus',
        'little hotelier','guestline','html','html5','bootstrap',
-       'jquery','fontawesome','google','facebook'
+       'jquery','fontawesome','google','facebook',
+       'canvas','siteminder canvas','blogger','blogspot',
+       'litespeed','litespeed web server','litespeed technologies',
+       'litespeed technologies inc',
+       'please be advised that litespeed technologies inc'
      )
      OR LOWER(agency_name) IN ('por','de','the','a','an','la','el','los','las','and','y','para','with','con','our','we','us','team','staff','services','services on your own','all rights reserved','copyright')
      OR agency_name ~ '@'           -- emails
@@ -65,7 +69,11 @@ const { rowCount } = await client.query(
        'hotetec','availpro','d-edge','profitroom','travelclick',
        'ihotelier','roomcloud','vertical booking','pegasus',
        'little hotelier','guestline','html','html5','bootstrap',
-       'jquery','fontawesome','google','facebook'
+       'jquery','fontawesome','google','facebook',
+       'canvas','siteminder canvas','blogger','blogspot',
+       'litespeed','litespeed web server','litespeed technologies',
+       'litespeed technologies inc',
+       'please be advised that litespeed technologies inc'
      )
      OR LOWER(agency_name) IN ('por','de','the','a','an','la','el','los','las','and','y','para','with','con','our','we','us','team','staff','services','services on your own','all rights reserved','copyright')
      OR agency_name ~ '@'
@@ -77,6 +85,52 @@ const { rowCount } = await client.query(
      OR agency_name ~ '^https?://'
      OR LENGTH(agency_name) < 3`
 );
-console.log(`[cleanup] borradas ${rowCount} filas.`);
+console.log(`[cleanup] borradas ${rowCount} filas (por nombre).`);
+
+// 2) URL-based cleanup: cualquier agencia cuyo agency_url apunte a un host
+// de plataforma conocido es reconocimiento de producto, no agencia.
+const PLATFORM_HOST_PATTERN = [
+  "siteminder.com",
+  "cloudbeds.com",
+  "mews.com",
+  "profitroom.com",
+  "profitroom.pl",
+  "hotetec.com",
+  "d-edge.com",
+  "availpro.com",
+  "synxis.com",
+  "ihotelier.com",
+  "travelclick.com",
+  "amadeus-hospitality.com",
+  "sabrehospitality.com",
+  "littlehotelier.com",
+  "guestline.com",
+  "hotelrunner.com",
+  "omnibees.com",
+  "roomcloud.net",
+  "asksuite.com",
+  "bookingcore.com",
+  "wordpress.com",
+  "wordpress.org",
+  "wix.com",
+  "squarespace.com",
+  "webflow.com",
+  "shopify.com",
+  "blogger.com",
+  "blogspot.com",
+  "google.com",
+  "litespeedtech.com",
+  "litespeed.com",
+  "godaddy.com",
+  "wpengine.com",
+].map((h) => h.replace(/\./g, "\\."));
+const hostRegex = "(^https?://)([^/]*\\.)?(" + PLATFORM_HOST_PATTERN.join("|") + ")(/|$|:)";
+
+const { rowCount: urlDeleted } = await client.query(
+  `DELETE FROM tracker_hotel_agency
+   WHERE agency_url ~* $1`,
+  [hostRegex]
+);
+console.log(`[cleanup] borradas ${urlDeleted} filas (por host plataforma).`);
 
 await client.end();
