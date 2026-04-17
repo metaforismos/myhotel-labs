@@ -5,6 +5,7 @@ import {
   type DomainEvidence,
   type LlmClassification,
 } from "@/lib/tracker/llm-classifier";
+import { prelinkDomain } from "@/lib/tracker/vendor-prelinker";
 
 export const maxDuration = 120;
 
@@ -69,14 +70,15 @@ async function gatherEvidence(
 
 async function persistClassification(
   registrable_domain: string,
-  c: LlmClassification
+  c: LlmClassification,
+  source: "llm" | "rule" = "llm"
 ) {
   await pool.query(
     `UPDATE tracker_resources
      SET primary_role = $2,
          vendor_name = COALESCE($3::text, vendor_name),
          vendor_product = COALESCE($4::text, vendor_product),
-         classified_by = 'llm',
+         classified_by = $6,
          classified_at = NOW(),
          classification_notes = $5::text,
          last_seen_at = NOW()
@@ -89,6 +91,7 @@ async function persistClassification(
       c.reasoning
         ? `${c.reasoning} (confidence=${c.confidence.toFixed(2)})`
         : `confidence=${c.confidence.toFixed(2)}`,
+      source,
     ]
   );
 
@@ -116,6 +119,30 @@ async function persistClassification(
 }
 
 async function classifyOne(registrable_domain: string) {
+  // Tier-0 pre-linker: curated regex table of well-known vendor families
+  // (Google, Cloudflare, AWS, WhatsApp, OTAs…). If it hits we skip the
+  // LLM entirely and persist as classified_by='rule'. Saves tokens and
+  // produces consistent canonical names across domain variants.
+  const prelinked = prelinkDomain(registrable_domain);
+  if (prelinked) {
+    await persistClassification(
+      registrable_domain,
+      {
+        role: prelinked.role,
+        vendor_name: prelinked.vendor_name,
+        vendor_product: prelinked.vendor_product,
+        confidence: prelinked.confidence,
+        reasoning: prelinked.reasoning,
+      },
+      "rule"
+    );
+    return {
+      registrable_domain,
+      classification: prelinked,
+      prelinked: true,
+    };
+  }
+
   const evidence = await gatherEvidence(registrable_domain);
   if (!evidence) {
     return { registrable_domain, error: "no_evidence" };
