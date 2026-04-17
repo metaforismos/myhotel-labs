@@ -337,6 +337,19 @@ export function TrackerBulk() {
     loadJobs();
   }, [loadJobs]);
 
+  // Auto-refresh del listado cuando hay batches activos. Permite seguir
+  // varios batches en paralelo desde la vista de "Nuevo batch" sin tener
+  // que recargar manualmente.
+  useEffect(() => {
+    if (activeJobId) return; // en vista de detalle ya se refresca solo
+    const hasActive = jobs.some(
+      (j) => j.status === "running" || j.status === "created" || j.pending > 0
+    );
+    if (!hasActive) return;
+    const t = setInterval(() => loadJobs(), 3000);
+    return () => clearInterval(t);
+  }, [activeJobId, jobs, loadJobs]);
+
   useEffect(() => {
     if (!activeJobId) {
       setActiveJob(null);
@@ -791,56 +804,83 @@ export function TrackerBulk() {
 
       {!activeJobId && jobs.length > 0 && (
         <div>
-          <h3 className="text-[10px] font-semibold uppercase tracking-[0.15em] text-text-dim mb-2">
-            Batches recientes
-          </h3>
-          <div className="border border-border rounded-md bg-surface overflow-hidden">
+          <BatchesSummary jobs={jobs} />
+          <div className="border border-border rounded-md bg-surface overflow-hidden mt-3">
             <table className="w-full text-sm">
               <thead className="bg-surface-2 border-b border-border">
                 <tr className="text-left text-[10px] uppercase tracking-wider text-text-dim">
                   <th className="px-3 py-2">Etiqueta</th>
                   <th className="px-3 py-2">Estado</th>
-                  <th className="px-3 py-2 text-right">Total</th>
+                  <th className="px-3 py-2 min-w-[180px]">Progreso</th>
                   <th className="px-3 py-2 text-right">OK</th>
-                  <th className="px-3 py-2 text-right">Errores</th>
-                  <th className="px-3 py-2 text-right">Pendientes</th>
+                  <th className="px-3 py-2 text-right">Error</th>
+                  <th className="px-3 py-2 text-right">Pend.</th>
                   <th className="px-3 py-2">Creado</th>
                 </tr>
               </thead>
               <tbody>
-                {jobs.map((j) => (
-                  <tr
-                    key={j.id}
-                    onClick={() => setActiveJobId(j.id)}
-                    className="border-b border-border last:border-0 hover:bg-surface-2/60 cursor-pointer"
-                  >
-                    <td className="px-3 py-2 text-text">
-                      {j.label || (
-                        <span className="font-mono text-xs text-text-dim">
-                          {j.id.slice(0, 8)}
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-3 py-2">
-                      <StatusBadge status={j.status} />
-                    </td>
-                    <td className="px-3 py-2 text-right tabular-nums">
-                      {j.total}
-                    </td>
-                    <td className="px-3 py-2 text-right tabular-nums text-positive">
-                      {j.done}
-                    </td>
-                    <td className="px-3 py-2 text-right tabular-nums text-negative">
-                      {j.failed}
-                    </td>
-                    <td className="px-3 py-2 text-right tabular-nums text-text-dim">
-                      {j.pending}
-                    </td>
-                    <td className="px-3 py-2 text-[11px] text-text-dim">
-                      {new Date(j.created_at).toLocaleString("es-CL")}
-                    </td>
-                  </tr>
-                ))}
+                {jobs.map((j) => {
+                  const doneCount = j.done + j.failed;
+                  const pct =
+                    j.total > 0
+                      ? Math.min(100, Math.round((doneCount * 100) / j.total))
+                      : 0;
+                  const isLive =
+                    j.status === "running" || j.status === "created" || j.pending > 0;
+                  return (
+                    <tr
+                      key={j.id}
+                      onClick={() => setActiveJobId(j.id)}
+                      className="border-b border-border last:border-0 hover:bg-surface-2/60 cursor-pointer"
+                    >
+                      <td className="px-3 py-2 text-text">
+                        {isLive && (
+                          <span
+                            className="inline-block w-1.5 h-1.5 rounded-full bg-positive mr-1.5 animate-pulse-slow"
+                            title="En curso"
+                          />
+                        )}
+                        {j.label || (
+                          <span className="font-mono text-xs text-text-dim">
+                            {j.id.slice(0, 8)}
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-3 py-2">
+                        <StatusBadge status={j.status} />
+                      </td>
+                      <td className="px-3 py-2">
+                        <div className="flex items-center gap-2">
+                          <div className="h-1.5 w-24 bg-surface-2 rounded overflow-hidden">
+                            <div
+                              className={`h-full transition-all ${
+                                j.status === "done"
+                                  ? "bg-positive"
+                                  : "bg-accent"
+                              }`}
+                              style={{ width: `${pct}%` }}
+                            />
+                          </div>
+                          <span className="text-[11px] tabular-nums text-text-dim">
+                            {doneCount}/{j.total} · {pct}%
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-3 py-2 text-right tabular-nums text-positive">
+                        {j.done}
+                      </td>
+                      <td className="px-3 py-2 text-right tabular-nums text-negative">
+                        {j.failed || ""}
+                      </td>
+                      <td className="px-3 py-2 text-right tabular-nums text-text-dim">
+                        {j.pending || ""}
+                      </td>
+                      <td className="px-3 py-2 text-[11px] text-text-dim">
+                        {new Date(j.created_at).toLocaleString("es-CL")}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -861,6 +901,80 @@ const CATEGORY_LABEL: Record<string, string> = {
   analytics: "Analytics",
   consent: "Consent",
 };
+
+function BatchesSummary({ jobs }: { jobs: JobRow[] }) {
+  const active = jobs.filter(
+    (j) => j.status === "running" || j.status === "created" || j.pending > 0
+  );
+  const totals = jobs.reduce(
+    (acc, j) => ({
+      total: acc.total + j.total,
+      done: acc.done + j.done,
+      failed: acc.failed + j.failed,
+      pending: acc.pending + j.pending,
+    }),
+    { total: 0, done: 0, failed: 0, pending: 0 }
+  );
+  const activeTotals = active.reduce(
+    (acc, j) => ({
+      total: acc.total + j.total,
+      done: acc.done + j.done,
+      pending: acc.pending + j.pending,
+    }),
+    { total: 0, done: 0, pending: 0 }
+  );
+  const pct =
+    activeTotals.total > 0
+      ? Math.round((activeTotals.done * 100) / activeTotals.total)
+      : 0;
+  return (
+    <div className="border border-border rounded-md bg-surface p-4">
+      <div className="flex items-center justify-between flex-wrap gap-2">
+        <div>
+          <h3 className="text-[10px] font-semibold uppercase tracking-[0.15em] text-text-dim">
+            Batches recientes
+          </h3>
+          <div className="text-xs text-text-dim mt-1">
+            {active.length > 0 ? (
+              <>
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-positive mr-1.5 animate-pulse-slow" />
+                <span className="tabular-nums text-text font-medium">
+                  {active.length}
+                </span>{" "}
+                batch{active.length === 1 ? "" : "es"} en curso ·{" "}
+                <span className="tabular-nums">{activeTotals.done}</span>/
+                <span className="tabular-nums">{activeTotals.total}</span>{" "}
+                URLs procesadas ({pct}%) ·{" "}
+                <span className="tabular-nums">{activeTotals.pending}</span>{" "}
+                pendientes
+              </>
+            ) : (
+              <>Sin batches activos · refresco automático cada 3s cuando hay.</>
+            )}
+          </div>
+        </div>
+        <div className="flex gap-4 text-right text-[11px] text-text-dim">
+          <div>
+            <div className="uppercase tracking-wider">Total</div>
+            <div className="text-sm tabular-nums text-text">{jobs.length}</div>
+          </div>
+          <div>
+            <div className="uppercase tracking-wider">OK</div>
+            <div className="text-sm tabular-nums text-positive">
+              {totals.done}
+            </div>
+          </div>
+          <div>
+            <div className="uppercase tracking-wider">Errores</div>
+            <div className="text-sm tabular-nums text-negative">
+              {totals.failed}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function OtaPills({
   otas,
