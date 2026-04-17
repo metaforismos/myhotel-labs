@@ -28,6 +28,7 @@ export type FetchOk = {
   content_type: string | null;
   duration_ms: number;
   insecure_tls?: boolean;
+  rendered_via_browser?: boolean;
 };
 
 export type FetchErr = {
@@ -96,6 +97,77 @@ async function doFetch(
   }
 }
 
+// Heurística: ¿el HTML fetcheado sin JS tiene tan poca señal que
+// conviene reintentar con Browserless? Casos típicos:
+//   - SPA sin hidratar (Next.js/React/Vue con <div id="root"></div> vacío).
+//   - "Please enable JavaScript" banners.
+//   - HTML <10kb (shells vacíos).
+function needsJsRendering(html: string): boolean {
+  if (!html) return true;
+  if (html.length < 10_000) return true;
+  if (/please\s+enable\s+javascript|you\s+need\s+javascript/i.test(html))
+    return true;
+  // Next.js SSG shell sin contenido
+  if (/<div[^>]*id=["']__next["'][^>]*>\s*<\/div>/i.test(html)) return true;
+  // React CRA shell
+  if (/<div[^>]*id=["']root["'][^>]*>\s*<\/div>/i.test(html)) return true;
+  // Vue/Nuxt shell
+  if (/<div[^>]*id=["']app["'][^>]*>\s*<\/div>/i.test(html)) return true;
+  return false;
+}
+
+async function fetchViaBrowserless(
+  url: string,
+  timeoutMs: number
+): Promise<FetchOk | null> {
+  const key = process.env.BROWSERLESS_API_KEY;
+  if (!key) return null;
+  const started = Date.now();
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), Math.max(timeoutMs, 30000));
+  try {
+    // Usamos el endpoint /content de Browserless, que renderiza con JS
+    // y devuelve el HTML hidratado.
+    const endpoint = `https://production-sfo.browserless.io/content?token=${encodeURIComponent(
+      key
+    )}`;
+    const res = await fetch(endpoint, {
+      signal: controller.signal,
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        url,
+        waitForTimeout: 3000, // espera 3s después del load event
+        userAgent: DEFAULT_UA,
+        gotoOptions: { waitUntil: "networkidle2", timeout: 20_000 },
+      }),
+    });
+    if (!res.ok) {
+      console.warn(
+        `[tracker.browserless] ${res.status} ${res.statusText} for ${url}`
+      );
+      return null;
+    }
+    const html = await res.text();
+    return {
+      ok: true,
+      status: 200,
+      final_url: url,
+      html: html.slice(0, 2_000_000),
+      content_type: "text/html",
+      duration_ms: Date.now() - started,
+      rendered_via_browser: true,
+    };
+  } catch (e) {
+    console.warn(
+      `[tracker.browserless] fetch failed: ${e instanceof Error ? e.message : e}`
+    );
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 export async function fetchHtml(
   url: string,
   { timeoutMs = 15000 }: { timeoutMs?: number } = {}
@@ -105,17 +177,21 @@ export async function fetchHtml(
 
   try {
     let res: MinimalResponse;
+    let browserlessFirstTry: FetchOk | null = null;
     try {
       res = await doFetch(url, timeoutMs, false);
     } catch (firstErr) {
       const info = extractCause(firstErr);
       if (info.code && TLS_ERROR_CODES.has(info.code)) {
         // Reintentamos con TLS relajado (cadena de cert rota es común en
-        // hoteles independientes LatAm). Marcamos insecure_tls en el
-        // resultado para trazabilidad.
+        // hoteles independientes LatAm).
         res = await doFetch(url, timeoutMs, true);
         insecureUsed = true;
       } else {
+        // Primer intento falló por algo distinto a TLS (ej. 403
+        // Cloudflare). Probamos Browserless antes de rendirnos.
+        browserlessFirstTry = await fetchViaBrowserless(url, timeoutMs);
+        if (browserlessFirstTry) return browserlessFirstTry;
         throw firstErr;
       }
     }
@@ -131,7 +207,20 @@ export async function fetchHtml(
       };
     }
 
+    // WAF/bot-protection: 403 con HTML mínimo → probar Browserless.
+    if (res.status === 403) {
+      const browserless = await fetchViaBrowserless(url, timeoutMs);
+      if (browserless) return browserless;
+    }
+
     const text = await res.text();
+
+    // Sitio SPA sin hidratar → reintentar con Browserless para JS.
+    if (needsJsRendering(text)) {
+      const browserless = await fetchViaBrowserless(url, timeoutMs);
+      if (browserless) return browserless;
+    }
+
     return {
       ok: true,
       status: res.status,

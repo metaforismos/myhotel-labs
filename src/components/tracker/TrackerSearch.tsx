@@ -35,6 +35,7 @@ type AnalyzeResponse = {
   iframe_srcs: string[];
   outbound_links: string[];
   insecure_tls?: boolean;
+  rendered_via_browser?: boolean;
   persisted?: { hotel_id: string; created: boolean } | null;
   persist_error?: string;
   error?: string;
@@ -369,6 +370,14 @@ export function TrackerSearch() {
                     title="La cadena de certificados del sitio no valida; se reintentó con TLS relajado."
                   >
                     TLS relajado
+                  </span>
+                )}
+                {result.rendered_via_browser && (
+                  <span
+                    className="ml-2 inline-block px-1.5 py-0 text-[9px] font-semibold uppercase tracking-wider bg-accent/10 text-accent-light border border-accent/30 rounded"
+                    title="El sitio fue renderizado con browser headless porque el HTML estático era insuficiente."
+                  >
+                    browser
                   </span>
                 )}
               </div>

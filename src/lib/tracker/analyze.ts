@@ -25,6 +25,7 @@ export type AnalyzeOptions = {
 export type AnalyzeOk = AnalyzeResult & {
   ok: true;
   insecure_tls?: boolean;
+  rendered_via_browser?: boolean;
   persisted?: { hotel_id: string; created: boolean } | null;
 };
 
@@ -473,6 +474,7 @@ export async function analyzeUrl(
     duration_ms: fetched.duration_ms,
     status: fetched.status,
     insecure_tls: fetched.insecure_tls,
+    rendered_via_browser: fetched.rendered_via_browser,
     ...parsed,
   };
 

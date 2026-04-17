@@ -38,6 +38,7 @@ type Item = {
     detections_count?: number;
     resources_count?: number;
     insecure_tls?: boolean;
+    rendered_via_browser?: boolean;
     is_chain?: boolean;
     property_count_estimate?: number | null;
     chain_signals?: string[];
@@ -759,6 +760,13 @@ export function TrackerBulk() {
                       {it.error ? (
                         <span className="text-negative" title={it.error}>
                           {it.error.slice(0, 50)}
+                        </span>
+                      ) : it.result_summary?.rendered_via_browser ? (
+                        <span
+                          className="px-1 py-0 text-[9px] uppercase tracking-wider bg-accent/10 text-accent-light border border-accent/30 rounded"
+                          title="Renderizado con browser headless (Browserless)"
+                        >
+                          browser
                         </span>
                       ) : it.result_summary?.insecure_tls ? (
                         <span

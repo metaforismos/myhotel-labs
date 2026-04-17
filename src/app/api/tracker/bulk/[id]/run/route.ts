@@ -153,6 +153,7 @@ export async function POST(
         detections_count: r.detections.length,
         resources_count: r.resources.length,
         insecure_tls: r.insecure_tls ?? false,
+        rendered_via_browser: r.rendered_via_browser ?? false,
         is_chain: r.chain.is_chain,
         property_count_estimate: r.chain.property_count_estimate,
         chain_signals: r.chain.signals,
