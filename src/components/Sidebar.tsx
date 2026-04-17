@@ -57,14 +57,14 @@ const sections: NavSection[] = [
   {
     label: "Tracker",
     items: [
-      { href: "/tracker", label: "Overview" },
-      { href: "/tracker/search", label: "Search" },
-      { href: "/tracker/bulk", label: "Bulk" },
-      { href: "/tracker/browse", label: "Browse" },
-      { href: "/tracker/resources", label: "Resources" },
-      { href: "/tracker/stats", label: "Stats" },
-      { href: "/tracker/discovery", label: "Discovery" },
-      { href: "/tracker/prospecting", label: "Prospecting" },
+      { href: "/tracker", label: "Resumen" },
+      { href: "/tracker/browse", label: "Hoteles" },
+      { href: "/tracker/search", label: "Analizar URL" },
+      { href: "/tracker/bulk", label: "Lotes" },
+      { href: "/tracker/resources", label: "Proveedores" },
+      { href: "/tracker/stats", label: "Métricas" },
+      { href: "/tracker/discovery", label: "Descubrimiento" },
+      { href: "/tracker/prospecting", label: "Prospección" },
     ],
   },
 ];

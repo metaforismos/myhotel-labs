@@ -30,69 +30,6 @@ async function getTotals(): Promise<Totals> {
   }
 }
 
-const phases = [
-  {
-    phase: "Fase 0",
-    title: "Fundación",
-    desc: "Schema DB, seed import, shell UI navegable.",
-    status: "in-progress" as const,
-  },
-  {
-    phase: "Fase 1A",
-    title: "Detector por reglas",
-    desc: "HTML estático + reglas JSON + endpoint síncrono /api/tracker/analyze.",
-    status: "pending" as const,
-  },
-  {
-    phase: "Fase 1B",
-    title: "Wappalyzer + agencia web",
-    desc: "Ampliar detección con Wappalyzer y reglas de agencias LatAm.",
-    status: "pending" as const,
-  },
-  {
-    phase: "Fase 1C",
-    title: "OTA linkage",
-    desc: "Extraer links outbound + fallback SerpAPI/Serper para matching por nombre+geo.",
-    status: "pending" as const,
-  },
-  {
-    phase: "Fase 1D",
-    title: "Persistencia + Bulk",
-    desc: "Guardar análisis en DB, subida CSV batch, export CSV/JSON.",
-    status: "pending" as const,
-  },
-  {
-    phase: "Fase 1E",
-    title: "Headless browser fallback",
-    desc: "Playwright/crawl4ai para sitios JS-heavy con estrategia 2 pasadas.",
-    status: "pending" as const,
-  },
-  {
-    phase: "Fase 2",
-    title: "Discovery geográfico",
-    desc: "Workers Python portados, cola de jobs, dedupe fuzzy + geo.",
-    status: "pending" as const,
-  },
-  {
-    phase: "Fase 3",
-    title: "Contactos",
-    desc: "Apollo + Hunter + LinkedIn, validación email, UI contactos. Gate legal previo.",
-    status: "blocked" as const,
-  },
-  {
-    phase: "Fase 4",
-    title: "Prospecting",
-    desc: "Secuencias multicanal + voz Vapi/Retell + Slack/HubSpot handoff.",
-    status: "blocked" as const,
-  },
-];
-
-const statusStyle: Record<(typeof phases)[number]["status"], string> = {
-  "in-progress": "bg-accent/15 text-accent-light border-accent/40",
-  pending: "bg-surface-2 text-text-dim border-border",
-  blocked: "bg-negative-muted text-negative border-negative/30",
-};
-
 export default async function TrackerOverviewPage() {
   const totals = await getTotals();
 
@@ -128,44 +65,14 @@ export default async function TrackerOverviewPage() {
 
       <section>
         <h2 className="text-[10px] font-semibold uppercase tracking-[0.15em] text-text-dim mb-2">
-          Roadmap
-        </h2>
-        <div className="border border-border rounded-md bg-surface divide-y divide-border">
-          {phases.map((p) => (
-            <div key={p.phase} className="px-4 py-3 flex items-start gap-4">
-              <div className="w-20 shrink-0">
-                <span
-                  className={`inline-block px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide border rounded ${statusStyle[p.status]}`}
-                >
-                  {p.phase}
-                </span>
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="text-sm font-medium text-text">{p.title}</div>
-                <div className="text-xs text-text-dim mt-0.5">{p.desc}</div>
-              </div>
-              <div className="text-[10px] text-text-dim uppercase tracking-wider shrink-0 self-center">
-                {p.status === "in-progress"
-                  ? "en curso"
-                  : p.status === "blocked"
-                    ? "gate legal"
-                    : "pendiente"}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <h2 className="text-[10px] font-semibold uppercase tracking-[0.15em] text-text-dim mb-2">
           Accesos rápidos
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
           <Link
             href="/tracker/browse"
             className="border border-border rounded-md bg-surface px-4 py-3 hover:border-border-light transition-colors"
           >
-            <div className="text-sm font-medium text-text">Browse</div>
+            <div className="text-sm font-medium text-text">Hoteles</div>
             <div className="text-xs text-text-dim mt-1">
               Explorar la base con filtros por país, ciudad y cliente.
             </div>
@@ -174,18 +81,27 @@ export default async function TrackerOverviewPage() {
             href="/tracker/search"
             className="border border-border rounded-md bg-surface px-4 py-3 hover:border-border-light transition-colors"
           >
-            <div className="text-sm font-medium text-text">Search</div>
+            <div className="text-sm font-medium text-text">Analizar URL</div>
             <div className="text-xs text-text-dim mt-1">
-              Analizar una URL individual. Disponible en Fase 1A.
+              Correr el análisis sobre un hotel nuevo o puntual.
             </div>
           </Link>
           <Link
             href="/tracker/bulk"
             className="border border-border rounded-md bg-surface px-4 py-3 hover:border-border-light transition-colors"
           >
-            <div className="text-sm font-medium text-text">Bulk</div>
+            <div className="text-sm font-medium text-text">Lotes</div>
             <div className="text-xs text-text-dim mt-1">
-              Subir CSV y analizar en batch. Disponible en Fase 1D.
+              Subir CSV y analizar cientos en segundo plano.
+            </div>
+          </Link>
+          <Link
+            href="/tracker/stats"
+            className="border border-border rounded-md bg-surface px-4 py-3 hover:border-border-light transition-colors"
+          >
+            <div className="text-sm font-medium text-text">Métricas</div>
+            <div className="text-xs text-text-dim mt-1">
+              Top agencias, vendors por categoría y cobertura por país.
             </div>
           </Link>
         </div>
