@@ -79,7 +79,7 @@ export async function verifyAgency(args: {
       maxTokens: 800,
     }),
     new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error("llm_timeout_25s")), 25000)
+      setTimeout(() => reject(new Error("llm_timeout_40s")), 40000)
     ),
   ]);
 

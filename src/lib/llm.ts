@@ -18,13 +18,16 @@ interface CallLLMResult {
 const MAX_RETRIES = 3;
 const BASE_DELAY_MS = 1000;
 
-// Fallback chain: if primary provider fails, try these in order
+// Fallback chain: if primary provider fails, try these in order.
+// Orden actualizado (2026-04-16): Claude Haiku PRIMERO después de
+// Gemini porque bajo carga concurrente (Tracker bulk + auto-classify)
+// Gemini Flash daba 502/503; Claude Haiku se comportó más estable.
 const FALLBACK_CHAIN: Record<string, string[]> = {
-  "gemini-flash": ["openai-gpt4o-mini", "claude-haiku"],
-  "openai-gpt4o-mini": ["gemini-flash", "claude-haiku"],
+  "gemini-flash": ["claude-haiku", "openai-gpt4o-mini"],
+  "openai-gpt4o-mini": ["claude-haiku", "gemini-flash"],
   "claude-haiku": ["gemini-flash", "openai-gpt4o-mini"],
   "claude-sonnet": ["gemini-pro", "gemini-flash", "openai-gpt4o-mini"],
-  "gemini-pro": ["gemini-flash", "claude-sonnet", "openai-gpt4o-mini"],
+  "gemini-pro": ["claude-sonnet", "gemini-flash", "openai-gpt4o-mini"],
 };
 
 async function withRetry<T>(fn: () => Promise<T>, retries = MAX_RETRIES): Promise<T> {
@@ -34,16 +37,16 @@ async function withRetry<T>(fn: () => Promise<T>, retries = MAX_RETRIES): Promis
       return await fn();
     } catch (err) {
       lastError = err instanceof Error ? err : new Error(String(err));
-      const isRetryable =
-        lastError.message.includes("overloaded") ||
-        lastError.message.includes("rate") ||
-        lastError.message.includes("529") ||
-        lastError.message.includes("500") ||
-        lastError.message.includes("timeout") ||
+      // Retry solo errores claramente transients de red. Códigos 5xx /
+      // overload / rate-limit caen al fallback chain inmediatamente
+      // (reintentar en el mismo provider bajo load sostenido es
+      // desperdicio de latencia).
+      const isTransientNetwork =
         lastError.message.includes("ECONNRESET") ||
-        lastError.message.includes("fetch failed");
+        lastError.message.includes("fetch failed") ||
+        lastError.message.includes("ETIMEDOUT");
 
-      if (!isRetryable || attempt === retries) throw lastError;
+      if (!isTransientNetwork || attempt === retries) throw lastError;
 
       const delay = BASE_DELAY_MS * Math.pow(2, attempt) + Math.random() * 500;
       console.log(`[LLM] Retry ${attempt + 1}/${retries} after ${Math.round(delay)}ms — ${lastError.message}`);
