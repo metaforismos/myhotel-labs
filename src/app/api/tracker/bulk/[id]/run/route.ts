@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { analyzeUrl } from "@/lib/tracker/analyze";
+import { extractOtaPresence } from "@/lib/tracker/ota";
 import { compactStackSummary, synthesizeStack } from "@/lib/tracker/stack";
 
 export const maxDuration = 60;
@@ -75,10 +76,16 @@ export async function POST(
       [id]
     );
     const res = await client.query<ItemRow>(
-      `SELECT id, url, input
-       FROM tracker_bulk_job_items
-       WHERE job_id = $1 AND status = 'pending'
-       ORDER BY idx ASC
+      `SELECT i.id, i.url, i.input
+       FROM tracker_bulk_job_items i
+       WHERE i.job_id = $1 AND i.status = 'pending'
+         AND NOT EXISTS (
+           SELECT 1 FROM tracker_bulk_job_items other
+           WHERE other.url = i.url
+             AND other.status = 'running'
+             AND other.job_id <> i.job_id
+         )
+       ORDER BY i.idx ASC
        LIMIT $2
        FOR UPDATE SKIP LOCKED`,
       [id, batchSize]
@@ -137,6 +144,7 @@ export async function POST(
 
       const stack = synthesizeStack(r.detections, r.resources);
       const compact = compactStackSummary(stack);
+      const otas = extractOtaPresence(r.outbound_links || []);
       const summary = {
         final_url: r.final_url,
         status: r.status,
@@ -155,6 +163,7 @@ export async function POST(
               confidence: r.agency.confidence,
             }
           : null,
+        otas: otas.map((o) => ({ ota: o.ota, profile_url: o.profile_url })),
         stack,
         ...compact,
       };

@@ -2,6 +2,7 @@ import type { PoolClient } from "pg";
 import pool from "@/lib/db";
 import { detect } from "./detector";
 import { canonicalizeUrl, fetchHtml, normalizeUrl } from "./fetcher";
+import { extractOtaPresence } from "./ota";
 import type { AnalyzeResult, RawResource, ResourceRole } from "./types";
 
 export type AnalyzePrefill = {
@@ -235,6 +236,21 @@ async function persistAnalysis(
           ]
         );
       }
+    }
+
+    // Persist OTA presence derived from outbound links.
+    const otaPresence = extractOtaPresence(result.outbound_links || []);
+    for (const ota of otaPresence) {
+      await client.query(
+        `INSERT INTO tracker_hotel_ota_presence
+           (hotel_id, ota, profile_url, confidence, verified_at)
+         VALUES ($1, $2, $3, $4, NOW())
+         ON CONFLICT (hotel_id, ota) DO UPDATE SET
+           profile_url = EXCLUDED.profile_url,
+           confidence = GREATEST(tracker_hotel_ota_presence.confidence, EXCLUDED.confidence),
+           verified_at = NOW()`,
+        [hotel_id, ota.ota, ota.profile_url, ota.confidence]
+      );
     }
 
     if (result.agency) {

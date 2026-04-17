@@ -17,6 +17,7 @@ type StatsResponse = {
     verified: number;
   }[];
   agencies_pending_verify?: number;
+  otas?: { ota: string; hotels: number; pct_of_analyzed: number }[];
   roles: {
     role: string;
     hotels_with: number;
@@ -209,6 +210,31 @@ export function TrackerStats() {
           </div>
         </div>
       </section>
+
+      {data.otas && data.otas.length > 0 && (
+        <section>
+          <h2 className="text-[10px] font-semibold uppercase tracking-[0.15em] text-text-dim mb-2">
+            Presencia en OTAs (desde outbound links del sitio)
+          </h2>
+          <div className="border border-border rounded-md bg-surface divide-y divide-border">
+            {data.otas.map((o) => (
+              <div
+                key={o.ota}
+                className="px-4 py-2.5 grid grid-cols-[220px,1fr,80px,80px] items-center gap-3"
+              >
+                <div className="text-sm text-text capitalize">{o.ota}</div>
+                <Bar value={o.pct_of_analyzed} />
+                <div className="text-right text-xs tabular-nums text-text-muted">
+                  {o.hotels} hoteles
+                </div>
+                <div className="text-right text-sm font-medium tabular-nums text-text">
+                  {pctText(o.pct_of_analyzed)}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {data.agencies && data.agencies.length > 0 && (
         <section>

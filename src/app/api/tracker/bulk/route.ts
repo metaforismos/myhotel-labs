@@ -67,6 +67,36 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  // Dedup contra URLs ya en vuelo en OTROS jobs (pending / running).
+  // Evita que dos batches paralelos consuman API quota analizando la
+  // misma URL. La segunda la marca como "in_flight" y se descarta.
+  const inFlightRes = await pool.query<{ url: string }>(
+    `SELECT DISTINCT url FROM tracker_bulk_job_items
+     WHERE status IN ('pending','running')
+       AND url = ANY($1::text[])`,
+    [normalized.map((n) => n.url)]
+  );
+  const inFlightSet = new Set(inFlightRes.rows.map((r) => r.url));
+  const inFlight: { idx: number; url: string }[] = [];
+  const filtered = normalized.filter((n) => {
+    if (inFlightSet.has(n.url)) {
+      inFlight.push({ idx: n.idx, url: n.url });
+      return false;
+    }
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    return NextResponse.json(
+      {
+        error: "all_urls_in_flight",
+        rejected,
+        in_flight: inFlight,
+      },
+      { status: 409 }
+    );
+  }
+
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
@@ -74,11 +104,11 @@ export async function POST(request: NextRequest) {
       `INSERT INTO tracker_bulk_jobs (label, total, status)
        VALUES ($1, $2, 'created')
        RETURNING id`,
-      [body.label ?? null, normalized.length]
+      [body.label ?? null, filtered.length]
     );
     const jobId = job.rows[0].id;
 
-    for (const item of normalized) {
+    for (const item of filtered) {
       const { url, input } = item;
       await client.query(
         `INSERT INTO tracker_bulk_job_items (job_id, idx, url, input)
@@ -103,7 +133,12 @@ export async function POST(request: NextRequest) {
     }
     await client.query("COMMIT");
     return NextResponse.json(
-      { job_id: jobId, accepted: normalized.length, rejected },
+      {
+        job_id: jobId,
+        accepted: filtered.length,
+        rejected,
+        in_flight: inFlight,
+      },
       { status: 201 }
     );
   } catch (err) {

@@ -27,23 +27,32 @@ export async function POST(request: NextRequest) {
   const limit = Math.min(2000, Math.max(1, body.limit ?? 500));
   const olderThan = body.older_than_days ?? null;
 
-  const where: string[] = ["website_url IS NOT NULL"];
+  // Guard anti-duplicado: excluye hoteles cuya website_url ya está
+  // siendo analizada en otro job pending/running. Evita gasto de API
+  // quota por batches paralelos que se solapan.
+  const where: string[] = [
+    "h.website_url IS NOT NULL",
+    `NOT EXISTS (
+       SELECT 1 FROM tracker_bulk_job_items i
+       WHERE i.status IN ('pending','running') AND i.url = h.website_url
+     )`,
+  ];
   const values: unknown[] = [];
 
   if (body.country) {
     values.push(body.country);
-    where.push(`country = $${values.length}`);
+    where.push(`h.country = $${values.length}`);
   }
   if (body.city) {
     values.push(body.city);
-    where.push(`city = $${values.length}`);
+    where.push(`h.city = $${values.length}`);
   }
   if (olderThan === null) {
-    where.push(`last_enriched_at IS NULL`);
+    where.push(`h.last_enriched_at IS NULL`);
   } else {
     values.push(olderThan);
     where.push(
-      `(last_enriched_at IS NULL OR last_enriched_at < NOW() - ($${values.length} || ' days')::interval)`
+      `(h.last_enriched_at IS NULL OR h.last_enriched_at < NOW() - ($${values.length} || ' days')::interval)`
     );
   }
 
@@ -60,11 +69,11 @@ export async function POST(request: NextRequest) {
       external_id: string | null;
       is_customer: boolean;
     }>(
-      `SELECT id, website_url, canonical_name, country, city, region,
-              external_id, is_customer
-       FROM tracker_hotels
+      `SELECT h.id, h.website_url, h.canonical_name, h.country, h.city, h.region,
+              h.external_id, h.is_customer
+       FROM tracker_hotels h
        WHERE ${where.join(" AND ")}
-       ORDER BY last_enriched_at NULLS FIRST, canonical_name
+       ORDER BY h.last_enriched_at NULLS FIRST, h.canonical_name
        LIMIT $${values.length}`,
       values
     );

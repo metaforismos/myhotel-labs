@@ -131,6 +131,13 @@ export async function GET() {
       `SELECT COUNT(*)::int AS n FROM tracker_hotel_agency WHERE verified_at IS NULL`
     );
 
+    const otasRes = await pool.query<{ ota: string; hotels: number }>(
+      `SELECT ota, COUNT(DISTINCT hotel_id)::int AS hotels
+       FROM tracker_hotel_ota_presence
+       GROUP BY ota
+       ORDER BY hotels DESC`
+    );
+
     const chainsRes = await pool.query<{
       chains: number;
       independents: number;
@@ -223,6 +230,12 @@ export async function GET() {
       },
       agencies: agenciesRes.rows,
       agencies_pending_verify: agencyVerifyPending.rows[0].n,
+      otas: otasRes.rows.map((r) => ({
+        ota: r.ota,
+        hotels: r.hotels,
+        pct_of_analyzed:
+          hotelsAnalyzed > 0 ? r.hotels / hotelsAnalyzed : 0,
+      })),
       roles,
       classification: classification.rows[0],
       penetration,

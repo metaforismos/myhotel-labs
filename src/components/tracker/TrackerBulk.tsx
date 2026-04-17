@@ -46,6 +46,7 @@ type Item = {
       url: string | null;
       confidence: number;
     } | null;
+    otas?: { ota: string; profile_url: string }[];
     categories?: string[];
     booking_engine?: string | null;
     cms?: string | null;
@@ -369,7 +370,18 @@ export function TrackerBulk() {
         }),
       });
       const d = await r.json();
-      if (!r.ok) throw new Error(d.error || `error_${r.status}`);
+      if (!r.ok) {
+        const inFlightMsg =
+          d.in_flight?.length > 0
+            ? ` (${d.in_flight.length} URLs ya están en otro batch en curso — usá el batch existente o esperá a que termine)`
+            : "";
+        throw new Error((d.error || `error_${r.status}`) + inFlightMsg);
+      }
+      if (d.in_flight?.length > 0) {
+        setRunErr(
+          `Batch creado con ${d.accepted} URLs. ${d.in_flight.length} se omitieron porque ya están en otro batch corriendo.`
+        );
+      }
       setActiveJobId(d.job_id);
       setRaw("");
       setParsed(null);
@@ -697,6 +709,7 @@ export function TrackerBulk() {
                   <th className="px-3 py-2">Booking</th>
                   <th className="px-3 py-2">CMS</th>
                   <th className="px-3 py-2">Agencia web</th>
+                  <th className="px-3 py-2">OTAs</th>
                   <th className="px-3 py-2">Otras capas</th>
                   <th className="px-3 py-2 text-right">Recursos</th>
                   <th className="px-3 py-2">Detalles</th>
@@ -732,6 +745,9 @@ export function TrackerBulk() {
                     </td>
                     <td className="px-3 py-1.5">
                       <AgencyCell agency={it.result_summary?.agency ?? null} />
+                    </td>
+                    <td className="px-3 py-1.5">
+                      <OtaPills otas={it.result_summary?.otas} />
                     </td>
                     <td className="px-3 py-1.5">
                       <CategoryPills stack={it.result_summary?.stack} exclude={["booking_engine", "cms"]} />
@@ -837,6 +853,31 @@ const CATEGORY_LABEL: Record<string, string> = {
   analytics: "Analytics",
   consent: "Consent",
 };
+
+function OtaPills({
+  otas,
+}: {
+  otas: { ota: string; profile_url: string }[] | undefined;
+}) {
+  if (!otas || otas.length === 0)
+    return <span className="text-text-dim text-xs">—</span>;
+  return (
+    <div className="flex flex-wrap gap-1">
+      {otas.map((o) => (
+        <a
+          key={o.ota}
+          href={o.profile_url}
+          target="_blank"
+          rel="noreferrer"
+          title={o.profile_url}
+          className="px-1.5 py-0 text-[10px] rounded border bg-positive-muted text-positive border-positive/30 hover:bg-positive/20 capitalize"
+        >
+          {o.ota}
+        </a>
+      ))}
+    </div>
+  );
+}
 
 function AgencyCell({
   agency,
