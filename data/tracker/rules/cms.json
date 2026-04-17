@@ -100,5 +100,17 @@
     "signatures": [
       { "type": "html", "pattern": "gatsby-focus-wrapper|___gatsby" }
     ]
+  },
+  {
+    "id": "profitroom_website",
+    "vendor": "Profitroom",
+    "product": "Profitroom Website",
+    "category": "cms",
+    "confidence_base": 0.9,
+    "signatures": [
+      { "type": "link_href", "pattern": "fonts\\.profitroom\\.com|wa-uploads\\.profitroom\\.com" },
+      { "type": "script_src", "pattern": "wa-uploads\\.profitroom\\.com|assets\\.profitroom\\.com" },
+      { "type": "html", "pattern": "fonts\\.profitroom\\.com|wa-uploads\\.profitroom\\.com" }
+    ]
   }
 ]
