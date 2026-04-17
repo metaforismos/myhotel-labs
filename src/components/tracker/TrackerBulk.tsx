@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { OrchestratorStatus } from "./OrchestratorStatus";
 
 type JobRow = {
   id: string;
@@ -553,6 +554,7 @@ export function TrackerBulk() {
 
   return (
     <div className="space-y-6">
+      <OrchestratorStatus />
       {!activeJobId && (
         <div className="border border-border rounded-md bg-surface p-4 space-y-3">
           <div className="flex items-start justify-between gap-4">
