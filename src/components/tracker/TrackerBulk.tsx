@@ -427,22 +427,39 @@ export function TrackerBulk() {
     if (activeJob.counts.done === 0) return;
     if (classifyFiredRef.current === activeJobId) return;
     classifyFiredRef.current = activeJobId;
-    setClassifyMsg("Clasificando unknowns del catálogo con LLM…");
+
     (async () => {
+      let totalSucceeded = 0;
+      let totalFailed = 0;
+      let totalMs = 0;
+      let pass = 0;
+      const MAX_PASSES = 10; // safety: ≤400 unknowns clasificados por batch
       try {
-        const r = await fetch("/api/tracker/resources/classify", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ batch: true, min_hotels: 1, limit: 40 }),
-        });
-        const d = await r.json();
-        if (!r.ok) {
-          setClassifyMsg(`Classify error: ${d.error || r.status}`);
-        } else {
+        while (pass < MAX_PASSES) {
+          pass++;
           setClassifyMsg(
-            `LLM: ${d.succeeded} clasificados · ${d.failed} fallas · ${Math.round((d.duration_ms || 0) / 1000)}s`
+            `Clasificando unknowns (pasada ${pass})… ${totalSucceeded} ya clasificados`
           );
+          const r = await fetch("/api/tracker/resources/classify", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ batch: true, min_hotels: 1, limit: 40 }),
+          });
+          const d = await r.json();
+          if (!r.ok) {
+            setClassifyMsg(`Classify error: ${d.error || r.status}`);
+            return;
+          }
+          totalSucceeded += d.succeeded || 0;
+          totalFailed += d.failed || 0;
+          totalMs += d.duration_ms || 0;
+          // Si no quedan pendientes, salimos. El endpoint devuelve processed=0
+          // cuando no hay candidatos con classified_by IS NULL.
+          if (!d.processed || d.processed === 0) break;
         }
+        setClassifyMsg(
+          `LLM: ${totalSucceeded} clasificados · ${totalFailed} fallas · ${Math.round(totalMs / 1000)}s (${pass} pasada${pass === 1 ? "" : "s"})`
+        );
       } catch (e) {
         setClassifyMsg(e instanceof Error ? e.message : "classify_failed");
       }
