@@ -482,9 +482,9 @@ for (const line of rowIter) {
 
   if (batch.length >= BATCH) {
     await flushBatch();
-    if (total % 5000 === 0) {
-      console.log(`  …procesados ${total} (ins=${inserted} upd=${updated} skip=${skipped})`);
-    }
+    console.log(
+      `  …procesados ${total} (ins=${inserted} upd=${updated} skip=${skipped} urls=${urlsFound})`
+    );
   }
 }
 

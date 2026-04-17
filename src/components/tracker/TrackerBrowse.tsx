@@ -43,6 +43,8 @@ export function TrackerBrowse() {
   const [list, setList] = useState<ListResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [enqueuing, setEnqueuing] = useState(false);
+  const [enqueueMsg, setEnqueueMsg] = useState<string | null>(null);
 
   const loadFacets = useCallback(async () => {
     try {
@@ -92,6 +94,46 @@ export function TrackerBrowse() {
     setIsCustomer("");
     setQ("");
     setPage(1);
+  };
+
+  const onEnqueuePending = async () => {
+    if (!confirm(
+      `Crear un batch con hasta 500 hoteles pendientes de analizar${country ? ` (país: ${country})` : ""}${city ? ` (ciudad: ${city})` : ""}? Solo incluye los que tienen website_url.`
+    )) {
+      return;
+    }
+    setEnqueuing(true);
+    setEnqueueMsg(null);
+    try {
+      const r = await fetch("/api/tracker/bulk/enqueue-pending", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          country: country || undefined,
+          city: city || undefined,
+          limit: 500,
+        }),
+      });
+      const d = await r.json();
+      if (!r.ok) {
+        setEnqueueMsg(`Error: ${d.error || r.status}`);
+        return;
+      }
+      if (d.accepted === 0) {
+        setEnqueueMsg("No hay hoteles pendientes con ese filtro.");
+        return;
+      }
+      setEnqueueMsg(
+        `Batch ${d.job_id.slice(0, 8)} creado con ${d.accepted} hoteles. Redirigiendo…`
+      );
+      setTimeout(() => {
+        window.location.href = `/tracker/bulk`;
+      }, 800);
+    } catch (e) {
+      setEnqueueMsg(e instanceof Error ? e.message : "error");
+    } finally {
+      setEnqueuing(false);
+    }
   };
 
   const toggleCustomer = async (h: Hotel) => {
@@ -219,6 +261,14 @@ export function TrackerBrowse() {
         >
           Limpiar
         </button>
+        <button
+          onClick={onEnqueuePending}
+          disabled={enqueuing}
+          className="px-3 py-1.5 text-xs font-medium rounded border border-accent/40 bg-accent/10 text-accent-light hover:bg-accent/20 disabled:opacity-50"
+          title="Crea un bulk job con hoteles del filtro actual que tengan URL pero no hayan sido analizados todavía. Redirecciona al job."
+        >
+          {enqueuing ? "Creando…" : "Enqueue pendientes →"}
+        </button>
         <div className="ml-auto text-xs text-text-dim">
           {facets ? (
             <>
@@ -230,6 +280,9 @@ export function TrackerBrowse() {
           )}
         </div>
       </div>
+      {enqueueMsg && (
+        <div className="text-xs text-text-muted px-1">{enqueueMsg}</div>
+      )}
 
       <div className="border border-border rounded-md bg-surface overflow-hidden">
         <table className="w-full text-sm">
