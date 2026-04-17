@@ -331,62 +331,80 @@ async function flushBatch() {
   if (!batch.length) return;
   await client.query("BEGIN");
   try {
-    for (const row of batch) {
-      const {
-        external_id,
-        canonical_name,
-        slug,
-        country,
-        region,
-        city,
-        lat,
-        lng,
-        website_url,
-        website_url_canonical,
-        raw,
-      } = row;
-
-      const res = await client.query(
-        `INSERT INTO tracker_hotels
-           (canonical_name, slug, country, region, city, lat, lng,
-            external_id, website_url, website_url_canonical)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-         ON CONFLICT (external_id) WHERE external_id IS NOT NULL DO UPDATE SET
-           canonical_name = EXCLUDED.canonical_name,
-           slug = EXCLUDED.slug,
-           country = COALESCE(EXCLUDED.country, tracker_hotels.country),
-           region = COALESCE(EXCLUDED.region, tracker_hotels.region),
-           city = COALESCE(EXCLUDED.city, tracker_hotels.city),
-           lat = COALESCE(EXCLUDED.lat, tracker_hotels.lat),
-           lng = COALESCE(EXCLUDED.lng, tracker_hotels.lng),
-           website_url = COALESCE(tracker_hotels.website_url, EXCLUDED.website_url),
-           website_url_canonical = COALESCE(tracker_hotels.website_url_canonical, EXCLUDED.website_url_canonical),
-           updated_at = NOW()
-         RETURNING id, (xmax = 0) AS inserted`,
-        [
-          canonical_name,
-          slug,
-          country,
-          region,
-          city,
-          lat,
-          lng,
-          external_id,
-          website_url,
-          website_url_canonical,
-        ]
+    // Multi-row UPSERT de tracker_hotels. 10 columnas × N filas.
+    const hotelParams = [];
+    const hotelValues = [];
+    for (let i = 0; i < batch.length; i++) {
+      const r = batch[i];
+      const base = i * 10;
+      hotelValues.push(
+        `($${base + 1}, $${base + 2}, $${base + 3}, $${base + 4}, $${base + 5}, $${base + 6}, $${base + 7}, $${base + 8}, $${base + 9}, $${base + 10})`
       );
-      const { id, inserted: wasInserted } = res.rows[0];
-      if (wasInserted) inserted++;
-      else updated++;
-
-      await client.query(
-        `INSERT INTO tracker_hotel_sources (hotel_id, source, raw)
-         VALUES ($1, $2, $3)
-         ON CONFLICT DO NOTHING`,
-        [id, SOURCE_TAG, raw]
+      hotelParams.push(
+        r.canonical_name,
+        r.slug,
+        r.country,
+        r.region,
+        r.city,
+        r.lat,
+        r.lng,
+        r.external_id,
+        r.website_url,
+        r.website_url_canonical
       );
     }
+
+    const hotelRes = await client.query(
+      `INSERT INTO tracker_hotels
+         (canonical_name, slug, country, region, city, lat, lng,
+          external_id, website_url, website_url_canonical)
+       VALUES ${hotelValues.join(",")}
+       ON CONFLICT (external_id) WHERE external_id IS NOT NULL DO UPDATE SET
+         canonical_name = EXCLUDED.canonical_name,
+         slug = EXCLUDED.slug,
+         country = COALESCE(EXCLUDED.country, tracker_hotels.country),
+         region = COALESCE(EXCLUDED.region, tracker_hotels.region),
+         city = COALESCE(EXCLUDED.city, tracker_hotels.city),
+         lat = COALESCE(EXCLUDED.lat, tracker_hotels.lat),
+         lng = COALESCE(EXCLUDED.lng, tracker_hotels.lng),
+         website_url = COALESCE(tracker_hotels.website_url, EXCLUDED.website_url),
+         website_url_canonical = COALESCE(tracker_hotels.website_url_canonical, EXCLUDED.website_url_canonical),
+         updated_at = NOW()
+       RETURNING id, external_id, (xmax = 0) AS inserted`,
+      hotelParams
+    );
+
+    // Mapear external_id → hotel_id para insertar sources.
+    const idByExt = new Map();
+    for (const row of hotelRes.rows) {
+      idByExt.set(row.external_id, row.id);
+      if (row.inserted) inserted++;
+      else updated++;
+    }
+
+    // Multi-row INSERT de sources. ON CONFLICT DO NOTHING en caso de
+    // re-run (source tag + hotel_id no tiene unique real, así que
+    // agregaría duplicados en re-runs — toleramos y limpiamos aparte).
+    const srcParams = [];
+    const srcValues = [];
+    let srcIdx = 0;
+    for (const r of batch) {
+      const hotelId = idByExt.get(r.external_id);
+      if (!hotelId) continue;
+      const base = srcIdx * 3;
+      srcValues.push(`($${base + 1}, $${base + 2}, $${base + 3}::jsonb)`);
+      srcParams.push(hotelId, SOURCE_TAG, JSON.stringify(r.raw));
+      srcIdx++;
+    }
+    if (srcValues.length > 0) {
+      await client.query(
+        `INSERT INTO tracker_hotel_sources (hotel_id, source, raw)
+         VALUES ${srcValues.join(",")}
+         ON CONFLICT DO NOTHING`,
+        srcParams
+      );
+    }
+
     await client.query("COMMIT");
   } catch (err) {
     await client.query("ROLLBACK");
