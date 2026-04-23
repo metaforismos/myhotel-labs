@@ -33,6 +33,7 @@ const sections: NavSection[] = [
     label: "Analytics",
     items: [
       { href: "/analytics", label: "GA4 Explorer" },
+      { href: "/analytics/plg-funnel", label: "Concierge PLG Funnel" },
     ],
   },
   {
