@@ -51,10 +51,20 @@ export async function POST(req: NextRequest) {
       idiomaPrior: idioma,
     });
 
+    // Normalización suave de marcadores (+)/(-): si la reseña los usa como
+    // delimitadores de sección, los explicitamos como pista para el LLM en
+    // vez de borrarlos (preservamos el texto original para spans literales).
+    const hasPositiveMarker = /\([\+]\)/.test(text);
+    const hasNegativeMarker = /\([\-–−]\)/.test(text);
+    const userMessage =
+      hasPositiveMarker || hasNegativeMarker
+        ? `NOTA DE FORMATO: este texto usa ${hasPositiveMarker ? "(+) para marcar bloques positivos" : ""}${hasPositiveMarker && hasNegativeMarker ? " y " : ""}${hasNegativeMarker ? "(-) para marcar bloques negativos" : ""}. Tratá cada bloque como una sección distinta y extraé TODAS las opiniones de ambos. No descartes el bloque negativo.\n\n---\n\n${text}`
+        : text;
+
     const { text: rawText } = await callLLM({
       modelId: model,
       systemPrompt,
-      userMessage: text,
+      userMessage,
       maxTokens: 4096,
     });
 

@@ -1,5 +1,5 @@
 {
-  "count": 201,
+  "count": 204,
   "nota": "area_primary = unica que suma al indice (MECE). areas_secondary = filtro/referencia, NO cuenta. Regla aplicada: primary=area_1, salvo dimension limpieza/olor en tags no-staff -> Housekeeping. Requiere curacion humana.",
   "temas": [
     {
@@ -5774,6 +5774,75 @@
         "pt": null
       },
       "nuevo": true
+    },
+    {
+      "tag": "experience-information_accuracy",
+      "dimension": "Comunicación",
+      "dimension_slug": null,
+      "area_primary": { "area_id": 1, "es": "Recepción" },
+      "areas_secondary": [],
+      "labels": {
+        "es": "Exactitud de la información",
+        "en": "Information accuracy",
+        "pt": "Exatidão da informação"
+      },
+      "descriptions": {
+        "es": "Información engañosa, contradictoria o incorrecta dada al huésped (web, recepción, staff).",
+        "en": null,
+        "pt": null
+      },
+      "examples": {
+        "es": "Me dijeron una cosa y resultó ser otra.\nLa información fue clara y precisa.",
+        "en": null,
+        "pt": null
+      },
+      "nuevo": true
+    },
+    {
+      "tag": "experience-reservation_fulfillment",
+      "dimension": "Fiabilidad",
+      "dimension_slug": null,
+      "area_primary": { "area_id": 6, "es": "Reservas" },
+      "areas_secondary": [],
+      "labels": {
+        "es": "Cumplimiento de la reserva",
+        "en": "Reservation fulfillment",
+        "pt": "Cumprimento da reserva"
+      },
+      "descriptions": {
+        "es": "Lo confirmado en la reserva vs lo entregado: habitaciones, servicios o accesos no honrados.",
+        "en": null,
+        "pt": null
+      },
+      "examples": {
+        "es": "Confirmaron la reserva y al llegar no la tenían.\nTodo tal cual lo reservé.",
+        "en": null,
+        "pt": null
+      },
+      "nuevo": true
+    },
+    {
+      "tag": "experience-service_recovery",
+      "dimension": "Resolución",
+      "dimension_slug": null,
+      "area_primary": { "area_id": 1, "es": "Recepción" },
+      "areas_secondary": [],
+      "labels": {
+        "es": "Resolución de problemas / compensación",
+        "en": "Service recovery",
+        "pt": "Resolução de problemas"
+      },
+      "descriptions": {
+        "es": "Manejo de quejas y errores: disculpas, soluciones y compensaciones cuando algo sale mal.",
+        "en": null,
+        "pt": null
+      },
+      "examples": {
+        "es": "Se disculparon pero no ofrecieron compensación.\nResolvieron el problema al instante.",
+        "en": null,
+        "pt": null
+      },
+      "nuevo": true
     }
   ],
   "curaduria_v2": {
@@ -5782,7 +5851,14 @@
       "experience-dietary_options",
       "experience-family_friendly",
       "experience-sustainability",
-      "experience-smoking_policy"
+      "experience-smoking_policy",
+      "experience-information_accuracy",
+      "experience-reservation_fulfillment",
+      "experience-service_recovery"
+    ],
+    "dimensiones_nuevas_post_test": [
+      "Fiabilidad (cumplimiento de reserva)",
+      "Resolución (recuperación de servicio / compensación)"
     ],
     "fixes_primaria": [
       "facilities-recreation-pool -> Piscina",

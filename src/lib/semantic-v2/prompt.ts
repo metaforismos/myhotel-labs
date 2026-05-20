@@ -59,13 +59,14 @@ CONTRATO DE SALIDA — JSON estricto, sin texto extra, sin markdown:
 }
 
 REGLAS DURAS (no negociables)
+0. **EXTRAÉ TODAS LAS OPINIONES.** No resumas ni te quedes con la principal. Un comentario negativo largo suele tener 3-5 menciones. Recorré el texto entero, incluido lo que venga después de marcadores como (+) o (-).
 1. **Subtema neutro.** La clave del subtema es un sustantivo (baño, ducha, bartender, ascensor). NUNCA pegar el adjetivo a la clave (no: "baño-sucio", "bartender-grosero").
 2. **Polaridad contextual.** Maneja negación ("no estaba sucio" → positivo), sarcasmo, comparativos, e intensificadores. La polaridad NO va codificada en el subtema; es campo aparte.
 3. **Una mención por span.** Si una frase tiene dos opiniones, son dos menciones. NO deduplicar por tema.
 4. **Capturar (+) y (–) y sugerencias.** Una sugerencia constructiva ("deberían tener menú vegano") → polaridad: "sugerencia", no negativo.
 5. **No traducir.** Procesá en el idioma del huésped. El campo \`span\` queda en ese idioma. \`tema\` y \`subtema\` son canónicos (en español neutro / slug en inglés).
 6. **No elijas el área.** El área la pone el sistema con un lookup determinístico desde el tema. Solo decidí \`tema\`, \`subtema\`, \`dimension\` y \`polaridad\`.
-7. **Reusá antes de proponer.** Si el subtema del huésped existe en la base, usalo. Solo marcá \`propuesto: true\` y \`tema: null\` cuando realmente no encaje en ninguno.
+7. **Reusá antes de proponer, pero NUNCA descartes.** Si el subtema del huésped existe en la base, usalo. Si una opinión clara —SOBRE TODO si es negativa o una queja— no calza en ningún tema del catálogo, NUNCA la descartes: emitíla con \`tema: null\`, \`propuesto: true\`, y rellená subtema, dimensión y polaridad. Omitir una queja por no encontrarle tema es un error grave.
 8. **La pregunta de la encuesta** ("¿Cómo podemos mejorar?") es contexto/prior, NO obliga a polaridad negativa.
 
 CONTEXTO DE ESTA RESEÑA
@@ -85,6 +86,17 @@ NOTAS DE EXTRACCIÓN
 - \`confianza\` 0.9+ cuando estés seguro; 0.5–0.7 cuando hay ambigüedad.
 - \`intensidad\` refleja la fuerza del adjetivo o adverbio ("muy", "increíble", "horrible" → fuerte; "más o menos" → leve).
 - Si la reseña habla de algo que no tiene área habilitada en el hotel (ej. Ski cuando Ski está OFF), igual extraé la mención — quedará como \`propuesto\` o sin área primaria. El sistema lo rutea.
+
+EJEMPLO
+Comentario: "(+) El hotel esta bien, la comida ok. (-) Estafa. Reservé porque tiene playas privadas; al llegar me dicen que la mejor es para afiliados, me hacen reserva para 2 días después. Confirmo y me dicen que sí, sin problema. Llego y está cerrada por mantenimiento. Me quejo, el encargado se disculpa pero ni una compensación. Una vergüenza."
+Salida esperada:
+{"menciones":[
+  {"span":"El hotel esta bien","subtema":"hotel","tema":null,"dimension":"General","polaridad":"positivo","intensidad":"leve","confianza":0.7,"idioma":"es","propuesto":true},
+  {"span":"la comida ok","subtema":"comida","tema":"food-restaurant","dimension":"Calidad","polaridad":"neutral","intensidad":"leve","confianza":0.7,"idioma":"es","propuesto":false},
+  {"span":"me dicen que la mejor es para afiliados","subtema":"información","tema":"experience-information_accuracy","dimension":"Comunicación","polaridad":"negativo","intensidad":"moderada","confianza":0.8,"idioma":"es","propuesto":false},
+  {"span":"Confirmo y me dicen que sí, sin problema. Llego y está cerrada","subtema":"reserva","tema":"experience-reservation_fulfillment","dimension":"Fiabilidad","polaridad":"negativo","intensidad":"fuerte","confianza":0.85,"idioma":"es","propuesto":false},
+  {"span":"el encargado se disculpa pero ni una compensación","subtema":"compensación","tema":"experience-service_recovery","dimension":"Resolución","polaridad":"negativo","intensidad":"fuerte","confianza":0.9,"idioma":"es","propuesto":false}
+]}
 
 Devolvé SOLO el JSON. Sin preámbulo, sin epílogo.`;
 }
