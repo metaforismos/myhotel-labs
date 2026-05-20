@@ -1,0 +1,300 @@
+{
+  "property_type": "Hotel",
+  "nota": "tipo=universal siempre activa; tipo=instalacion el hotel la prende/apaga. Heuristica inicial, requiere curacion.",
+  "areas": [
+    {
+      "area_id": 1,
+      "es": "Recepción",
+      "en": "Front Desk",
+      "pt": "Recepção",
+      "tipo": "universal"
+    },
+    {
+      "area_id": 2,
+      "es": "Alimentos y Bebidas",
+      "en": "Food & Beverages",
+      "pt": "Alimentos e Bebidas",
+      "tipo": "universal"
+    },
+    {
+      "area_id": 3,
+      "es": "Infraestructura",
+      "en": "Infrastructure",
+      "pt": "Infraestrutura",
+      "tipo": "universal"
+    },
+    {
+      "area_id": 4,
+      "es": "Housekeeping",
+      "en": "Housekeeping",
+      "pt": "Governança",
+      "tipo": "universal"
+    },
+    {
+      "area_id": 5,
+      "es": "Tecnología",
+      "en": "Technology",
+      "pt": "Tecnologia",
+      "tipo": "universal"
+    },
+    {
+      "area_id": 6,
+      "es": "Reservas",
+      "en": "Reservations",
+      "pt": "Reservas",
+      "tipo": "universal"
+    },
+    {
+      "area_id": 7,
+      "es": "Exploraciones",
+      "en": "Explorations",
+      "pt": "Explorações",
+      "tipo": "instalacion"
+    },
+    {
+      "area_id": 8,
+      "es": "Excursiones",
+      "en": "Excursions",
+      "pt": "Excursões",
+      "tipo": "instalacion"
+    },
+    {
+      "area_id": 9,
+      "es": "Eventos",
+      "en": "Events",
+      "pt": "Eventos",
+      "tipo": "instalacion"
+    },
+    {
+      "area_id": 10,
+      "es": "Spa",
+      "en": "SPA",
+      "pt": "Spa",
+      "tipo": "instalacion"
+    },
+    {
+      "area_id": 12,
+      "es": "Habitaciones",
+      "en": "Rooms",
+      "pt": "Quartos",
+      "tipo": "universal"
+    },
+    {
+      "area_id": 13,
+      "es": "Solicitudes",
+      "en": "Requests",
+      "pt": "Solicitações",
+      "tipo": "universal"
+    },
+    {
+      "area_id": 14,
+      "es": "Relación Precio / Calidad",
+      "en": "Value for Money",
+      "pt": "Relação Preço / Qualidade",
+      "tipo": "universal"
+    },
+    {
+      "area_id": 15,
+      "es": "Probabilidad de Retorno",
+      "en": "Return Probability",
+      "pt": "Probabilidade de Retorno",
+      "tipo": "instalacion"
+    },
+    {
+      "area_id": 16,
+      "es": "Yurt",
+      "en": "Yurt",
+      "pt": "Cabana",
+      "tipo": "instalacion"
+    },
+    {
+      "area_id": 17,
+      "es": "Servicio Restaurante",
+      "en": "Restaurant Service",
+      "pt": "Serviço de Restaurante",
+      "tipo": "instalacion"
+    },
+    {
+      "area_id": 18,
+      "es": "Banquete",
+      "en": "Banquet",
+      "pt": "Banquetes",
+      "tipo": "instalacion"
+    },
+    {
+      "area_id": 19,
+      "es": "Servicios",
+      "en": "Services",
+      "pt": "Serviços",
+      "tipo": "universal"
+    },
+    {
+      "area_id": 20,
+      "es": "Gimnasio",
+      "en": "Gym",
+      "pt": "Academia",
+      "tipo": "instalacion"
+    },
+    {
+      "area_id": 21,
+      "es": "Mantenimiento",
+      "en": "Maintenance",
+      "pt": "Manutenção",
+      "tipo": "universal"
+    },
+    {
+      "area_id": 22,
+      "es": "Personal",
+      "en": "Staff",
+      "pt": "Colaboradores",
+      "tipo": "universal"
+    },
+    {
+      "area_id": 23,
+      "es": "Entretenimiento",
+      "en": "Entertainment",
+      "pt": "Lazer",
+      "tipo": "instalacion"
+    },
+    {
+      "area_id": 24,
+      "es": "Piscina",
+      "en": "Pool",
+      "pt": "Piscina",
+      "tipo": "instalacion"
+    },
+    {
+      "area_id": 25,
+      "es": "Tiendas",
+      "en": "Stores",
+      "pt": "Lojas",
+      "tipo": "instalacion"
+    },
+    {
+      "area_id": 26,
+      "es": "Ski",
+      "en": "Ski",
+      "pt": "Ski",
+      "tipo": "instalacion"
+    },
+    {
+      "area_id": 27,
+      "es": "Bar",
+      "en": "Pub",
+      "pt": "Bar",
+      "tipo": "instalacion"
+    },
+    {
+      "area_id": 28,
+      "es": "Servicios en la pista",
+      "en": "Services on the track",
+      "pt": "Serviços na pista",
+      "tipo": "instalacion"
+    },
+    {
+      "area_id": 29,
+      "es": "Rental",
+      "en": "Rental",
+      "pt": "Aluguel",
+      "tipo": "instalacion"
+    },
+    {
+      "area_id": 30,
+      "es": "Escuela de Ski",
+      "en": "Class Ski",
+      "pt": "Escola de Ski",
+      "tipo": "instalacion"
+    },
+    {
+      "area_id": 31,
+      "es": "Pistas de Ski",
+      "en": "Ski slope",
+      "pt": "Pista de Ski",
+      "tipo": "instalacion"
+    },
+    {
+      "area_id": 32,
+      "es": "Sostenibilidad",
+      "en": "Sustainability",
+      "pt": "Sustentabilidade",
+      "tipo": "instalacion"
+    },
+    {
+      "area_id": 33,
+      "es": "Ubicación",
+      "en": "Location",
+      "pt": "Localização",
+      "tipo": "universal"
+    },
+    {
+      "area_id": 34,
+      "es": "Calidad del Sueño",
+      "en": "Sleep Quality",
+      "pt": "Qualidade do Sono",
+      "tipo": "instalacion"
+    },
+    {
+      "area_id": 35,
+      "es": "Seguridad",
+      "en": "Security",
+      "pt": "Segurança",
+      "tipo": "universal"
+    },
+    {
+      "area_id": 36,
+      "es": "Lavandería",
+      "en": "Laundry",
+      "pt": "Lavanderia",
+      "tipo": "instalacion"
+    },
+    {
+      "area_id": 37,
+      "es": "Áreas Públicas",
+      "en": "Public Areas",
+      "pt": "Áreas Públicas",
+      "tipo": "universal"
+    },
+    {
+      "area_id": 38,
+      "es": "Room Service",
+      "en": "Room Service",
+      "pt": "Serviço de Quarto",
+      "tipo": "instalacion"
+    },
+    {
+      "area_id": 39,
+      "es": "Programa de Fidelización",
+      "en": "Loyalty Club",
+      "pt": "Programa de Fidelidade",
+      "tipo": "instalacion"
+    },
+    {
+      "area_id": 40,
+      "es": "Transporte",
+      "en": "Transportation",
+      "pt": "Transporte",
+      "tipo": "instalacion"
+    },
+    {
+      "area_id": 109,
+      "es": "Bioseguridad",
+      "en": "Biosecurity",
+      "pt": "Biossegurança",
+      "tipo": "instalacion"
+    },
+    {
+      "area_id": 182,
+      "es": "Experiencia General",
+      "en": "General Experience",
+      "pt": "Experiência Geral",
+      "tipo": "universal"
+    },
+    {
+      "area_id": 183,
+      "es": "Comercial",
+      "en": "Commercial",
+      "pt": "Comercial",
+      "tipo": "instalacion"
+    }
+  ]
+}

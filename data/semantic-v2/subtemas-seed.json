@@ -1,0 +1,5797 @@
+{
+  "count": 236,
+  "source": "subtopics_match_count.csv — 892 subtemas adjetivo-sustantivo, uso total 4.183.374",
+  "metodo": "Neutralizado: clave=sustantivo (sin adjetivo); del adjetivo se derivan dimension y polaridad observadas (DATA, no autoritativa, p.ej. 'staff' -> dims [Actitud,Ayuda,Calidad,Conocimiento]). La clave NO lleva polaridad. area_sugerida: best-effort por elemento; los genericos (stay, experience, hotel) -> 'Experiencia General'. needs_curation=true => sin area asignada, encolar a descubrimiento/curacion. El tema exacto se resuelve por (subtema + dimension de la mencion) en runtime; temas_candidatos es solo pista por coincidencia de nodo. label_es agregado a los 85 del Pareto-90 (ES neutro LatAm); resto pendiente.",
+  "pareto": {
+    "elementos_total": 236,
+    "en_pareto_90": 85,
+    "pareto90_con_area": 78,
+    "con_area_total": 97,
+    "con_dimension_observada": 199,
+    "sin_area_(needs_curation)": 139
+  },
+  "subtemas": [
+    {
+      "subtema": "staff",
+      "label_es": "Personal",
+      "usage_count": 246236,
+      "cumulative_percentage": 5.89,
+      "in_pareto_90": true,
+      "area_sugerida": "Personal",
+      "dimensiones_observadas": [
+        "Actitud",
+        "Ayuda",
+        "Calidad",
+        "Conocimiento"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "bad",
+        "exceptional",
+        "friendly",
+        "helpful",
+        "knowledgeable",
+        "professional",
+        "rude",
+        "unhelpful",
+        "unprofessional"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "location",
+      "label_es": "Ubicación",
+      "usage_count": 208217,
+      "cumulative_percentage": 10.86,
+      "in_pareto_90": true,
+      "area_sugerida": "Ubicación",
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Calidad",
+        "Conveniencia",
+        "Ruido"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [
+        "property-location-neighborhood"
+      ],
+      "adjetivos_fuente": [
+        "bad",
+        "beautiful",
+        "convenient",
+        "great",
+        "noisy",
+        "quiet",
+        "remote"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "breakfast",
+      "label_es": "Desayuno",
+      "usage_count": 190507,
+      "cumulative_percentage": 15.42,
+      "in_pareto_90": true,
+      "area_sugerida": "Alimentos y Bebidas",
+      "dimensiones_observadas": [
+        "Calidad",
+        "Frescura",
+        "Precio",
+        "Sabor",
+        "Temperatura",
+        "Variedad"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [
+        "food-breakfast",
+        "food-breakfast-consistency",
+        "food-breakfast-cost",
+        "food-breakfast-freshness",
+        "food-breakfast-nutrition",
+        "food-breakfast-selection",
+        "food-breakfast-size",
+        "food-breakfast-smell",
+        "food-breakfast-taste",
+        "food-breakfast-temperature"
+      ],
+      "adjetivos_fuente": [
+        "bad",
+        "cold",
+        "delicious",
+        "free",
+        "fresh",
+        "hot",
+        "limited",
+        "poor"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "service",
+      "label_es": "Servicio",
+      "usage_count": 166969,
+      "cumulative_percentage": 19.41,
+      "in_pareto_90": true,
+      "area_sugerida": "Personal",
+      "dimensiones_observadas": [
+        "Actitud",
+        "Ayuda",
+        "Calidad",
+        "Conocimiento",
+        "Velocidad"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "exceptional",
+        "friendly",
+        "helpful",
+        "professional",
+        "quick",
+        "rude",
+        "slow",
+        "unhelpful"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "condition",
+      "label_es": "Condición",
+      "usage_count": 141129,
+      "cumulative_percentage": 22.78,
+      "in_pareto_90": true,
+      "area_sugerida": "Experiencia General",
+      "dimensiones_observadas": [
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "bad",
+        "excellent",
+        "great",
+        "poor"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "accommodation",
+      "label_es": "Alojamiento",
+      "usage_count": 130515,
+      "cumulative_percentage": 25.9,
+      "in_pareto_90": true,
+      "area_sugerida": "Habitaciones",
+      "dimensiones_observadas": [
+        "Calidad",
+        "Comodidad",
+        "Limpieza",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "clean",
+        "comfortable",
+        "great",
+        "poor",
+        "small"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "stay",
+      "label_es": "Estadía",
+      "usage_count": 113719,
+      "cumulative_percentage": 28.62,
+      "in_pareto_90": true,
+      "area_sugerida": "Experiencia General",
+      "dimensiones_observadas": [
+        "Calidad",
+        "Comodidad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "bad",
+        "comfortable",
+        "disappointing",
+        "great",
+        "memorable",
+        "uncomfortable"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "personnel",
+      "label_es": "Personal (general)",
+      "usage_count": 110274,
+      "cumulative_percentage": 31.26,
+      "in_pareto_90": true,
+      "area_sugerida": "Personal",
+      "dimensiones_observadas": [
+        "Actitud",
+        "Ayuda"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "friendly",
+        "helpful",
+        "rude",
+        "unhelpful"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "reception",
+      "label_es": "Recepción",
+      "usage_count": 98868,
+      "cumulative_percentage": 33.62,
+      "in_pareto_90": true,
+      "area_sugerida": "Recepción",
+      "dimensiones_observadas": [
+        "Actitud",
+        "Ayuda",
+        "Velocidad"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "friendly",
+        "helpful",
+        "rude",
+        "slow"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "experience",
+      "label_es": "Experiencia",
+      "usage_count": 93099,
+      "cumulative_percentage": 35.85,
+      "in_pareto_90": true,
+      "area_sugerida": "Experiencia General",
+      "dimensiones_observadas": [
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "amazing",
+        "disappointing",
+        "great",
+        "memorable",
+        "poor"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "comment",
+      "label_es": "Comentario",
+      "usage_count": 86673,
+      "cumulative_percentage": 37.92,
+      "in_pareto_90": true,
+      "area_sugerida": "Experiencia General",
+      "dimensiones_observadas": [
+        "Actitud",
+        "Ayuda"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "helpful",
+        "negative",
+        "positive",
+        "rude"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "food",
+      "label_es": "Comida",
+      "usage_count": 85078,
+      "cumulative_percentage": 39.95,
+      "in_pareto_90": true,
+      "area_sugerida": "Alimentos y Bebidas",
+      "dimensiones_observadas": [
+        "Calidad",
+        "Frescura",
+        "Precio",
+        "Sabor",
+        "Temperatura"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "bad",
+        "bland",
+        "cold",
+        "delicious",
+        "fresh",
+        "healthy",
+        "hot",
+        "local",
+        "overpriced"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "restaurant",
+      "label_es": "Restaurante",
+      "usage_count": 84239,
+      "cumulative_percentage": 41.97,
+      "in_pareto_90": true,
+      "area_sugerida": "Alimentos y Bebidas",
+      "dimensiones_observadas": [
+        "Actitud",
+        "Apariencia",
+        "Calidad",
+        "Precio",
+        "Sabor",
+        "Variedad"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [
+        "facilities-restaurant",
+        "facilities-restaurant-atmosphere",
+        "facilities-restaurant-cleanliness",
+        "facilities-restaurant-condition",
+        "facilities-restaurant-convenience",
+        "facilities-restaurant-cost",
+        "facilities-restaurant-decor"
+      ],
+      "adjetivos_fuente": [
+        "bad",
+        "beautiful",
+        "delicious",
+        "expensive",
+        "friendly",
+        "great",
+        "limited"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "facility",
+      "label_es": "Instalación",
+      "usage_count": 75208,
+      "cumulative_percentage": 43.77,
+      "in_pareto_90": true,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Decoración",
+        "Estado",
+        "Limpieza"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "clean",
+        "great",
+        "modern",
+        "old",
+        "poor"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "hotel",
+      "label_es": "Hotel",
+      "usage_count": 74816,
+      "cumulative_percentage": 45.55,
+      "in_pareto_90": true,
+      "area_sugerida": "Experiencia General",
+      "dimensiones_observadas": [
+        "Decoración",
+        "Estado",
+        "Limpieza",
+        "Precio",
+        "Ruido"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "clean",
+        "expensive",
+        "luxurious",
+        "modern",
+        "noisy",
+        "old"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "bed",
+      "label_es": "Cama",
+      "usage_count": 68125,
+      "cumulative_percentage": 47.18,
+      "in_pareto_90": true,
+      "area_sugerida": "Habitaciones",
+      "dimensiones_observadas": [
+        "Comodidad",
+        "Limpieza"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "clean",
+        "comfortable",
+        "dirty",
+        "hard",
+        "uncomfortable"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "sheet",
+      "label_es": "Sábanas",
+      "usage_count": 67345,
+      "cumulative_percentage": 48.79,
+      "in_pareto_90": true,
+      "area_sugerida": "Housekeeping",
+      "dimensiones_observadas": [
+        "Limpieza"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "clean",
+        "dirty",
+        "thin"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "server",
+      "label_es": "Mesero",
+      "usage_count": 65349,
+      "cumulative_percentage": 50.35,
+      "in_pareto_90": true,
+      "area_sugerida": "Personal",
+      "dimensiones_observadas": [
+        "Actitud",
+        "Calidad",
+        "Velocidad"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "attentive",
+        "friendly",
+        "great",
+        "rude",
+        "slow"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "standard",
+      "label_es": "Estándar",
+      "usage_count": 61158,
+      "cumulative_percentage": 51.82,
+      "in_pareto_90": true,
+      "area_sugerida": "Experiencia General",
+      "dimensiones_observadas": [
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "breakfast",
+        "great",
+        "high",
+        "low",
+        "poor"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "cleanliness",
+      "label_es": "Limpieza",
+      "usage_count": 60581,
+      "cumulative_percentage": 53.26,
+      "in_pareto_90": true,
+      "area_sugerida": "Housekeeping",
+      "dimensiones_observadas": [
+        "Calidad",
+        "Limpieza"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "dirty",
+        "great",
+        "poor"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "manager",
+      "label_es": "Gerente",
+      "usage_count": 59875,
+      "cumulative_percentage": 54.7,
+      "in_pareto_90": true,
+      "area_sugerida": "Personal",
+      "dimensiones_observadas": [
+        "Actitud",
+        "Ayuda"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [
+        "staff-manager",
+        "staff-manager-appearance",
+        "staff-manager-attitude",
+        "staff-manager-communication",
+        "staff-manager-helpfulness",
+        "staff-manager-knowledge",
+        "staff-manager-quality",
+        "staff-manager-service"
+      ],
+      "adjetivos_fuente": [
+        "friendly",
+        "helpful",
+        "rude",
+        "unresponsive"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "pool",
+      "label_es": "Piscina",
+      "usage_count": 54415,
+      "cumulative_percentage": 56.0,
+      "in_pareto_90": true,
+      "area_sugerida": "Piscina",
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Calidad",
+        "Limpieza",
+        "Temperatura"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "beautiful",
+        "clean",
+        "cold",
+        "crowded",
+        "dirty",
+        "great",
+        "heated"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "price",
+      "label_es": "Precio",
+      "usage_count": 48392,
+      "cumulative_percentage": 57.15,
+      "in_pareto_90": true,
+      "area_sugerida": "Relación Precio / Calidad",
+      "dimensiones_observadas": [
+        "Calidad",
+        "Precio"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [
+        "experience-price-billing",
+        "experience-price-fees",
+        "experience-price-value"
+      ],
+      "adjetivos_fuente": [
+        "affordable",
+        "expensive",
+        "great",
+        "high"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "value",
+      "label_es": "Valor",
+      "usage_count": 47713,
+      "cumulative_percentage": 58.29,
+      "in_pareto_90": true,
+      "area_sugerida": "Relación Precio / Calidad",
+      "dimensiones_observadas": [
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "excellent",
+        "good",
+        "great",
+        "low",
+        "poor"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "menu",
+      "label_es": "Carta",
+      "usage_count": 44264,
+      "cumulative_percentage": 59.35,
+      "in_pareto_90": true,
+      "area_sugerida": "Alimentos y Bebidas",
+      "dimensiones_observadas": [
+        "Calidad",
+        "Sabor",
+        "Variedad"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "delicious",
+        "great",
+        "limited",
+        "poor"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "meal",
+      "label_es": "Plato",
+      "usage_count": 43972,
+      "cumulative_percentage": 60.4,
+      "in_pareto_90": true,
+      "area_sugerida": "Alimentos y Bebidas",
+      "dimensiones_observadas": [
+        "Calidad",
+        "Sabor",
+        "Temperatura"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "bad",
+        "cold",
+        "delicious",
+        "great",
+        "hot"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "amenity",
+      "label_es": "Comodidades",
+      "usage_count": 43938,
+      "cumulative_percentage": 61.45,
+      "in_pareto_90": true,
+      "area_sugerida": "Experiencia General",
+      "dimensiones_observadas": [
+        "Calidad",
+        "Decoración",
+        "Limpieza"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "basic",
+        "clean",
+        "great",
+        "modern",
+        "poor"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "maintenance",
+      "label_es": "Mantenimiento",
+      "usage_count": 43605,
+      "cumulative_percentage": 62.5,
+      "in_pareto_90": true,
+      "area_sugerida": "Mantenimiento",
+      "dimensiones_observadas": [
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "delayed",
+        "great",
+        "poor"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "review",
+      "label_es": "Reseña",
+      "usage_count": 41659,
+      "cumulative_percentage": 63.49,
+      "in_pareto_90": true,
+      "area_sugerida": "Experiencia General",
+      "dimensiones_observadas": [
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "bad",
+        "good",
+        "great",
+        "negative",
+        "positive"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "waiter",
+      "label_es": "Mesero",
+      "usage_count": 41473,
+      "cumulative_percentage": 64.48,
+      "in_pareto_90": true,
+      "area_sugerida": "Personal",
+      "dimensiones_observadas": [
+        "Actitud",
+        "Calidad",
+        "Velocidad"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "attentive",
+        "friendly",
+        "great",
+        "rude",
+        "slow"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "concierge",
+      "label_es": "Conserje",
+      "usage_count": 38544,
+      "cumulative_percentage": 65.41,
+      "in_pareto_90": true,
+      "area_sugerida": "Recepción",
+      "dimensiones_observadas": [
+        "Actitud",
+        "Ayuda",
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [
+        "staff-concierge",
+        "staff-concierge-appearance",
+        "staff-concierge-attitude",
+        "staff-concierge-availability",
+        "staff-concierge-communication",
+        "staff-concierge-helpfulness",
+        "staff-concierge-knowledge",
+        "staff-concierge-quality",
+        "staff-concierge-responsiveness",
+        "staff-concierge-service"
+      ],
+      "adjetivos_fuente": [
+        "friendly",
+        "great",
+        "helpful",
+        "rude",
+        "unhelpful"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "view",
+      "label_es": "Vista",
+      "usage_count": 38079,
+      "cumulative_percentage": 66.32,
+      "in_pareto_90": true,
+      "area_sugerida": "Habitaciones",
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Calidad",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "beautiful",
+        "great",
+        "panoramic",
+        "partial",
+        "small"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "guest",
+      "label_es": "Huésped",
+      "usage_count": 36831,
+      "cumulative_percentage": 67.2,
+      "in_pareto_90": true,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Actitud",
+        "Ruido"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "friendly",
+        "happy",
+        "noisy",
+        "rude"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "bathroom",
+      "label_es": "Baño",
+      "usage_count": 36801,
+      "cumulative_percentage": 68.08,
+      "in_pareto_90": true,
+      "area_sugerida": "Habitaciones",
+      "dimensiones_observadas": [
+        "Decoración",
+        "Limpieza",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [
+        "accommodations-bathroom",
+        "accommodations-bathroom-cleanliness",
+        "accommodations-bathroom-condition",
+        "accommodations-bathroom-decor",
+        "accommodations-bathroom-design",
+        "accommodations-bathroom-linens",
+        "accommodations-bathroom-odor",
+        "accommodations-bathroom-size",
+        "accommodations-bathroom-toiletries",
+        "accommodations-bathroom-water"
+      ],
+      "adjetivos_fuente": [
+        "clean",
+        "dirty",
+        "modern",
+        "small"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "shower",
+      "label_es": "Ducha",
+      "usage_count": 35273,
+      "cumulative_percentage": 68.92,
+      "in_pareto_90": true,
+      "area_sugerida": "Habitaciones",
+      "dimensiones_observadas": [
+        "Calidad",
+        "Limpieza",
+        "Temperatura"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "clean",
+        "cold",
+        "dirty",
+        "great",
+        "hot"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "attention",
+      "label_es": "Atención",
+      "usage_count": 35025,
+      "cumulative_percentage": 69.76,
+      "in_pareto_90": true,
+      "area_sugerida": "Personal",
+      "dimensiones_observadas": [
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "great",
+        "little",
+        "personal",
+        "poor"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "distance",
+      "label_es": "Distancia",
+      "usage_count": 33962,
+      "cumulative_percentage": 70.57,
+      "in_pareto_90": true,
+      "area_sugerida": "Ubicación",
+      "dimensiones_observadas": [
+        "Conveniencia"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "convenient",
+        "difficult",
+        "long"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "housekeeping",
+      "label_es": "Housekeeping",
+      "usage_count": 33569,
+      "cumulative_percentage": 71.37,
+      "in_pareto_90": true,
+      "area_sugerida": "Housekeeping",
+      "dimensiones_observadas": [
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "efficient",
+        "great",
+        "infrequent",
+        "poor"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "environment",
+      "label_es": "Entorno",
+      "usage_count": 31882,
+      "cumulative_percentage": 72.13,
+      "in_pareto_90": true,
+      "area_sugerida": "Experiencia General",
+      "dimensiones_observadas": [
+        "Calidad",
+        "Limpieza",
+        "Ruido"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "clean",
+        "dirty",
+        "great",
+        "noisy"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "employee",
+      "label_es": "Empleado",
+      "usage_count": 31776,
+      "cumulative_percentage": 72.89,
+      "in_pareto_90": true,
+      "area_sugerida": "Personal",
+      "dimensiones_observadas": [
+        "Actitud",
+        "Ayuda",
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "friendly",
+        "great",
+        "helpful",
+        "lazy",
+        "rude"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "property",
+      "label_es": "Propiedad",
+      "usage_count": 30850,
+      "cumulative_percentage": 73.63,
+      "in_pareto_90": true,
+      "area_sugerida": "Experiencia General",
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Calidad",
+        "Estado",
+        "Limpieza",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "beautiful",
+        "clean",
+        "great",
+        "old",
+        "small"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "desk",
+      "label_es": "Escritorio",
+      "usage_count": 27647,
+      "cumulative_percentage": 74.29,
+      "in_pareto_90": true,
+      "area_sugerida": "Habitaciones",
+      "dimensiones_observadas": [
+        "Actitud",
+        "Ayuda"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "friendly",
+        "helpful",
+        "rude"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "bedroom",
+      "label_es": "Dormitorio",
+      "usage_count": 26787,
+      "cumulative_percentage": 74.93,
+      "in_pareto_90": true,
+      "area_sugerida": "Habitaciones",
+      "dimensiones_observadas": [
+        "Limpieza",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "clean",
+        "dirty",
+        "small"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "hospitality",
+      "label_es": "Hospitalidad",
+      "usage_count": 24894,
+      "cumulative_percentage": 75.53,
+      "in_pareto_90": true,
+      "area_sugerida": "Personal",
+      "dimensiones_observadas": [
+        "Calidad",
+        "Temperatura"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "cold",
+        "great",
+        "poor"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "communication",
+      "label_es": "Comunicación",
+      "usage_count": 21286,
+      "cumulative_percentage": 76.04,
+      "in_pareto_90": true,
+      "area_sugerida": "Personal",
+      "dimensiones_observadas": [
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "clear",
+        "delayed",
+        "great",
+        "poor"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "surprise",
+      "label_es": "Sorpresa",
+      "usage_count": 20776,
+      "cumulative_percentage": 76.53,
+      "in_pareto_90": true,
+      "area_sugerida": "Experiencia General",
+      "dimensiones_observadas": [
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "disappointing",
+        "great",
+        "pleasant",
+        "unpleasant"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "resort",
+      "label_es": "Resort",
+      "usage_count": 20700,
+      "cumulative_percentage": 77.03,
+      "in_pareto_90": true,
+      "area_sugerida": "Experiencia General",
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Calidad",
+        "Estado",
+        "Limpieza",
+        "Precio"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "beautiful",
+        "busy",
+        "clean",
+        "expensive",
+        "great",
+        "old"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "smell",
+      "label_es": "Olor",
+      "usage_count": 20451,
+      "cumulative_percentage": 77.52,
+      "in_pareto_90": true,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Frescura",
+        "Olor"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "bad",
+        "fresh",
+        "musty",
+        "pleasant"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "setting",
+      "label_es": "Entorno",
+      "usage_count": 20200,
+      "cumulative_percentage": 78.0,
+      "in_pareto_90": true,
+      "area_sugerida": "Experiencia General",
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "beautiful",
+        "great",
+        "poor",
+        "unpleasant"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "parking",
+      "label_es": "Estacionamiento",
+      "usage_count": 19949,
+      "cumulative_percentage": 78.48,
+      "in_pareto_90": true,
+      "area_sugerida": "Infraestructura",
+      "dimensiones_observadas": [
+        "Calidad",
+        "Precio",
+        "Variedad"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "easy",
+        "expensive",
+        "free",
+        "great",
+        "limited"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "atmosphere",
+      "label_es": "Ambiente",
+      "usage_count": 19620,
+      "cumulative_percentage": 78.94,
+      "in_pareto_90": true,
+      "area_sugerida": "Experiencia General",
+      "dimensiones_observadas": [
+        "Actitud",
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "friendly",
+        "great",
+        "tense",
+        "unpleasant"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "buffet",
+      "label_es": "Buffet",
+      "usage_count": 19609,
+      "cumulative_percentage": 79.41,
+      "in_pareto_90": true,
+      "area_sugerida": "Alimentos y Bebidas",
+      "dimensiones_observadas": [
+        "Calidad",
+        "Sabor",
+        "Tamaño",
+        "Variedad"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "delicious",
+        "extensive",
+        "great",
+        "mediocre",
+        "small"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "renovation",
+      "label_es": "Renovación",
+      "usage_count": 19446,
+      "cumulative_percentage": 79.88,
+      "in_pareto_90": true,
+      "area_sugerida": "Mantenimiento",
+      "dimensiones_observadas": [
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "complete",
+        "great",
+        "ongoing",
+        "poor"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "wifi",
+      "label_es": "WiFi",
+      "usage_count": 18607,
+      "cumulative_percentage": 80.32,
+      "in_pareto_90": true,
+      "area_sugerida": "Tecnología",
+      "dimensiones_observadas": [
+        "Calidad",
+        "Precio",
+        "Velocidad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "accesible",
+        "fast",
+        "free",
+        "great",
+        "slow",
+        "weak"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "rate",
+      "label_es": "Tarifa",
+      "usage_count": 17329,
+      "cumulative_percentage": 80.74,
+      "in_pareto_90": true,
+      "area_sugerida": "Relación Precio / Calidad",
+      "dimensiones_observadas": [
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "great",
+        "high",
+        "unfair"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "cuisine",
+      "label_es": "Cocina",
+      "usage_count": 16807,
+      "cumulative_percentage": 81.14,
+      "in_pareto_90": true,
+      "area_sugerida": "Alimentos y Bebidas",
+      "dimensiones_observadas": [
+        "Calidad",
+        "Sabor"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "bland",
+        "delicious",
+        "local",
+        "poor"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "team",
+      "label_es": "Equipo",
+      "usage_count": 16402,
+      "cumulative_percentage": 81.53,
+      "in_pareto_90": true,
+      "area_sugerida": "Personal",
+      "dimensiones_observadas": [
+        "Actitud",
+        "Ayuda",
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "friendly",
+        "great",
+        "helpful",
+        "rude",
+        "uncooperative"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "activity",
+      "label_es": "Actividad",
+      "usage_count": 16141,
+      "cumulative_percentage": 81.92,
+      "in_pareto_90": true,
+      "area_sugerida": "Entretenimiento",
+      "dimensiones_observadas": [
+        "Calidad",
+        "Precio"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "boring",
+        "expensive",
+        "free",
+        "fun",
+        "great"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "receptionist",
+      "label_es": "Recepcionista",
+      "usage_count": 16124,
+      "cumulative_percentage": 82.3,
+      "in_pareto_90": true,
+      "area_sugerida": "Recepción",
+      "dimensiones_observadas": [
+        "Actitud",
+        "Ayuda",
+        "Velocidad"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "friendly",
+        "helpful",
+        "rude",
+        "slow"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "recommendation",
+      "label_es": "Recomendación",
+      "usage_count": 15923,
+      "cumulative_percentage": 82.68,
+      "in_pareto_90": true,
+      "area_sugerida": "Personal",
+      "dimensiones_observadas": [
+        "Ayuda",
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "great",
+        "helpful",
+        "poor",
+        "useless"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "drink",
+      "label_es": "Bebida",
+      "usage_count": 15234,
+      "cumulative_percentage": 83.05,
+      "in_pareto_90": true,
+      "area_sugerida": "Alimentos y Bebidas",
+      "dimensiones_observadas": [
+        "Calidad",
+        "Precio",
+        "Sabor"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "bad",
+        "delicious",
+        "expensive",
+        "free",
+        "great"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "check",
+      "label_es": "Check-in/out",
+      "usage_count": 14270,
+      "cumulative_percentage": 83.39,
+      "in_pareto_90": true,
+      "area_sugerida": "Recepción",
+      "dimensiones_observadas": [
+        "Actitud",
+        "Velocidad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "easy",
+        "friendly",
+        "late",
+        "quick",
+        "slow"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "care",
+      "label_es": "Cuidado",
+      "usage_count": 14154,
+      "cumulative_percentage": 83.73,
+      "in_pareto_90": true,
+      "area_sugerida": "Personal",
+      "dimensiones_observadas": [
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "excellent",
+        "genuine",
+        "great",
+        "indifferent",
+        "poor"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "entertainment",
+      "label_es": "Entretenimiento",
+      "usage_count": 13920,
+      "cumulative_percentage": 84.06,
+      "in_pareto_90": true,
+      "area_sugerida": "Entretenimiento",
+      "dimensiones_observadas": [
+        "Calidad",
+        "Variedad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "boring",
+        "fun",
+        "great",
+        "limited",
+        "live"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "suggestion",
+      "label_es": "Sugerencia",
+      "usage_count": 13775,
+      "cumulative_percentage": 84.39,
+      "in_pareto_90": true,
+      "area_sugerida": "Personal",
+      "dimensiones_observadas": [
+        "Ayuda",
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "great",
+        "helpful",
+        "poor",
+        "useless"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "bartender",
+      "label_es": "Bartender",
+      "usage_count": 13483,
+      "cumulative_percentage": 84.71,
+      "in_pareto_90": true,
+      "area_sugerida": "Personal",
+      "dimensiones_observadas": [
+        "Actitud",
+        "Calidad",
+        "Velocidad"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "friendly",
+        "great",
+        "rude",
+        "slow"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "management",
+      "label_es": "Gerencia",
+      "usage_count": 13103,
+      "cumulative_percentage": 85.02,
+      "in_pareto_90": true,
+      "area_sugerida": "Personal",
+      "dimensiones_observadas": [
+        "Ayuda",
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "great",
+        "poor",
+        "unhelpful"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "towel",
+      "label_es": "Toalla",
+      "usage_count": 12903,
+      "cumulative_percentage": 85.33,
+      "in_pareto_90": true,
+      "area_sugerida": "Housekeeping",
+      "dimensiones_observadas": [
+        "Estado",
+        "Limpieza"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "clean",
+        "dirty",
+        "extra",
+        "old"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "water",
+      "label_es": "Agua",
+      "usage_count": 12517,
+      "cumulative_percentage": 85.63,
+      "in_pareto_90": true,
+      "area_sugerida": "Habitaciones",
+      "dimensiones_observadas": [
+        "Frescura",
+        "Limpieza",
+        "Temperatura"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "clean",
+        "clear",
+        "cold",
+        "dirty",
+        "fresh",
+        "hot"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "beach",
+      "label_es": "Playa",
+      "usage_count": 12453,
+      "cumulative_percentage": 85.93,
+      "in_pareto_90": true,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Limpieza",
+        "Ruido"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "beautiful",
+        "clean",
+        "crowded",
+        "quiet",
+        "rocky"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "impression",
+      "label_es": "Impresión",
+      "usage_count": 12403,
+      "cumulative_percentage": 86.23,
+      "in_pareto_90": true,
+      "area_sugerida": "Experiencia General",
+      "dimensiones_observadas": [
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "bad",
+        "great",
+        "poor",
+        "positive"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "attitude",
+      "label_es": "Actitud",
+      "usage_count": 12106,
+      "cumulative_percentage": 86.52,
+      "in_pareto_90": true,
+      "area_sugerida": "Personal",
+      "dimensiones_observadas": [
+        "Actitud",
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "bad",
+        "friendly",
+        "positive",
+        "rude"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "elevator",
+      "label_es": "Ascensor",
+      "usage_count": 11978,
+      "cumulative_percentage": 86.8,
+      "in_pareto_90": true,
+      "area_sugerida": "Infraestructura",
+      "dimensiones_observadas": [
+        "Tamaño",
+        "Velocidad"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "fast",
+        "slow",
+        "small"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "light",
+      "label_es": "Iluminación",
+      "usage_count": 11681,
+      "cumulative_percentage": 87.08,
+      "in_pareto_90": true,
+      "area_sugerida": "Habitaciones",
+      "dimensiones_observadas": [
+        "Calidad",
+        "Iluminación"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "bright",
+        "dim",
+        "natural",
+        "poor"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "customer",
+      "label_es": "Cliente",
+      "usage_count": 11677,
+      "cumulative_percentage": 87.36,
+      "in_pareto_90": true,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Actitud"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "happy",
+        "loyal",
+        "rude",
+        "unhappy"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "access",
+      "label_es": "Acceso",
+      "usage_count": 10679,
+      "cumulative_percentage": 87.62,
+      "in_pareto_90": true,
+      "area_sugerida": "Ubicación",
+      "dimensiones_observadas": [
+        "Conveniencia",
+        "Precio",
+        "Variedad"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "convenient",
+        "difficult",
+        "easy",
+        "free",
+        "limited"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "building",
+      "label_es": "Edificio",
+      "usage_count": 10589,
+      "cumulative_percentage": 87.87,
+      "in_pareto_90": true,
+      "area_sugerida": "Infraestructura",
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Calidad",
+        "Decoración",
+        "Estado"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "beautiful",
+        "great",
+        "modern",
+        "old",
+        "outdated"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "expectation",
+      "label_es": "Expectativa",
+      "usage_count": 10539,
+      "cumulative_percentage": 88.12,
+      "in_pareto_90": true,
+      "area_sugerida": "Experiencia General",
+      "dimensiones_observadas": [
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "great",
+        "high",
+        "low",
+        "unmet"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "design",
+      "label_es": "Diseño",
+      "usage_count": 10450,
+      "cumulative_percentage": 88.37,
+      "in_pareto_90": true,
+      "area_sugerida": "Infraestructura",
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Calidad",
+        "Decoración"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "beautiful",
+        "great",
+        "modern",
+        "outdated",
+        "poor"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "unconditioned",
+      "label_es": "Aire acondicionado (anomalía de parseo)",
+      "usage_count": 10306,
+      "cumulative_percentage": 88.62,
+      "in_pareto_90": true,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "air"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "coffee",
+      "label_es": "Café",
+      "usage_count": 10121,
+      "cumulative_percentage": 88.86,
+      "in_pareto_90": true,
+      "area_sugerida": "Alimentos y Bebidas",
+      "dimensiones_observadas": [
+        "Calidad",
+        "Frescura",
+        "Temperatura"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "bad",
+        "fresh",
+        "great",
+        "hot",
+        "weak"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "unprepared",
+      "label_es": "Habitación no preparada (anomalía de parseo)",
+      "usage_count": 9995,
+      "cumulative_percentage": 89.1,
+      "in_pareto_90": true,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "room"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "feature",
+      "label_es": "Característica",
+      "usage_count": 9931,
+      "cumulative_percentage": 89.34,
+      "in_pareto_90": true,
+      "area_sugerida": "Experiencia General",
+      "dimensiones_observadas": [
+        "Ayuda",
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "great",
+        "poor",
+        "useless"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "cleaning",
+      "label_es": "Limpieza (proceso)",
+      "usage_count": 9799,
+      "cumulative_percentage": 89.57,
+      "in_pareto_90": true,
+      "area_sugerida": "Housekeeping",
+      "dimensiones_observadas": [
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "great",
+        "poor",
+        "rare"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "charge",
+      "label_es": "Cargo",
+      "usage_count": 9655,
+      "cumulative_percentage": 89.8,
+      "in_pareto_90": true,
+      "area_sugerida": "Relación Precio / Calidad",
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "extra",
+        "fair",
+        "high",
+        "low"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "fiesta",
+      "label_es": "Fiesta",
+      "usage_count": 9503,
+      "cumulative_percentage": 90.03,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Ruido"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "disorganized",
+        "fun",
+        "great",
+        "loud"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "show",
+      "label_es": "Espectáculo",
+      "usage_count": 9431,
+      "cumulative_percentage": 90.25,
+      "in_pareto_90": false,
+      "area_sugerida": "Entretenimiento",
+      "dimensiones_observadas": [
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "boring",
+        "entertaining",
+        "fun",
+        "great",
+        "short"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "unit",
+      "label_es": "Unidad",
+      "usage_count": 9046,
+      "cumulative_percentage": 90.47,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Decoración",
+        "Estado",
+        "Ruido"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "modern",
+        "noisy",
+        "old"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "lighting",
+      "label_es": "Iluminación",
+      "usage_count": 8934,
+      "cumulative_percentage": 90.68,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Iluminación"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "bright",
+        "dim",
+        "great",
+        "poor"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "bar",
+      "label_es": "Bar",
+      "usage_count": 8841,
+      "cumulative_percentage": 90.89,
+      "in_pareto_90": false,
+      "area_sugerida": "Bar",
+      "dimensiones_observadas": [
+        "Actitud",
+        "Apariencia",
+        "Calidad",
+        "Ruido",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [
+        "facilities-bar",
+        "facilities-bar-atmosphere",
+        "facilities-bar-cleanliness",
+        "facilities-bar-condition",
+        "facilities-bar-convenience",
+        "facilities-bar-cost"
+      ],
+      "adjetivos_fuente": [
+        "beautiful",
+        "friendly",
+        "great",
+        "loud",
+        "open",
+        "small"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "tv",
+      "label_es": "TV",
+      "usage_count": 8587,
+      "cumulative_percentage": 91.1,
+      "in_pareto_90": false,
+      "area_sugerida": "Tecnología",
+      "dimensiones_observadas": [
+        "Calidad",
+        "Estado",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "great",
+        "large",
+        "old",
+        "small"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "furniture",
+      "label_es": "Mobiliario",
+      "usage_count": 8354,
+      "cumulative_percentage": 91.3,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Comodidad",
+        "Decoración",
+        "Estado"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "comfortable",
+        "modern",
+        "old",
+        "uncomfortable"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "gym",
+      "label_es": "Gimnasio",
+      "usage_count": 8333,
+      "cumulative_percentage": 91.5,
+      "in_pareto_90": false,
+      "area_sugerida": "Gimnasio",
+      "dimensiones_observadas": [
+        "Calidad",
+        "Decoración",
+        "Limpieza",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "basic",
+        "clean",
+        "great",
+        "modern",
+        "small"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "perk",
+      "label_es": "Beneficio",
+      "usage_count": 8280,
+      "cumulative_percentage": 91.7,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Disponibilidad",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "exclusive",
+        "great",
+        "small",
+        "unavailable"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "spa",
+      "label_es": "Spa",
+      "usage_count": 8133,
+      "cumulative_percentage": 91.89,
+      "in_pareto_90": false,
+      "area_sugerida": "Spa",
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Calidad",
+        "Precio",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "beautiful",
+        "expensive",
+        "great",
+        "small"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "garden",
+      "label_es": "Jardín",
+      "usage_count": 7961,
+      "cumulative_percentage": 92.08,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Calidad",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "beautiful",
+        "great",
+        "lush",
+        "neglected",
+        "small"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "guide",
+      "label_es": "Guía",
+      "usage_count": 7816,
+      "cumulative_percentage": 92.27,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Actitud",
+        "Calidad",
+        "Conocimiento"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "great",
+        "knowledgeable",
+        "rude",
+        "uninformative"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "seating",
+      "label_es": "Asientos",
+      "usage_count": 7716,
+      "cumulative_percentage": 92.45,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Comodidad",
+        "Variedad"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "ample",
+        "comfortable",
+        "limited",
+        "uncomfortable"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "vallarta",
+      "label_es": "Vallarta (lugar — anomalía)",
+      "usage_count": 7663,
+      "cumulative_percentage": 92.64,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Calidad",
+        "Precio"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "beautiful",
+        "crowded",
+        "expensive",
+        "great"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "hostel",
+      "label_es": "Hostal",
+      "usage_count": 7649,
+      "cumulative_percentage": 92.82,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Limpieza",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "clean",
+        "dirty",
+        "small"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "portion",
+      "label_es": "Porción",
+      "usage_count": 7437,
+      "cumulative_percentage": 93.0,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "generous",
+        "large",
+        "meager",
+        "small"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "event",
+      "label_es": "Evento",
+      "usage_count": 6909,
+      "cumulative_percentage": 93.16,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "boring",
+        "disorganized",
+        "fun",
+        "great"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "ac",
+      "label_es": "Aire acondicionado",
+      "usage_count": 6792,
+      "cumulative_percentage": 93.32,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Ruido"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "efficient",
+        "great",
+        "noisy",
+        "weak"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "temperature",
+      "label_es": "Temperatura",
+      "usage_count": 6636,
+      "cumulative_percentage": 93.48,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Comodidad",
+        "Temperatura"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "cold",
+        "comfortable",
+        "hot",
+        "perfect"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "shuttle",
+      "label_es": "Shuttle",
+      "usage_count": 6603,
+      "cumulative_percentage": 93.64,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Conveniencia",
+        "Precio"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "convenient",
+        "free",
+        "great",
+        "late",
+        "unreliable"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "dinner",
+      "label_es": "Cena",
+      "usage_count": 6447,
+      "cumulative_percentage": 93.79,
+      "in_pareto_90": false,
+      "area_sugerida": "Alimentos y Bebidas",
+      "dimensiones_observadas": [
+        "Calidad",
+        "Precio",
+        "Sabor"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "delicious",
+        "expensive",
+        "great",
+        "poor"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "suite",
+      "label_es": "Suite",
+      "usage_count": 6439,
+      "cumulative_percentage": 93.95,
+      "in_pareto_90": false,
+      "area_sugerida": "Habitaciones",
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Estado",
+        "Limpieza",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "beautiful",
+        "clean",
+        "dated",
+        "small"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "birthday",
+      "label_es": "Cumpleaños",
+      "usage_count": 6193,
+      "cumulative_percentage": 94.1,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "forgotten",
+        "memorable",
+        "ordinary"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "pillow",
+      "label_es": "Almohada",
+      "usage_count": 6147,
+      "cumulative_percentage": 94.24,
+      "in_pareto_90": false,
+      "area_sugerida": "Habitaciones",
+      "dimensiones_observadas": [
+        "Comodidad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "comfortable",
+        "extra",
+        "hard",
+        "thin"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "floor",
+      "label_es": "Piso",
+      "usage_count": 6027,
+      "cumulative_percentage": 94.39,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Limpieza"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "beautiful",
+        "clean",
+        "dirty",
+        "slippery"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "snack",
+      "label_es": "Snack",
+      "usage_count": 5706,
+      "cumulative_percentage": 94.52,
+      "in_pareto_90": false,
+      "area_sugerida": "Alimentos y Bebidas",
+      "dimensiones_observadas": [
+        "Frescura",
+        "Precio",
+        "Sabor",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "delicious",
+        "free",
+        "small",
+        "stale"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "equipped",
+      "label_es": "Equipamiento (anomalía de parseo)",
+      "anomalia_parseo": true,
+      "usage_count": 5517,
+      "cumulative_percentage": 94.66,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "room"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "dish",
+      "label_es": "Plato",
+      "usage_count": 5197,
+      "cumulative_percentage": 94.78,
+      "in_pareto_90": false,
+      "area_sugerida": "Alimentos y Bebidas",
+      "dimensiones_observadas": [
+        "Limpieza",
+        "Sabor",
+        "Temperatura"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "cold",
+        "delicious",
+        "dirty",
+        "hot",
+        "local"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "music",
+      "label_es": "Música",
+      "usage_count": 5071,
+      "cumulative_percentage": 94.9,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Ruido"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "great",
+        "live",
+        "loud",
+        "pleasant",
+        "terrible"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "kid",
+      "label_es": "Niños",
+      "usage_count": 5022,
+      "cumulative_percentage": 95.02,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Actitud",
+        "Ruido"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "disruptive",
+        "friendly",
+        "happy",
+        "noisy"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "noise",
+      "label_es": "Ruido",
+      "usage_count": 4925,
+      "cumulative_percentage": 95.14,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Ruido"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "constant",
+        "loud",
+        "quiet"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "decoration",
+      "label_es": "Decoración",
+      "usage_count": 4830,
+      "cumulative_percentage": 95.25,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Calidad",
+        "Decoración"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "beautiful",
+        "great",
+        "outdated",
+        "poor"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "lounge",
+      "label_es": "Sala de estar",
+      "usage_count": 4826,
+      "cumulative_percentage": 95.37,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Comodidad",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "comfortable",
+        "crowded",
+        "great",
+        "small"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "butler",
+      "label_es": "Mayordomo",
+      "usage_count": 4565,
+      "cumulative_percentage": 95.48,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Actitud",
+        "Calidad",
+        "Disponibilidad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "attentive",
+        "great",
+        "rude",
+        "unavailable"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "decor",
+      "label_es": "Decoración",
+      "usage_count": 4421,
+      "cumulative_percentage": 95.58,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Calidad",
+        "Decoración"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "beautiful",
+        "modern",
+        "outdated",
+        "poor"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "internet-availability",
+      "label_es": "Disponibilidad de internet",
+      "usage_count": 4363,
+      "cumulative_percentage": 95.69,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "negativo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "bad"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "ocean",
+      "label_es": "Mar",
+      "usage_count": 4148,
+      "cumulative_percentage": 95.79,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Temperatura"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "beautiful",
+        "cold",
+        "rough"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "mattress",
+      "label_es": "Colchón",
+      "usage_count": 4143,
+      "cumulative_percentage": 95.89,
+      "in_pareto_90": false,
+      "area_sugerida": "Habitaciones",
+      "dimensiones_observadas": [
+        "Comodidad",
+        "Estado"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "comfortable",
+        "hard",
+        "old"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "cocktail",
+      "label_es": "Cóctel",
+      "usage_count": 3819,
+      "cumulative_percentage": 95.98,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Precio",
+        "Sabor"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "delicious",
+        "expensive",
+        "great",
+        "weak"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "fridge",
+      "label_es": "Refrigerador",
+      "usage_count": 3773,
+      "cumulative_percentage": 96.07,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Ruido",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido",
+        "negativo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "cool",
+        "noisy",
+        "small"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "pressure",
+      "label_es": "Presión de agua",
+      "usage_count": 3756,
+      "cumulative_percentage": 96.16,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "good",
+        "great",
+        "low",
+        "weak"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "lobby",
+      "label_es": "Lobby",
+      "usage_count": 3728,
+      "cumulative_percentage": 96.25,
+      "in_pareto_90": false,
+      "area_sugerida": "Áreas Públicas",
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [
+        "facilities-lobby",
+        "facilities-lobby-atmosphere",
+        "facilities-lobby-cleanliness",
+        "facilities-lobby-condition",
+        "facilities-lobby-decor",
+        "facilities-lobby-internet_access"
+      ],
+      "adjetivos_fuente": [
+        "beautiful",
+        "crowded",
+        "small"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "sleep",
+      "label_es": "Descanso",
+      "usage_count": 3711,
+      "cumulative_percentage": 96.34,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "disturbed",
+        "great",
+        "poor"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "door",
+      "label_es": "Puerta",
+      "usage_count": 3505,
+      "cumulative_percentage": 96.42,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Estado"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "broken",
+        "open",
+        "thin"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "massage",
+      "label_es": "Masaje",
+      "usage_count": 3451,
+      "cumulative_percentage": 96.5,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Conocimiento",
+        "Precio"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "expensive",
+        "great",
+        "professional",
+        "short"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "grounds",
+      "label_es": "Jardines",
+      "usage_count": 3375,
+      "cumulative_percentage": 96.58,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Limpieza"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "beautiful",
+        "clean",
+        "dirty",
+        "lush",
+        "neglected"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "wall",
+      "label_es": "Pared",
+      "usage_count": 3259,
+      "cumulative_percentage": 96.66,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Limpieza"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "clean",
+        "decorative",
+        "dirty",
+        "thin"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "machine",
+      "label_es": "Máquina",
+      "usage_count": 3166,
+      "cumulative_percentage": 96.74,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Conveniencia",
+        "Estado",
+        "Ruido"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "broken",
+        "convenient",
+        "functional",
+        "noisy"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "apartment",
+      "label_es": "Departamento",
+      "usage_count": 3160,
+      "cumulative_percentage": 96.81,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Limpieza",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "clean",
+        "dirty",
+        "small"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "rooftop",
+      "label_es": "Rooftop",
+      "usage_count": 2965,
+      "cumulative_percentage": 96.88,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Calidad",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "beautiful",
+        "crowded",
+        "great",
+        "small"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "wifi-range",
+      "label_es": "Alcance del WiFi",
+      "usage_count": 2897,
+      "cumulative_percentage": 96.95,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "bad",
+        "good"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "flexible",
+      "label_es": "Flexibilidad (anomalía de parseo)",
+      "anomalia_parseo": true,
+      "usage_count": 2869,
+      "cumulative_percentage": 97.02,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "checkin"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "ingredient",
+      "label_es": "Ingredientes",
+      "usage_count": 2855,
+      "cumulative_percentage": 97.09,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Frescura"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "fresh",
+        "poor",
+        "stale"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "family",
+      "label_es": "Familia",
+      "usage_count": 2836,
+      "cumulative_percentage": 97.16,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Actitud",
+        "Ruido"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "disruptive",
+        "friendly",
+        "noisy"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "transportation",
+      "label_es": "Transporte",
+      "usage_count": 2833,
+      "cumulative_percentage": 97.22,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Conveniencia",
+        "Precio",
+        "Velocidad"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "convenient",
+        "expensive",
+        "great",
+        "slow"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "attraction",
+      "label_es": "Atracción",
+      "usage_count": 2826,
+      "cumulative_percentage": 97.29,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "distant",
+        "great",
+        "local",
+        "overcrowded"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "insufficient",
+      "label_es": "Insuficiente (anomalía de parseo)",
+      "anomalia_parseo": true,
+      "usage_count": 2816,
+      "cumulative_percentage": 97.36,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "heating"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "outlet",
+      "label_es": "Enchufe",
+      "usage_count": 2804,
+      "cumulative_percentage": 97.43,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Conveniencia",
+        "Disponibilidad",
+        "Estado"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "available",
+        "convenient",
+        "faulty",
+        "scarce"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "inclusive",
+      "label_es": "Todo incluido",
+      "usage_count": 2697,
+      "cumulative_percentage": 97.49,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Precio",
+        "Variedad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "comprehensive",
+        "expensive",
+        "great",
+        "limited"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "tub",
+      "label_es": "Bañera",
+      "usage_count": 2540,
+      "cumulative_percentage": 97.55,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Tamaño",
+        "Temperatura"
+      ],
+      "polaridades_observadas": [
+        "contexto"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "cold",
+        "hot",
+        "small"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "party",
+      "label_es": "Fiesta",
+      "usage_count": 2494,
+      "cumulative_percentage": 97.61,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Ruido"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "disruptive",
+        "fun",
+        "great",
+        "loud",
+        "private"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "carpet",
+      "label_es": "Alfombra",
+      "usage_count": 2476,
+      "cumulative_percentage": 97.67,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Estado",
+        "Limpieza"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "clean",
+        "dirty",
+        "old"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "tour",
+      "label_es": "Tour",
+      "usage_count": 2326,
+      "cumulative_percentage": 97.73,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Precio"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "expensive",
+        "free",
+        "great",
+        "informative",
+        "short"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "worker",
+      "label_es": "Trabajador",
+      "usage_count": 2285,
+      "cumulative_percentage": 97.78,
+      "in_pareto_90": false,
+      "area_sugerida": "Personal",
+      "dimensiones_observadas": [
+        "Actitud"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "friendly",
+        "hardworking",
+        "lazy",
+        "rude"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "complaint",
+      "label_es": "Reclamo",
+      "usage_count": 2221,
+      "cumulative_percentage": 97.83,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "major",
+        "minor",
+        "serious"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "window",
+      "label_es": "Ventana",
+      "usage_count": 2192,
+      "cumulative_percentage": 97.89,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Limpieza",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "clean",
+        "dirty",
+        "great",
+        "large",
+        "small"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "egg",
+      "label_es": "Huevos",
+      "usage_count": 2172,
+      "cumulative_percentage": 97.94,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Frescura",
+        "Sabor",
+        "Temperatura"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "cold",
+        "fresh",
+        "hot",
+        "overcooked"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "beer",
+      "label_es": "Cerveza",
+      "usage_count": 2133,
+      "cumulative_percentage": 97.99,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Temperatura"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "cold",
+        "flat",
+        "great",
+        "warm"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "patio",
+      "label_es": "Patio",
+      "usage_count": 2050,
+      "cumulative_percentage": 98.04,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Limpieza",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "beautiful",
+        "dirty",
+        "small"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "balcony",
+      "label_es": "Balcón",
+      "usage_count": 1930,
+      "cumulative_percentage": 98.08,
+      "in_pareto_90": false,
+      "area_sugerida": "Habitaciones",
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Calidad",
+        "Limpieza",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "beautiful",
+        "dirty",
+        "great",
+        "small"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "smart",
+      "label_es": "Inteligente (anomalía de parseo)",
+      "anomalia_parseo": true,
+      "usage_count": 1928,
+      "cumulative_percentage": 98.13,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "tv"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "meat",
+      "label_es": "Carne",
+      "usage_count": 1892,
+      "cumulative_percentage": 98.18,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Sabor"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "delicious",
+        "overcooked",
+        "tough"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "host",
+      "label_es": "Anfitrión",
+      "usage_count": 1888,
+      "cumulative_percentage": 98.22,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Actitud",
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "absent",
+        "friendly",
+        "great",
+        "unwelcoming"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "absent",
+      "label_es": "Ausente (anomalía de parseo)",
+      "anomalia_parseo": true,
+      "usage_count": 1869,
+      "cumulative_percentage": 98.27,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "charger",
+        "play",
+        "tour",
+        "wheelchair",
+        "yoga"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "fee",
+      "label_es": "Cargo",
+      "usage_count": 1866,
+      "cumulative_percentage": 98.31,
+      "in_pareto_90": false,
+      "area_sugerida": "Relación Precio / Calidad",
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "extra",
+        "high",
+        "low"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "terrace",
+      "label_es": "Terraza",
+      "usage_count": 1863,
+      "cumulative_percentage": 98.35,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Limpieza",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "beautiful",
+        "dirty",
+        "small"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "layout",
+      "label_es": "Distribución",
+      "usage_count": 1801,
+      "cumulative_percentage": 98.4,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "confusing",
+        "cramped",
+        "great",
+        "practical"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "excellent",
+      "label_es": "Excelente (anomalía de parseo)",
+      "anomalia_parseo": true,
+      "usage_count": 1769,
+      "cumulative_percentage": 98.44,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "security"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "tile",
+      "label_es": "Azulejos",
+      "usage_count": 1694,
+      "cumulative_percentage": 98.48,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Estado",
+        "Limpieza"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "beautiful",
+        "broken",
+        "clean",
+        "dirty"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "vibe",
+      "label_es": "Ambiente",
+      "usage_count": 1648,
+      "cumulative_percentage": 98.52,
+      "in_pareto_90": false,
+      "area_sugerida": "Experiencia General",
+      "dimensiones_observadas": [
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "bad",
+        "great",
+        "positive",
+        "tense"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "club",
+      "label_es": "Club",
+      "usage_count": 1624,
+      "cumulative_percentage": 98.56,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Precio",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "exclusive",
+        "expensive",
+        "fun",
+        "great",
+        "small"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "refund",
+      "label_es": "Reembolso",
+      "usage_count": 1606,
+      "cumulative_percentage": 98.6,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "delayed",
+        "full",
+        "partial"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "board",
+      "label_es": "Régimen de comidas",
+      "usage_count": 1603,
+      "cumulative_percentage": 98.64,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Sabor",
+        "Variedad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "delicious",
+        "full",
+        "limited",
+        "poor"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "air",
+      "label_es": "Aire (anomalía de parseo)",
+      "anomalia_parseo": true,
+      "usage_count": 1552,
+      "cumulative_percentage": 98.67,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Frescura",
+        "Limpieza",
+        "Temperatura"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "clean",
+        "fresh",
+        "hot",
+        "stale"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "poor",
+      "label_es": "Deficiente (anomalía de parseo)",
+      "anomalia_parseo": true,
+      "usage_count": 1516,
+      "cumulative_percentage": 98.71,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "culture",
+        "security"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "local",
+      "label_es": "Local (anomalía de parseo)",
+      "anomalia_parseo": true,
+      "usage_count": 1481,
+      "cumulative_percentage": 98.74,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "breakfast"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "table",
+      "label_es": "Mesa",
+      "usage_count": 1474,
+      "cumulative_percentage": 98.78,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Limpieza",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "clean",
+        "dirty",
+        "small"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "lunch",
+      "label_es": "Almuerzo",
+      "usage_count": 1465,
+      "cumulative_percentage": 98.81,
+      "in_pareto_90": false,
+      "area_sugerida": "Alimentos y Bebidas",
+      "dimensiones_observadas": [
+        "Calidad",
+        "Sabor",
+        "Temperatura"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "cold",
+        "delicious",
+        "great",
+        "late"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "fruit",
+      "label_es": "Fruta",
+      "usage_count": 1431,
+      "cumulative_percentage": 98.85,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Frescura",
+        "Sabor"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "delicious",
+        "fresh",
+        "rotten",
+        "scarce"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "allowed",
+      "label_es": "Permitido (anomalía de parseo)",
+      "anomalia_parseo": true,
+      "usage_count": 1430,
+      "cumulative_percentage": 98.88,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "pet"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "couple",
+      "label_es": "Pareja",
+      "usage_count": 1422,
+      "cumulative_percentage": 98.92,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Ruido"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "disruptive",
+        "happy",
+        "noisy"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "taste",
+      "label_es": "Sabor",
+      "usage_count": 1411,
+      "cumulative_percentage": 98.95,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Sabor"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "bad",
+        "bland",
+        "delicious",
+        "great"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "game",
+      "label_es": "Juego",
+      "usage_count": 1409,
+      "cumulative_percentage": 98.98,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Estado"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "boring",
+        "broken",
+        "fun",
+        "great"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "lounger",
+      "label_es": "Reposera",
+      "usage_count": 1408,
+      "cumulative_percentage": 99.02,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Comodidad",
+        "Disponibilidad",
+        "Estado"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "available",
+        "broken",
+        "comfortable",
+        "uncomfortable"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "cost",
+      "label_es": "Costo",
+      "usage_count": 1407,
+      "cumulative_percentage": 99.05,
+      "in_pareto_90": false,
+      "area_sugerida": "Relación Precio / Calidad",
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "extra",
+        "high",
+        "low"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "class",
+      "label_es": "Clase",
+      "usage_count": 1406,
+      "cumulative_percentage": 99.09,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "great",
+        "high",
+        "low",
+        "poor"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "bottle",
+      "label_es": "Botella",
+      "usage_count": 1389,
+      "cumulative_percentage": 99.12,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Precio",
+        "Tamaño",
+        "Temperatura"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "cold",
+        "free",
+        "small",
+        "warm"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "strict",
+      "label_es": "Estricto (anomalía de parseo)",
+      "anomalia_parseo": true,
+      "usage_count": 1354,
+      "cumulative_percentage": 99.15,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "checkin"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "sand",
+      "label_es": "Arena",
+      "usage_count": 1340,
+      "cumulative_percentage": 99.18,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Limpieza"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "beautiful",
+        "clean",
+        "dirty",
+        "rocky"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "blanket",
+      "label_es": "Cobija",
+      "usage_count": 1277,
+      "cumulative_percentage": 99.21,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Estado"
+      ],
+      "polaridades_observadas": [
+        "negativo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "old",
+        "thin"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "help",
+      "label_es": "Ayuda",
+      "usage_count": 1264,
+      "cumulative_percentage": 99.24,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Disponibilidad",
+        "Velocidad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "great",
+        "poor",
+        "quick",
+        "unavailable"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "child",
+      "label_es": "Niños",
+      "usage_count": 1203,
+      "cumulative_percentage": 99.27,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Actitud",
+        "Ruido"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "disruptive",
+        "friendly",
+        "happy",
+        "noisy"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "glass",
+      "label_es": "Vaso",
+      "usage_count": 1161,
+      "cumulative_percentage": 99.3,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Estado",
+        "Limpieza"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "beautiful",
+        "broken",
+        "clean",
+        "dirty"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "cup",
+      "label_es": "Taza",
+      "usage_count": 1147,
+      "cumulative_percentage": 99.33,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Limpieza",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "clean",
+        "dirty",
+        "large",
+        "small"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "accessible",
+      "label_es": "Accesibilidad (anomalía de parseo)",
+      "anomalia_parseo": true,
+      "usage_count": 1093,
+      "cumulative_percentage": 99.35,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "wheelchair"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "plate",
+      "label_es": "Plato",
+      "usage_count": 1077,
+      "cumulative_percentage": 99.38,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Limpieza",
+        "Tamaño",
+        "Temperatura"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "clean",
+        "dirty",
+        "hot",
+        "small"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "prohibited",
+      "label_es": "Prohibido (anomalía de parseo)",
+      "anomalia_parseo": true,
+      "usage_count": 1056,
+      "cumulative_percentage": 99.4,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "pet"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "package",
+      "label_es": "Paquete",
+      "usage_count": 1043,
+      "cumulative_percentage": 99.43,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Precio",
+        "Variedad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "expensive",
+        "great",
+        "inclusive",
+        "limited"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "traveller",
+      "label_es": "Viajero",
+      "usage_count": 1031,
+      "cumulative_percentage": 99.45,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Actitud",
+        "Ruido"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "disruptive",
+        "friendly",
+        "happy",
+        "noisy"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "gesture",
+      "label_es": "Detalle",
+      "usage_count": 1025,
+      "cumulative_percentage": 99.48,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "great",
+        "meaningless",
+        "small"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "disappointment",
+      "label_es": "Decepción",
+      "usage_count": 1012,
+      "cumulative_percentage": 99.5,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "huge",
+        "major",
+        "minor"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "outdated",
+      "label_es": "Anticuado (anomalía de parseo)",
+      "anomalia_parseo": true,
+      "usage_count": 1009,
+      "cumulative_percentage": 99.53,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "tv"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "spring",
+      "label_es": "Resortes (colchón)",
+      "usage_count": 993,
+      "cumulative_percentage": 99.55,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Temperatura"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "cold",
+        "hot",
+        "murky",
+        "natural"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "entrance",
+      "label_es": "Entrada",
+      "usage_count": 982,
+      "cumulative_percentage": 99.57,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Conveniencia",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "convenient",
+        "grand",
+        "hidden",
+        "narrow"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "chair",
+      "label_es": "Silla",
+      "usage_count": 968,
+      "cumulative_percentage": 99.6,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Comodidad",
+        "Disponibilidad",
+        "Estado"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "available",
+        "broken",
+        "comfortable",
+        "hard"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "juice",
+      "label_es": "Jugo",
+      "usage_count": 953,
+      "cumulative_percentage": 99.62,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Frescura",
+        "Sabor",
+        "Temperatura"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "delicious",
+        "diluted",
+        "fresh",
+        "warm"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "wine",
+      "label_es": "Vino",
+      "usage_count": 936,
+      "cumulative_percentage": 99.64,
+      "in_pareto_90": false,
+      "area_sugerida": "Alimentos y Bebidas",
+      "dimensiones_observadas": [
+        "Calidad",
+        "Precio",
+        "Temperatura"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "free",
+        "great",
+        "poor",
+        "warm"
+      ],
+      "needs_curation": false
+    },
+    {
+      "subtema": "style",
+      "label_es": "Estilo",
+      "usage_count": 914,
+      "cumulative_percentage": 99.66,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Decoración",
+        "Estado"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "beautiful",
+        "modern",
+        "old",
+        "outdated"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "monolingual",
+      "label_es": "Monolingüe (anomalía de parseo)",
+      "anomalia_parseo": true,
+      "usage_count": 847,
+      "cumulative_percentage": 99.68,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "staff"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "bug",
+      "label_es": "Insectos",
+      "usage_count": 816,
+      "cumulative_percentage": 99.7,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido",
+        "negativo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "annoying",
+        "harmless",
+        "large"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "friendly",
+      "label_es": "Amable (anomalía de parseo)",
+      "anomalia_parseo": true,
+      "usage_count": 808,
+      "cumulative_percentage": 99.72,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "eco"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "shop",
+      "label_es": "Tienda",
+      "usage_count": 785,
+      "cumulative_percentage": 99.74,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Conveniencia",
+        "Precio",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "convenient",
+        "expensive",
+        "great",
+        "local",
+        "small"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "concern",
+      "label_es": "Preocupación",
+      "usage_count": 773,
+      "cumulative_percentage": 99.76,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "major",
+        "minor",
+        "serious"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "smile",
+      "label_es": "Sonrisa",
+      "usage_count": 744,
+      "cumulative_percentage": 99.78,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Actitud"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "fake",
+        "friendly",
+        "rare"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "available",
+      "label_es": "Disponibilidad (anomalía de parseo)",
+      "anomalia_parseo": true,
+      "usage_count": 736,
+      "cumulative_percentage": 99.8,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "charger",
+        "play",
+        "tour"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "key",
+      "label_es": "Llave",
+      "usage_count": 721,
+      "cumulative_percentage": 99.81,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Estado"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "bad",
+        "lost",
+        "new"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "tasteless",
+      "label_es": "Insípido (anomalía de parseo)",
+      "anomalia_parseo": true,
+      "usage_count": 716,
+      "cumulative_percentage": 99.83,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "dinner"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "store",
+      "label_es": "Tienda",
+      "usage_count": 675,
+      "cumulative_percentage": 99.85,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Conveniencia",
+        "Precio",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "convenient",
+        "expensive",
+        "great",
+        "small"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "sunset",
+      "label_es": "Atardecer",
+      "usage_count": 670,
+      "cumulative_percentage": 99.86,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "beautiful",
+        "cloudy",
+        "great",
+        "ordinary"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "request",
+      "label_es": "Solicitud",
+      "usage_count": 623,
+      "cumulative_percentage": 99.88,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Velocidad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "denied",
+        "multiple",
+        "quick"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "vendor",
+      "label_es": "Vendedor",
+      "usage_count": 542,
+      "cumulative_percentage": 99.89,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Actitud",
+        "Precio"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "expensive",
+        "friendly",
+        "local",
+        "rude"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "transfer",
+      "label_es": "Traslado",
+      "usage_count": 516,
+      "cumulative_percentage": 99.9,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Precio"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "expensive",
+        "free",
+        "great",
+        "late"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "courtyard",
+      "label_es": "Patio interior",
+      "usage_count": 477,
+      "cumulative_percentage": 99.91,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Apariencia",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "beautiful",
+        "neglected",
+        "small"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "group",
+      "label_es": "Grupo",
+      "usage_count": 475,
+      "cumulative_percentage": 99.93,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Actitud",
+        "Calidad",
+        "Ruido",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "friendly",
+        "great",
+        "noisy",
+        "small"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "notice",
+      "label_es": "Aviso",
+      "usage_count": 420,
+      "cumulative_percentage": 99.94,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "clear",
+        "short",
+        "vague"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "sufficient",
+      "label_es": "Suficiente (anomalía de parseo)",
+      "anomalia_parseo": true,
+      "usage_count": 376,
+      "cumulative_percentage": 99.94,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "heating"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "unfriendly",
+      "label_es": "Poco amable (anomalía de parseo)",
+      "anomalia_parseo": true,
+      "usage_count": 327,
+      "cumulative_percentage": 99.95,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "eco"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "shape",
+      "label_es": "Estado",
+      "usage_count": 270,
+      "cumulative_percentage": 99.96,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Estado"
+      ],
+      "polaridades_observadas": [
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "bad",
+        "great",
+        "perfect",
+        "worn"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "multilingual",
+      "label_es": "Multilingüe (anomalía de parseo)",
+      "anomalia_parseo": true,
+      "usage_count": 216,
+      "cumulative_percentage": 99.96,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "staff"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "market",
+      "label_es": "Mercado",
+      "usage_count": 216,
+      "cumulative_percentage": 99.97,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad",
+        "Precio",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "expensive",
+        "great",
+        "local",
+        "small"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "bag",
+      "label_es": "Equipaje",
+      "usage_count": 192,
+      "cumulative_percentage": 99.97,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Conveniencia",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "convenient",
+        "small",
+        "torn"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "tip",
+      "label_es": "Propina",
+      "usage_count": 170,
+      "cumulative_percentage": 99.98,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Ayuda",
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "great",
+        "helpful",
+        "useless",
+        "vague"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "unreliable",
+      "label_es": "Poco confiable (anomalía de parseo)",
+      "anomalia_parseo": true,
+      "usage_count": 146,
+      "cumulative_percentage": 99.98,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "shuttle"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "treat",
+      "label_es": "Trato",
+      "usage_count": 124,
+      "cumulative_percentage": 99.98,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Calidad"
+      ],
+      "polaridades_observadas": [
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "great",
+        "ordinary",
+        "poor"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "bonus",
+      "label_es": "Bonificación",
+      "usage_count": 119,
+      "cumulative_percentage": 99.99,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Ayuda",
+        "Calidad",
+        "Tamaño"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "great",
+        "small",
+        "useless"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "rich",
+      "label_es": "Abundante (anomalía de parseo)",
+      "anomalia_parseo": true,
+      "usage_count": 113,
+      "cumulative_percentage": 99.99,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "culture"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "reliable",
+      "label_es": "Confiable (anomalía de parseo)",
+      "anomalia_parseo": true,
+      "usage_count": 112,
+      "cumulative_percentage": 99.99,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "shuttle"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "dull",
+      "label_es": "Soso (anomalía de parseo)",
+      "anomalia_parseo": true,
+      "usage_count": 103,
+      "cumulative_percentage": 100.0,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "decor"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "flavorful",
+      "label_es": "Sabroso (anomalía de parseo)",
+      "anomalia_parseo": true,
+      "usage_count": 86,
+      "cumulative_percentage": 100.0,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "dinner"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "vibrant",
+      "label_es": "Vibrante (anomalía de parseo)",
+      "anomalia_parseo": true,
+      "usage_count": 76,
+      "cumulative_percentage": 100.0,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [],
+      "polaridades_observadas": [
+        "desconocido"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "decor"
+      ],
+      "needs_curation": true
+    },
+    {
+      "subtema": "wave",
+      "label_es": "Olas",
+      "usage_count": 46,
+      "cumulative_percentage": 100.0,
+      "in_pareto_90": false,
+      "area_sugerida": null,
+      "dimensiones_observadas": [
+        "Apariencia"
+      ],
+      "polaridades_observadas": [
+        "contexto",
+        "desconocido",
+        "negativo",
+        "positivo"
+      ],
+      "temas_candidatos": [],
+      "adjetivos_fuente": [
+        "beautiful",
+        "gentle",
+        "rough",
+        "strong"
+      ],
+      "needs_curation": true
+    }
+  ]
+}

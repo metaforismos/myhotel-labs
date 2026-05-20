@@ -1,0 +1,95 @@
+{
+  "nota": "15 reseñas reales-style en ES/EN/PT para validar el prototipo Semántico v2. Cubren multi-mención, negación, sugerencias, áreas no habilitadas y subtemas propuestos. Touchpoints variados.",
+  "reviews": [
+    {
+      "id": "rv-es-01",
+      "idioma": "es",
+      "touchpoint": "FollowUp",
+      "text": "El baño estaba impecable y las toallas frescas. La cama riquísima, dormí espectacular. Lo único, el desayuno se enfría rápido y la variedad es bastante limitada. Sería genial tener opciones sin gluten."
+    },
+    {
+      "id": "rv-es-02",
+      "idioma": "es",
+      "touchpoint": "OnSite",
+      "text": "El bartender del lobby fue grosero, casi no nos miró cuando pedimos un trago. En contraste, la chica de recepción muy amable y resolutiva con un cambio de habitación."
+    },
+    {
+      "id": "rv-es-03",
+      "idioma": "es",
+      "touchpoint": "Online",
+      "text": "La ubicación es ideal, a una cuadra de la playa. La piscina estaba helada y nadie del staff supo decirme cuándo la prendían. La pista de ski cerca del hotel está increíble, lástima que el lobby es ruidoso de noche."
+    },
+    {
+      "id": "rv-es-04",
+      "idioma": "es",
+      "touchpoint": "FollowUp",
+      "text": "No esperaba mucho del wifi pero anduvo perfecto en toda la habitación. El check-in fue rápido. El spa se ve lindo pero los precios son demasiado caros para lo que ofrecen."
+    },
+    {
+      "id": "rv-es-05",
+      "idioma": "es",
+      "touchpoint": "OnSite",
+      "text": "Las sábanas no estaban sucias, pero olían a humedad. El aire acondicionado de la habitación hace mucho ruido. Por favor cambien el menú del restaurante, llevamos 3 noches y es siempre lo mismo."
+    },
+    {
+      "id": "rv-es-06",
+      "idioma": "es",
+      "touchpoint": "Concierge",
+      "text": "Quería saber si tienen menú vegano y si la piscina tiene horario nocturno. Gracias."
+    },
+    {
+      "id": "rv-es-07",
+      "idioma": "es",
+      "touchpoint": "Online",
+      "text": "La habitación es chica pero está muy bien decorada. La carta del restaurante promete varios fiambres pero solo trajeron jamón, eso se siente como engaño. El gimnasio bastante completo, me sorprendió."
+    },
+    {
+      "id": "rv-en-01",
+      "idioma": "en",
+      "touchpoint": "Online",
+      "text": "The bathroom was spotless, but I found mold in the shower corner. Breakfast was outstanding, especially the fresh fruits. Front desk staff was professional but a bit slow at check-in."
+    },
+    {
+      "id": "rv-en-02",
+      "idioma": "en",
+      "touchpoint": "FollowUp",
+      "text": "Stay was great overall. The pool was warm and clean. However, the gym lacks free weights — would love to see dumbbells added. Wifi was unreliable on the upper floors."
+    },
+    {
+      "id": "rv-en-03",
+      "idioma": "en",
+      "touchpoint": "OnSite",
+      "text": "Bartender at the rooftop bar was rude and ignored us for 15 minutes. The view itself is incredible. Beds are unbelievably comfortable."
+    },
+    {
+      "id": "rv-en-04",
+      "idioma": "en",
+      "touchpoint": "Online",
+      "text": "Great location near the convention center. Hot tub was lukewarm. The ski concierge desk in the lobby was super helpful for booking lessons."
+    },
+    {
+      "id": "rv-en-05",
+      "idioma": "en",
+      "touchpoint": "FollowUp",
+      "text": "Room smelled smoky despite being non-smoking. Towels were not replaced on day 2. Otherwise the location and the breakfast variety were excellent."
+    },
+    {
+      "id": "rv-pt-01",
+      "idioma": "pt",
+      "touchpoint": "Online",
+      "text": "O banheiro estava limpíssimo e o chuveiro com ótima pressão. O café da manhã muito frio, precisam aquecer melhor a comida. A recepção muito atenciosa."
+    },
+    {
+      "id": "rv-pt-02",
+      "idioma": "pt",
+      "touchpoint": "FollowUp",
+      "text": "A localização é maravilhosa, perto de tudo. Os colchões poderiam ser mais firmes. A piscina aquecida foi um achado para os meus filhos. Faltam opções para crianças no menu do restaurante."
+    },
+    {
+      "id": "rv-pt-03",
+      "idioma": "pt",
+      "touchpoint": "OnSite",
+      "text": "O ar condicionado faz barulho e o quarto demora muito para esfriar. Sugiro revisar a manutenção. O staff do bar foi excelente, super simpático."
+    }
+  ]
+}
