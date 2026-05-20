@@ -16,6 +16,7 @@ const sections: NavSection[] = [
     label: "Semantic",
     items: [
       { href: "/", label: "Analysis" },
+      { href: "/semantic-v2", label: "v2 Prototype" },
       { href: "/proposals", label: "Proposals" },
       { href: "/explorer", label: "Pool Explorer" },
       { href: "/prompts", label: "Prompts" },
