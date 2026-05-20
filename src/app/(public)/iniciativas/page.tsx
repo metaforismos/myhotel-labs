@@ -9,6 +9,7 @@ const PRODUCT_DESCRIPTIONS: Record<string, string> = {
   PreStay: "Engagement pre-llegada: web check-in, pedidos anticipados",
   OnSite: "Encuestas durante la estadía, Smart Replies, detección de problemas",
   FollowUp: "Encuestas post-estadía, reputación, NPS",
+  Online: "Gestión de reseñas públicas (Booking, Google, TripAdvisor) y reputación online",
   Semantic: "Análisis semántico de reseñas y comentarios con IA",
   Concierge: "Asistente virtual IA por WhatsApp para huéspedes",
   Desk: "Gestión de incidentes y casos de huéspedes",

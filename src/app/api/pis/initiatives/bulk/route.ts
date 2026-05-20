@@ -18,6 +18,7 @@ const PRODUCT_MAP: Record<string, PisProduct> = {
   followup: "FollowUp",
   "follow up": "FollowUp",
   "follow-up": "FollowUp",
+  online: "Online",
   semantic: "Semantic",
   semántico: "Semantic",
   semantico: "Semantic",

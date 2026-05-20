@@ -4,6 +4,7 @@ export const PIS_PRODUCTS = [
   "PreStay",
   "OnSite",
   "FollowUp",
+  "Online",
   "Semantic",
   "Concierge",
   "Desk",
